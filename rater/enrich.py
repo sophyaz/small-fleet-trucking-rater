@@ -1,7 +1,7 @@
 """Enrichment: FMCSA QCMobile (carrier) + NHTSA vPIC (VIN). Cache-first; never raises.
 VERIFY: field names below are from the QCMobile response schema as I recall it — confirm against a live
 response (docs: https://mobile.fmcsa.dot.gov/QCDevsite/docs/qcApi) and fix in _parse_carrier().
-Set env FMCSA_WEBKEY. Offline mode (RATER_OFFLINE=1) reads only samples/fixtures + data/cache."""
+Set FMCSA_WEBKEY in env or in a .env file at repo root (gitignored). Offline mode (RATER_OFFLINE=1) reads only samples/fixtures + data/cache."""
 import json, os, time, hashlib
 from .config import DATA_DIR, ROOT
 

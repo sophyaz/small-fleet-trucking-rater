@@ -4,7 +4,7 @@ Primary auto liability rater for for-hire trucking carriers with 1–5 power uni
 
 ```
 pip install -r requirements.txt
-export RATER_OFFLINE=1                      # uses samples/fixtures; unset and set FMCSA_WEBKEY for live enrichment
+echo FMCSA_WEBKEY=yourkey > .env            # .env is gitignored; set RATER_OFFLINE=1 (env or .env) to use samples/fixtures only
 python samples/make_synthetic_samples.py    # synthetic carriers + edge cases
 python -m rater samples/submissions/00_established_clean_ia.json     # one submission, full breakdown
 python -m rater.book samples/submissions --csv out.csv               # book check

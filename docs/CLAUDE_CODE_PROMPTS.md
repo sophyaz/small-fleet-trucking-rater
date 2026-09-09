@@ -5,6 +5,7 @@ Run these in order from the repo root. Each is self-contained; paste as one mess
 ---
 
 ## Prompt 1 — QCMobile field verification (30 min, do first)
+**Status 2026-09-09: AWAITING API KEY.** webKey requested and placed in `.env` (`FMCSA_WEBKEY`, loaded by `rater/config.py`); run once the key is active.
 ```
 Read rater/enrich.py. I have an FMCSA QCMobile webKey in env FMCSA_WEBKEY. For USDOT numbers 2231000, 3456789 and one you find that is a 1-5 power unit for-hire carrier, call these endpoints and save each raw JSON to data/raw/qcmobile_samples/<dot>_<endpoint>.json:
   /carriers/{dot}, /carriers/{dot}/basics, /carriers/{dot}/authority, /carriers/{dot}/cargo-carried, /carriers/{dot}/operation-classification, /carriers/{dot}/docket-numbers
@@ -12,6 +13,7 @@ Then diff the actual field names against what _parse_carrier() expects (allowedT
 ```
 
 ## Prompt 2 — Bulk files and frequency tables (2–3 h incl. download)
+**Status 2026-09-09: DONE** — commit `a4dfc3e`. Outputs in `data/derived/` (crash_rate_by_segment, crash_rate_by_state, glm_relativities*, proposed_venue_state) and proposals in `docs/FREQUENCY_PROPOSAL_2026-09-09.md`. Ran before Prompt 1 since it needs no webKey.
 ```
 Find and download the current FMCSA Motor Carrier Census file and the last three years of public MCMIS crash files (start at https://ai.fmcsa.dot.gov/SMS/Tools/Downloads.aspx and data.transportation.gov; also check FMCSA "Data Dissemination Program"). Save them as data/raw/census.csv and data/raw/crash_<year>.csv and record the URLs, pull date and file sizes in docs/SOURCES.md rows S3 and S4. Print the header of each file. Then update the COLS mapping at the top of analysis/build_frequency_tables.py to match the real column names — in particular the columns for power units, drivers, add date, MCS-150 date, interstate/for-hire operation, hazmat and passenger flags, and the crash file's DOT number, report date, state, fatalities, injuries, tow-away. Run python -m analysis.build_frequency_tables --years 3 and show me data/derived/crash_rate_by_segment.csv and glm_relativities.csv. Then propose (do not apply) the replacement values for crash_rate_per_unit_year, authority_age_years factors, fleet_size_units factors and the venue_state tiers in config/rates.yaml, each with its standard error, and flag any segment with fewer than 200 crashes.
 ```
