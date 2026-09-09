@@ -15,7 +15,7 @@ meta:
 # Base segment: for-hire, 2-5 units, authority 3+ yrs, dry van, radius 51-200,
 # neutral venue state, average OOS, no crashes, drivers == units.
 loss_cost:
-  crash_rate_per_unit_year: 0.0625          # [S/B] DOT-recordable crashes per power-unit-year, base segment. VERIFY: replace with data/derived/crash_rate_by_segment.csv (analysis/build_frequency_tables.py)
+  crash_rate_per_unit_year: 0.0625          # [S/B] DOT-recordable crashes per power-unit-year, base segment. VERIFY: measured 0.0363 (2-5 units, 3y+) / 0.0452 grossed up for unmatched crashes, docs/FREQUENCY_PROPOSAL_2026-09-09.md. Apply jointly with crash_to_claim_ratio: only the product is identified by market data
   crash_rate_range: [0.04, 0.09]
   crash_to_claim_ratio: 1.20                # [S] liability claims per DOT-recordable crash (adds non-recordable claims, removes not-at-fault). VERIFY vs any claims benchmark
   # claim frequency = crash_rate x crash_to_claim_ratio  (= 0.075 at defaults)

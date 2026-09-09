@@ -1,6 +1,6 @@
 # Rationale — Small-Fleet Trucking Primary Auto Liability Rater
 
-**Author:** Sophia · **Status:** v0.1 built offline against synthetic fixtures; all live-data steps flagged VERIFY
+**Author:** Sophia · **Status:** v0.1. QCMobile and vPIC schemas verified live 2026-09-09 (raw responses in `data/raw/`); census and crash files archived and the frequency tables built; 45 real carriers enriched and book-checked. Remaining VERIFY markers are the rate anchors in §5 (A1, A2, A7, A8, A12) and the open rows in §3.
 
 ## 1. The answer
 
@@ -10,7 +10,7 @@ Would it make money? Only if selection works. The margin is in the decline list 
 
 ## 2. Scope and definitions
 
-- **Coverage:** primary auto liability, $1,000,000 combined single limit, occurrence, annual term. Federal minimum is $750k (49 CFR 387.9) but shippers and brokers require $1m; ILFs for $750k / $2m are produced by `analysis/fit_severity.py`.
+- **Coverage:** primary auto liability, $1,000,000 combined single limit, occurrence, annual term. Federal minimum is $750k (49 CFR 387.9; confirmed by the live QCMobile record, `bipdRequiredAmount` = 750 for general-freight for-hire carriers) but shippers and brokers require $1m; ILFs for $750k / $2m are produced by `analysis/fit_severity.py`.
 - **Not priced:** physical damage, cargo, GL, non-trucking liability, hazmat, passenger, HHG, auto-hauler. These route to decline D11 (appetite), not to an error.
 - **Segment:** interstate authorised-for-hire property carriers, 1–5 power units, Class 7–8, general freight (dry van / reefer / flatbed and similar). Private carriers and intrastate-only are declined (D12) — they need different data and different pricing. D12 needs positive evidence: a registration under ~60 days old comes back from QCMobile with an empty operation-classification list, and that is treated as unknown (refer R09), not as private. No active MC authority with no BI/PD filing on record refers (R07): a new applicant cannot get authority until an insurer files the BMC-91, so that is what a legitimate prospect looks like at quote time. Authority that was granted and is now inactive, with no filing, is a lapse and declines (D25).
 - **Submission schema:** `config/schema.json`. Only `usdot` is required; everything else is coerced, defaulted, and flagged. Defaults are conservative (unknown radius → intermediate, unknown commodity → 1.10).
@@ -20,10 +20,10 @@ Would it make money? Only if selection works. The margin is in the decline list 
 
 | Need | Source | Status |
 |---|---|---|
-| Carrier record: units, drivers, authority, OOS rates, 24-month crashes, safety rating, MCS-150 date/mileage | FMCSA QCMobile API (cache-first) | Client written; **field names VERIFY** against live response |
-| BASIC percentiles (where public) | QCMobile `/basics` | as above |
-| Vehicle year, class, body | NHTSA vPIC batch | Client written; VERIFY |
-| Population and crash frequency by segment | FMCSA Census + MCMIS Crash files | Script written; **files TO PULL** |
+| Carrier record: units, drivers, authority, OOS rates, 24-month crashes, safety rating, MCS-150 date/mileage | FMCSA QCMobile API (cache-first) + local census snapshot | **Verified live 2026-09-09** (DOTs 1000986, 2231000, 3456789; `data/raw/qcmobile_samples/`). addDate, MCS-150 date/mileage and HM/PC flags are absent from the API and come from `data/raw/census.csv` via `data/cache/census.sqlite` |
+| BASIC percentiles (where public) | QCMobile `/basics` | Endpoint verified; `basicsPercentile` is "Not Public" for **53 of 53** live property carriers (FAST Act), so the `basic_percentile` relativities and D24 are **dormant on live data** — see S7 |
+| Vehicle year, class, body | NHTSA vPIC batch | **Verified live 2026-09-09** (`data/raw/vpic_sample.json`); decode gated on fatal error codes 5/6/7/8/400 |
+| Population and crash frequency by segment | FMCSA Census + MCMIS Crash files | **Archived 2026-09-09** (S3/S4); tables in `data/derived/`, proposals in `docs/FREQUENCY_PROPOSAL_2026-09-09.md`; status of each proposal in §5 |
 | Insurance cancellations, authority history | FMCSA L&I | Not automated; rule D23 currently reads the submission's declared field |
 | Driver records | None public (MVR / PSP are paid, consent-based) | Uses submitted driver fields only — see §7 |
 
