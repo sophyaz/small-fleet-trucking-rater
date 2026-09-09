@@ -1,0 +1,26 @@
+{
+ "submission_id": "new_venture_ca_2units",
+ "usdot": 9900004,
+ "drivers": [
+  {
+   "age": 56,
+   "cdl_years": 11
+  },
+  {
+   "age": 47,
+   "cdl_years": 4
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR30LLA1827"
+  },
+  {
+   "vin": "1FUJGLDR31LLA1467"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "flatbed",
+ "garaging_state": "CA",
+ "limit": 1000000
+}

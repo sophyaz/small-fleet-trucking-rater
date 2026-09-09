@@ -1,0 +1,26 @@
+{
+ "submission_id": "oos_order_nj",
+ "usdot": 9900011,
+ "drivers": [
+  {
+   "age": 41,
+   "cdl_years": 24
+  },
+  {
+   "age": 40,
+   "cdl_years": 7
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR100LLA686"
+  },
+  {
+   "vin": "1FUJGLDR101LLA349"
+  }
+ ],
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "NJ",
+ "limit": 1000000
+}

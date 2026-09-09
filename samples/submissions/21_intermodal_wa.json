@@ -1,0 +1,33 @@
+{
+ "submission_id": "intermodal_wa",
+ "usdot": 9900022,
+ "drivers": [
+  {
+   "age": 43,
+   "cdl_years": 6
+  },
+  {
+   "age": 51,
+   "cdl_years": 13
+  },
+  {
+   "age": 38,
+   "cdl_years": 8
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR210LLA722"
+  },
+  {
+   "vin": "1FUJGLDR211LLA508"
+  },
+  {
+   "vin": "1FUJGLDR212LLA127"
+  }
+ ],
+ "radius": "local_0_50",
+ "commodity": "intermodal",
+ "garaging_state": "WA",
+ "limit": 1000000
+}

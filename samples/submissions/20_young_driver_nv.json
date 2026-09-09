@@ -1,0 +1,19 @@
+{
+ "submission_id": "young_driver_nv",
+ "usdot": 9900021,
+ "drivers": [
+  {
+   "age": 57,
+   "cdl_years": 1
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR200LLA873"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "NV",
+ "limit": 1000000
+}

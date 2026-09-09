@@ -1,0 +1,26 @@
+{
+ "submission_id": "unit_mismatch_mi",
+ "usdot": 9900024,
+ "drivers": [
+  {
+   "age": 56,
+   "cdl_years": 6
+  },
+  {
+   "age": 55,
+   "cdl_years": 17
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR230LLA547"
+  },
+  {
+   "vin": "1FUJGLDR231LLA211"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "MI",
+ "limit": 1000000
+}

@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900005,
+    "legalName": "OWNER OP LOCAL OH LLC",
+    "phyState": "OH",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 1,
+    "totalDrivers": 1,
+    "driverOosRate": 0.0,
+    "vehicleOosRate": 14.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 6,
+    "vehicleInsp": 7,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2014-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 85000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

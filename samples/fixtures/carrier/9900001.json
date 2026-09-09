@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900001,
+    "legalName": "ESTABLISHED CLEAN IA LLC",
+    "phyState": "IA",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 3,
+    "totalDrivers": 3,
+    "driverOosRate": 3.0,
+    "vehicleOosRate": 15.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 12,
+    "vehicleInsp": 15,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2018-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 255000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

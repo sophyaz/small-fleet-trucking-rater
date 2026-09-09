@@ -1,0 +1,26 @@
+{
+ "submission_id": "hazmat_flag_ok",
+ "usdot": 9900013,
+ "drivers": [
+  {
+   "age": 29,
+   "cdl_years": 8
+  },
+  {
+   "age": 34,
+   "cdl_years": 18
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR120LLA376"
+  },
+  {
+   "vin": "1FUJGLDR121LLA616"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "OK",
+ "limit": 1000000
+}

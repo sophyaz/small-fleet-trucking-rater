@@ -1,0 +1,8 @@
+{
+ "submission_id": "garbage",
+ "usdot": 9900001,
+ "drivers": "three",
+ "units": "two trucks",
+ "radius": 200,
+ "limit": "1m"
+}

@@ -1,0 +1,23 @@
+# Decline / refer rules. Any DECLINE wins; else any REFER -> refer; else PRICE.
+# Conditions evaluate over the feature dict built in rater/features.py. Missing field => condition is False.
+rules:
+  - {id: D01, action: decline, reason: "USDOT not found / no carrier record", when: {field: carrier_found, op: eq, value: false}}
+  - {id: D02, action: decline, reason: "Not allowed to operate / authority inactive", when: {field: allowed_to_operate, op: eq, value: false}}
+  - {id: D03, action: decline, reason: "Federal out-of-service order in force", when: {field: oos_order, op: eq, value: true}}
+  - {id: D04, action: decline, reason: "Safety rating Unsatisfactory", when: {field: safety_rating, op: in, value: [UNSATISFACTORY]}}
+  - {id: D10, action: decline, reason: "Power units outside 1-5", when: {field: power_units, op: not_between, value: [1, 5]}}
+  - {id: D11, action: decline, reason: "Hazmat / tanker / passenger / HHG / auto-hauler out of appetite", when: {field: out_of_appetite_commodity, op: eq, value: true}}
+  - {id: D12, action: decline, reason: "Not a for-hire interstate carrier", when: {field: for_hire_interstate, op: eq, value: false}}
+  - {id: D20, action: decline, reason: "Credibility-weighted crash rate > 3x segment", when: {field: cred_rate_relativity, op: gt, value: 3.0}}
+  - {id: D21, action: decline, reason: "Fatal crash in window with >=1 other crash", when: {all: [{field: fatal_crashes, op: gte, value: 1}, {field: crashes_24m, op: gte, value: 2}]}}
+  - {id: D22, action: decline, reason: "Driver OOS rate > 3x segment avg with >= 5 inspections", when: {all: [{field: driver_oos_ratio, op: gt, value: 3.0}, {field: driver_inspections, op: gte, value: 5}]}}
+  - {id: D23, action: decline, reason: "Insurance cancelled / coverage gap in last 24 months", when: {field: insurance_cancellation_24m, op: eq, value: true}}
+  - {id: D24, action: decline, reason: "Unsafe Driving BASIC >= 90th percentile", when: {field: basic_unsafe_driving, op: gte, value: 90}}
+  - {id: D30, action: decline, reason: "Submitted VINs decode to non-commercial vehicles", when: {field: non_commercial_vin_share, op: gt, value: 0.5}}
+  - {id: D31, action: decline, reason: "Declared units differ from census by >3 or >2x", when: {field: unit_count_mismatch, op: eq, value: true}}
+  - {id: R01, action: refer, reason: "Authority < 6 months and no inspection history", when: {all: [{field: authority_age_years, op: lt, value: 0.5}, {field: total_inspections, op: eq, value: 0}]}}
+  - {id: R02, action: refer, reason: "Enrichment degraded - priced on segment defaults", when: {field: enrichment_degraded, op: eq, value: true}}
+  - {id: R03, action: refer, reason: "Safety rating Conditional", when: {field: safety_rating, op: in, value: [CONDITIONAL]}}
+  - {id: R04, action: refer, reason: "MCS-150 not updated in > 2 years", when: {field: mcs150_age_years, op: gt, value: 2}}
+  - {id: R05, action: refer, reason: "Zero drivers declared", when: {field: drivers, op: lte, value: 0}}
+  - {id: R06, action: refer, reason: "Chameleon signal: shared address/phone with revoked carrier", when: {field: chameleon_flag, op: eq, value: true}}

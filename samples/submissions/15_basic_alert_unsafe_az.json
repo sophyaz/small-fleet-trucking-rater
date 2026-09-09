@@ -1,0 +1,44 @@
+{
+ "submission_id": "basic_alert_unsafe_az",
+ "usdot": 9900016,
+ "drivers": [
+  {
+   "age": 29,
+   "cdl_years": 20
+  },
+  {
+   "age": 58,
+   "cdl_years": 12
+  },
+  {
+   "age": 35,
+   "cdl_years": 16
+  },
+  {
+   "age": 36,
+   "cdl_years": 17
+  },
+  {
+   "age": 54,
+   "cdl_years": 23
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR150LLA608"
+  },
+  {
+   "vin": "1FUJGLDR151LLA891"
+  },
+  {
+   "vin": "1FUJGLDR152LLA652"
+  },
+  {
+   "vin": "1FUJGLDR153LLA236"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "reefer",
+ "garaging_state": "AZ",
+ "limit": 1000000
+}

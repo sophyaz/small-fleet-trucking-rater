@@ -1,0 +1,26 @@
+{
+ "submission_id": "stale_mcs150_ky",
+ "usdot": 9900012,
+ "drivers": [
+  {
+   "age": 36,
+   "cdl_years": 22
+  },
+  {
+   "age": 37,
+   "cdl_years": 4
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR110LLA617"
+  },
+  {
+   "vin": "1FUJGLDR111LLA379"
+  }
+ ],
+ "radius": "intermediate_51_200",
+ "commodity": "logs_lumber",
+ "garaging_state": "KY",
+ "limit": 1000000
+}

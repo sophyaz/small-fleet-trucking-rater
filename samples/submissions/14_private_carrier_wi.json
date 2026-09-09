@@ -1,0 +1,33 @@
+{
+ "submission_id": "private_carrier_wi",
+ "usdot": 9900015,
+ "drivers": [
+  {
+   "age": 51,
+   "cdl_years": 24
+  },
+  {
+   "age": 58,
+   "cdl_years": 21
+  },
+  {
+   "age": 34,
+   "cdl_years": 25
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR140LLA302"
+  },
+  {
+   "vin": "1FUJGLDR141LLA399"
+  },
+  {
+   "vin": "1FUJGLDR142LLA348"
+  }
+ ],
+ "radius": "local_0_50",
+ "commodity": "grain_feed",
+ "garaging_state": "WI",
+ "limit": 1000000
+}

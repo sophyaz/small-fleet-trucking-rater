@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900004,
+    "legalName": "NEW VENTURE CA 2UNITS LLC",
+    "phyState": "CA",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 2,
+    "totalDrivers": 2,
+    "driverOosRate": 0.0,
+    "vehicleOosRate": 50.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 2,
+    "vehicleInsp": 2,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2025-11-21",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 170000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

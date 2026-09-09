@@ -1,0 +1,26 @@
+{
+ "submission_id": "mid_age_fl_one_crash",
+ "usdot": 9900006,
+ "drivers": [
+  {
+   "age": 43,
+   "cdl_years": 4
+  },
+  {
+   "age": 49,
+   "cdl_years": 6
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR50LLA3560"
+  },
+  {
+   "vin": "1FUJGLDR51LLA4062"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "FL",
+ "limit": 1000000
+}

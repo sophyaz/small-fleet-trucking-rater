@@ -1,0 +1,13 @@
+{
+ "submission_id": "bad_vins",
+ "usdot": "USDOT 9900001",
+ "units": [
+  {
+   "vin": "NOTAVIN"
+  },
+  {
+   "vin": ""
+  }
+ ],
+ "commodity": ""
+}

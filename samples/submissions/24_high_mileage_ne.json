@@ -1,0 +1,26 @@
+{
+ "submission_id": "high_mileage_ne",
+ "usdot": 9900025,
+ "drivers": [
+  {
+   "age": 47,
+   "cdl_years": 25
+  },
+  {
+   "age": 40,
+   "cdl_years": 16
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR240LLA139"
+  },
+  {
+   "vin": "1FUJGLDR241LLA850"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "NE",
+ "limit": 1000000
+}

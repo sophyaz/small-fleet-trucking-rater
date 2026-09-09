@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900009,
+    "legalName": "CONDITIONAL RATING IL LLC",
+    "phyState": "IL",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 5,
+    "totalDrivers": 6,
+    "driverOosRate": 10.0,
+    "vehicleOosRate": 28.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 20,
+    "vehicleInsp": 25,
+    "crashTotal": 1,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 1,
+    "safetyRating": "CONDITIONAL",
+    "oosDate": null,
+    "addDate": "2017-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 425000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

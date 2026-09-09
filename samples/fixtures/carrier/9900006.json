@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900006,
+    "legalName": "MID AGE FL ONE CRASH LLC",
+    "phyState": "FL",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 2,
+    "totalDrivers": 2,
+    "driverOosRate": 20.0,
+    "vehicleOosRate": 33.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 5,
+    "vehicleInsp": 6,
+    "crashTotal": 1,
+    "fatalCrash": 0,
+    "injCrash": 1,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2024-03-10",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 170000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

@@ -1,0 +1,117 @@
+# ============================================================
+# RATING MANUAL — single source of truth. rater/price.py reads this;
+# docs/RATING_MANUAL.md is rendered from it (python -m analysis.render_manual).
+# Every number is tagged:  [E] estimated from data   [S] selected (judgment)
+#                          [B] benchmark-anchored     VERIFY = re-derive from live data
+# ============================================================
+meta:
+  version: "0.1.0"
+  currency: USD
+  base_limit_csl: 1000000          # [B] shipper/broker standard; 49 CFR 387.9 min is 750k
+  exposure_base: power_unit_year
+  effective: "2026-09-01"
+
+# ---- Loss-cost anchors (per power-unit-year, base segment) ------------------
+# Base segment: for-hire, 2-5 units, authority 3+ yrs, dry van, radius 51-200,
+# neutral venue state, average OOS, no crashes, drivers == units.
+loss_cost:
+  crash_rate_per_unit_year: 0.0625          # [S/B] DOT-recordable crashes per power-unit-year, base segment. VERIFY: replace with data/derived/crash_rate_by_segment.csv (analysis/build_frequency_tables.py)
+  crash_rate_range: [0.04, 0.09]
+  crash_to_claim_ratio: 1.20                # [S] liability claims per DOT-recordable crash (adds non-recordable claims, removes not-at-fault). VERIFY vs any claims benchmark
+  # claim frequency = crash_rate x crash_to_claim_ratio  (= 0.075 at defaults)
+  severity:                                 # ground-up mixture; limited mean computed numerically in rater/losscost.py
+    pdo:    {share: 0.735, dist: lognormal, mean: 18000,   cv: 1.2}
+    injury: {share: 0.250, dist: lognormal, mean: 140000,  cv: 2.5}
+    fatal:  {share: 0.015, dist: pareto,    threshold: 250000, alpha: 1.6}
+  severity_trend_annual: 0.08               # [B] ATRI social inflation / verdict growth. VERIFY
+  trend_years: 1.5
+
+credibility:
+  k_unit_years: 25            # [S] Z = n/(n+k)
+  history_years: 2
+  own_rate_cap_multiple: 3.0
+
+relativities:
+  total_cap: {min: 0.60, max: 3.25}
+  authority_age_years:
+    - {max: 1,   factor: 1.65}
+    - {max: 3,   factor: 1.25}
+    - {max: 99,  factor: 1.00}
+  fleet_size_units:
+    - {max: 1,   factor: 0.95}
+    - {max: 5,   factor: 1.00}
+  radius_miles:
+    local_0_50: 0.80
+    intermediate_51_200: 1.00
+    regional_201_500: 1.15
+    long_haul_500_plus: 1.30
+  commodity:
+    dry_van: 1.00
+    reefer: 1.05
+    flatbed: 1.10
+    general_freight: 1.00
+    building_materials: 1.10
+    machinery_heavy: 1.15
+    grain_feed: 1.00
+    logs_lumber: 1.20
+    intermodal: 1.05
+    unknown: 1.10
+  venue_state:
+    high:   {factor: 1.35, states: [LA, GA, FL, TX, CA, IL, NY, NJ, PA, MO, NV, WA]}
+    medium: {factor: 1.12, states: [AL, MS, SC, NM, OK, AZ, MD, MI, OR, MN]}
+    low:    {factor: 0.90, states: [IA, NE, KS, ND, SD, WI, ID, UT, WY, MT, IN, KY, TN, VA, NC, OH]}
+  driver_unit_ratio:
+    - {max: 0.99, factor: 0.90}
+    - {max: 1.20, factor: 1.00}
+    - {max: 2.00, factor: 1.10}
+    - {max: 99,   factor: 1.25}
+  driver_experience_years_min:
+    - {max: 2,  factor: 1.30}
+    - {max: 5,  factor: 1.10}
+    - {max: 99, factor: 1.00}
+  vehicle_age_years_avg:
+    - {max: 5,  factor: 0.95}
+    - {max: 12, factor: 1.00}
+    - {max: 20, factor: 1.10}
+    - {max: 99, factor: 1.20}
+  oos_ratio_to_segment_avg:
+    min_inspections: 3
+    driver:
+      - {max: 0.5, factor: 0.95}
+      - {max: 1.5, factor: 1.00}
+      - {max: 3.0, factor: 1.15}
+      - {max: 99,  factor: 1.30}
+    vehicle:
+      - {max: 0.5, factor: 0.95}
+      - {max: 1.5, factor: 1.00}
+      - {max: 3.0, factor: 1.10}
+      - {max: 99,  factor: 1.20}
+  basic_percentile:
+    unsafe_driving: [{max: 50, factor: 1.00}, {max: 65, factor: 1.10}, {max: 100, factor: 1.30}]
+    hos_compliance: [{max: 50, factor: 1.00}, {max: 65, factor: 1.08}, {max: 100, factor: 1.20}]
+    vehicle_maintenance: [{max: 50, factor: 1.00}, {max: 80, factor: 1.05}, {max: 100, factor: 1.12}]
+    driver_fitness: [{max: 50, factor: 1.00}, {max: 80, factor: 1.03}, {max: 100, factor: 1.08}]
+    controlled_substances: [{max: 50, factor: 1.00}, {max: 80, factor: 1.10}, {max: 100, factor: 1.30}]
+  mcs150_stale_years:
+    - {max: 2,  factor: 1.00}
+    - {max: 99, factor: 1.08}
+  mileage_intensity:
+    - {max: 30000,  factor: 0.90}
+    - {max: 90000,  factor: 1.00}
+    - {max: 140000, factor: 1.08}
+    - {max: 9000000000, factor: 1.15}
+
+loadings:
+  alae_ratio: 0.14
+  expense_ratio: 0.22
+  reinsurance_ratio: 0.06
+  profit_cost_of_capital: 0.07
+  minimum_premium_per_unit: 6500
+  policy_fee: 250
+
+limits:
+  offered: [750000, 1000000, 2000000]
+
+segment_averages:
+  driver_oos_rate: 0.062
+  vehicle_oos_rate: 0.215

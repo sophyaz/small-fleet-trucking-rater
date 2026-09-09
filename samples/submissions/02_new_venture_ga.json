@@ -1,0 +1,19 @@
+{
+ "submission_id": "new_venture_ga",
+ "usdot": 9900003,
+ "drivers": [
+  {
+   "age": 54,
+   "cdl_years": 20
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR20LLA9167"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "GA",
+ "limit": 1000000
+}

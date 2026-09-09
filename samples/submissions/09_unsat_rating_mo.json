@@ -1,0 +1,33 @@
+{
+ "submission_id": "unsat_rating_mo",
+ "usdot": 9900010,
+ "drivers": [
+  {
+   "age": 53,
+   "cdl_years": 19
+  },
+  {
+   "age": 33,
+   "cdl_years": 25
+  },
+  {
+   "age": 45,
+   "cdl_years": 10
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR90LLA2764"
+  },
+  {
+   "vin": "1FUJGLDR91LLA2324"
+  },
+  {
+   "vin": "1FUJGLDR92LLA1785"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "MO",
+ "limit": 1000000
+}

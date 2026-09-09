@@ -1,0 +1,33 @@
+{
+ "submission_id": "established_clean_ia",
+ "usdot": 9900001,
+ "drivers": [
+  {
+   "age": 33,
+   "cdl_years": 20
+  },
+  {
+   "age": 43,
+   "cdl_years": 24
+  },
+  {
+   "age": 47,
+   "cdl_years": 9
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR00LLA6929"
+  },
+  {
+   "vin": "1FUJGLDR01LLA7103"
+  },
+  {
+   "vin": "1FUJGLDR02LLA7656"
+  }
+ ],
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "IA",
+ "limit": 1000000
+}

@@ -1,0 +1,19 @@
+{
+ "submission_id": "owner_op_local_oh",
+ "usdot": 9900005,
+ "drivers": [
+  {
+   "age": 42,
+   "cdl_years": 22
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR40LLA7080"
+  }
+ ],
+ "radius": "local_0_50",
+ "commodity": "building_materials",
+ "garaging_state": "OH",
+ "limit": 1000000
+}

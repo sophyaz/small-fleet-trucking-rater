@@ -1,0 +1,65 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900016,
+    "legalName": "BASIC ALERT UNSAFE AZ LLC",
+    "phyState": "AZ",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 4,
+    "totalDrivers": 5,
+    "driverOosRate": 12.0,
+    "vehicleOosRate": 30.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 25,
+    "vehicleInsp": 30,
+    "crashTotal": 2,
+    "fatalCrash": 0,
+    "injCrash": 1,
+    "towawayCrash": 1,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2020-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 340000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": [
+   {
+    "basic": {
+     "basicsType": {
+      "basicsShortDesc": "unsafe driving"
+     },
+     "basicsPercentile": 93
+    }
+   }
+  ]
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

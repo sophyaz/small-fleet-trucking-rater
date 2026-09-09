@@ -1,0 +1,58 @@
+{
+ "submission_id": "six_units_pa",
+ "usdot": 9900014,
+ "drivers": [
+  {
+   "age": 28,
+   "cdl_years": 23
+  },
+  {
+   "age": 39,
+   "cdl_years": 15
+  },
+  {
+   "age": 47,
+   "cdl_years": 18
+  },
+  {
+   "age": 32,
+   "cdl_years": 22
+  },
+  {
+   "age": 43,
+   "cdl_years": 22
+  },
+  {
+   "age": 32,
+   "cdl_years": 16
+  },
+  {
+   "age": 33,
+   "cdl_years": 24
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR130LLA438"
+  },
+  {
+   "vin": "1FUJGLDR131LLA899"
+  },
+  {
+   "vin": "1FUJGLDR132LLA488"
+  },
+  {
+   "vin": "1FUJGLDR133LLA196"
+  },
+  {
+   "vin": "1FUJGLDR134LLA218"
+  },
+  {
+   "vin": "1FUJGLDR135LLA863"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "PA",
+ "limit": 1000000
+}

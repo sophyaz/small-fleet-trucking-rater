@@ -1,0 +1,33 @@
+{
+ "submission_id": "basic_elevated_hos_nc",
+ "usdot": 9900017,
+ "drivers": [
+  {
+   "age": 35,
+   "cdl_years": 19
+  },
+  {
+   "age": 45,
+   "cdl_years": 24
+  },
+  {
+   "age": 55,
+   "cdl_years": 23
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR160LLA743"
+  },
+  {
+   "vin": "1FUJGLDR161LLA781"
+  },
+  {
+   "vin": "1FUJGLDR162LLA190"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "NC",
+ "limit": 1000000
+}

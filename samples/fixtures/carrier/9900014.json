@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900014,
+    "legalName": "SIX UNITS PA LLC",
+    "phyState": "PA",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 6,
+    "totalDrivers": 7,
+    "driverOosRate": 5.0,
+    "vehicleOosRate": 20.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 18,
+    "vehicleInsp": 20,
+    "crashTotal": 1,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 1,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2021-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 510000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "submission_id": "high_crash_la",
+ "usdot": 9900007,
+ "drivers": [
+  {
+   "age": 38,
+   "cdl_years": 11
+  },
+  {
+   "age": 44,
+   "cdl_years": 13
+  },
+  {
+   "age": 28,
+   "cdl_years": 6
+  },
+  {
+   "age": 46,
+   "cdl_years": 7
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR60LLA6994"
+  },
+  {
+   "vin": "1FUJGLDR61LLA6331"
+  },
+  {
+   "vin": "1FUJGLDR62LLA2090"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "LA",
+ "limit": 1000000
+}

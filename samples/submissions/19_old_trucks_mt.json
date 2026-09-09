@@ -1,0 +1,26 @@
+{
+ "submission_id": "old_trucks_mt",
+ "usdot": 9900020,
+ "drivers": [
+  {
+   "age": 49,
+   "cdl_years": 20
+  },
+  {
+   "age": 46,
+   "cdl_years": 8
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR190LLA574"
+  },
+  {
+   "vin": "1FUJGLDR191LLA690"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "logs_lumber",
+ "garaging_state": "MT",
+ "limit": 1000000
+}

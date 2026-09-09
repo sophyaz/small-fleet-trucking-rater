@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900010,
+    "legalName": "UNSAT RATING MO LLC",
+    "phyState": "MO",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 3,
+    "totalDrivers": 3,
+    "driverOosRate": 30.0,
+    "vehicleOosRate": 50.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 15,
+    "vehicleInsp": 18,
+    "crashTotal": 2,
+    "fatalCrash": 0,
+    "injCrash": 1,
+    "towawayCrash": 1,
+    "safetyRating": "UNSATISFACTORY",
+    "oosDate": null,
+    "addDate": "2019-09-10",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 255000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

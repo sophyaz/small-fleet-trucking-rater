@@ -1,0 +1,51 @@
+{
+ "submission_id": "conditional_rating_il",
+ "usdot": 9900009,
+ "drivers": [
+  {
+   "age": 52,
+   "cdl_years": 25
+  },
+  {
+   "age": 36,
+   "cdl_years": 14
+  },
+  {
+   "age": 30,
+   "cdl_years": 13
+  },
+  {
+   "age": 38,
+   "cdl_years": 4
+  },
+  {
+   "age": 58,
+   "cdl_years": 17
+  },
+  {
+   "age": 52,
+   "cdl_years": 7
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR80LLA1007"
+  },
+  {
+   "vin": "1FUJGLDR81LLA3748"
+  },
+  {
+   "vin": "1FUJGLDR82LLA7160"
+  },
+  {
+   "vin": "1FUJGLDR83LLA6209"
+  },
+  {
+   "vin": "1FUJGLDR84LLA1957"
+  }
+ ],
+ "radius": "intermediate_51_200",
+ "commodity": "general_freight",
+ "garaging_state": "IL",
+ "limit": 1000000
+}

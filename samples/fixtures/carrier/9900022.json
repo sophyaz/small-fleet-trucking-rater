@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900022,
+    "legalName": "INTERMODAL WA LLC",
+    "phyState": "WA",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 3,
+    "totalDrivers": 3,
+    "driverOosRate": 9.0,
+    "vehicleOosRate": 23.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 11,
+    "vehicleInsp": 13,
+    "crashTotal": 1,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 1,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2021-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 255000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

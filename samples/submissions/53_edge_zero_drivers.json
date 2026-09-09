@@ -1,0 +1,13 @@
+{
+ "submission_id": "zero_drivers",
+ "usdot": 9900005,
+ "driver_count": 0,
+ "units": [
+  {
+   "vin": "1FUJGLDR40LLA55555"
+  }
+ ],
+ "radius": "local",
+ "commodity": "dry_van",
+ "garaging_state": "OH"
+}

@@ -1,0 +1,40 @@
+{
+ "submission_id": "established_clean_tx",
+ "usdot": 9900002,
+ "drivers": [
+  {
+   "age": 47,
+   "cdl_years": 16
+  },
+  {
+   "age": 58,
+   "cdl_years": 18
+  },
+  {
+   "age": 48,
+   "cdl_years": 23
+  },
+  {
+   "age": 48,
+   "cdl_years": 9
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR10LLA2233"
+  },
+  {
+   "vin": "1FUJGLDR11LLA4976"
+  },
+  {
+   "vin": "1FUJGLDR12LLA2188"
+  },
+  {
+   "vin": "1FUJGLDR13LLA9315"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "reefer",
+ "garaging_state": "TX",
+ "limit": 1000000
+}

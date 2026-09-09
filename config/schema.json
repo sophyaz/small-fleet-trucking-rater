@@ -1,0 +1,17 @@
+{
+  "title": "Submission",
+  "type": "object",
+  "required": ["usdot"],
+  "properties": {
+    "submission_id": {"type": "string"},
+    "usdot": {"type": ["integer", "string"]},
+    "drivers": {"type": "array", "items": {"type": "object", "properties": {"age": {"type": "number"}, "cdl_years": {"type": "number"}, "years_with_carrier": {"type": "number"}}}},
+    "driver_count": {"type": "integer"},
+    "units": {"type": "array", "items": {"type": "object", "properties": {"vin": {"type": "string"}}}},
+    "radius": {"type": "string", "enum": ["local_0_50", "intermediate_51_200", "regional_201_500", "long_haul_500_plus"]},
+    "commodity": {"type": "string"},
+    "garaging_state": {"type": "string"},
+    "limit": {"type": "integer"},
+    "insurance_history": {"type": "object", "properties": {"cancellation_24m": {"type": "boolean"}, "prior_carrier": {"type": "string"}}}
+  }
+}

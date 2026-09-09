@@ -1,0 +1,38 @@
+{
+ "submission_id": "more_drivers_than_units_ny",
+ "usdot": 9900019,
+ "drivers": [
+  {
+   "age": 35,
+   "cdl_years": 5
+  },
+  {
+   "age": 29,
+   "cdl_years": 9
+  },
+  {
+   "age": 37,
+   "cdl_years": 15
+  },
+  {
+   "age": 44,
+   "cdl_years": 22
+  },
+  {
+   "age": 32,
+   "cdl_years": 6
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR180LLA190"
+  },
+  {
+   "vin": "1FUJGLDR181LLA639"
+  }
+ ],
+ "radius": "local_0_50",
+ "commodity": "dry_van",
+ "garaging_state": "NY",
+ "limit": 1000000
+}

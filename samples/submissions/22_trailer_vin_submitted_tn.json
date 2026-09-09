@@ -1,0 +1,26 @@
+{
+ "submission_id": "trailer_vin_submitted_tn",
+ "usdot": 9900023,
+ "drivers": [
+  {
+   "age": 39,
+   "cdl_years": 5
+  },
+  {
+   "age": 56,
+   "cdl_years": 8
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR220LLA194"
+  },
+  {
+   "vin": "1FUJGLDR221LLA693"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "TN",
+ "limit": 1000000
+}

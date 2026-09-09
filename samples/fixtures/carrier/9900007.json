@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900007,
+    "legalName": "HIGH CRASH LA LLC",
+    "phyState": "LA",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 3,
+    "totalDrivers": 4,
+    "driverOosRate": 22.0,
+    "vehicleOosRate": 45.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 9,
+    "vehicleInsp": 11,
+    "crashTotal": 4,
+    "fatalCrash": 0,
+    "injCrash": 2,
+    "towawayCrash": 2,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2022-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 255000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

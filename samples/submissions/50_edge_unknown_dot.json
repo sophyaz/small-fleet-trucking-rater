@@ -1,0 +1,12 @@
+{
+ "submission_id": "unknown_dot",
+ "usdot": 9999999,
+ "units": [
+  {
+   "vin": "1FUJGLDR11LLA12345"
+  }
+ ],
+ "radius": "regional",
+ "commodity": "dry van",
+ "garaging_state": "TX"
+}

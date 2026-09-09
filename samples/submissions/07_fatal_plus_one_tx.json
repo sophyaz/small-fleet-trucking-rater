@@ -1,0 +1,26 @@
+{
+ "submission_id": "fatal_plus_one_tx",
+ "usdot": 9900008,
+ "drivers": [
+  {
+   "age": 30,
+   "cdl_years": 4
+  },
+  {
+   "age": 55,
+   "cdl_years": 25
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR70LLA6248"
+  },
+  {
+   "vin": "1FUJGLDR71LLA4812"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "flatbed",
+ "garaging_state": "TX",
+ "limit": 1000000
+}

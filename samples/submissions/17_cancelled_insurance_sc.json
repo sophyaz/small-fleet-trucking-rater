@@ -1,0 +1,30 @@
+{
+ "submission_id": "cancelled_insurance_sc",
+ "usdot": 9900018,
+ "drivers": [
+  {
+   "age": 57,
+   "cdl_years": 10
+  },
+  {
+   "age": 51,
+   "cdl_years": 4
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR170LLA905"
+  },
+  {
+   "vin": "1FUJGLDR171LLA467"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "SC",
+ "limit": 1000000,
+ "insurance_history": {
+  "cancellation_24m": true,
+  "prior_carrier": "Progressive"
+ }
+}

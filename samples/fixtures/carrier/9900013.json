@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900013,
+    "legalName": "HAZMAT FLAG OK LLC",
+    "phyState": "OK",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 2,
+    "totalDrivers": 2,
+    "driverOosRate": 0.0,
+    "vehicleOosRate": 20.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 5,
+    "vehicleInsp": 5,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2020-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 170000,
+    "hazmatFlag": "Y",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

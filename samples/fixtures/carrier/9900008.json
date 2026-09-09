@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900008,
+    "legalName": "FATAL PLUS ONE TX LLC",
+    "phyState": "TX",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 2,
+    "totalDrivers": 2,
+    "driverOosRate": 12.0,
+    "vehicleOosRate": 30.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 8,
+    "vehicleInsp": 9,
+    "crashTotal": 2,
+    "fatalCrash": 1,
+    "injCrash": 0,
+    "towawayCrash": 1,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2021-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 170000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

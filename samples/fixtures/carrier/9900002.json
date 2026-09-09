@@ -1,0 +1,56 @@
+{
+ "_synthetic": true,
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900002,
+    "legalName": "ESTABLISHED CLEAN TX LLC",
+    "phyState": "TX",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 4,
+    "totalDrivers": 4,
+    "driverOosRate": 5.0,
+    "vehicleOosRate": 20.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 10,
+    "vehicleInsp": 12,
+    "crashTotal": 1,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 1,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2020-09-09",
+    "mcs150Date": "2026-02-02",
+    "mcs150Mileage": 340000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}
