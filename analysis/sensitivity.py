@@ -6,8 +6,8 @@ from rater.config import rates
 from rater.price import price
 
 SWINGS = [  # (label, path in cfg, low, high)
-    ("Crash rate / unit-yr", ["loss_cost", "crash_rate_per_unit_year"], 0.04, 0.09),
-    ("Crash->claim ratio", ["loss_cost", "crash_to_claim_ratio"], 0.9, 1.6),
+    ("Crash rate / unit-yr", ["loss_cost", "crash_rate_per_unit_year"], 0.036, 0.055),   # measured floor .. grossed-up + lag
+    ("Crash->claim ratio", ["loss_cost", "crash_to_claim_ratio"], 1.2, 3.4),              # market back-out range, MARKET_BENCHMARK.md
     ("Injury mean severity", ["loss_cost", "severity", "injury", "mean"], 90000, 220000),
     ("Fatal tail alpha (lower=fatter)", ["loss_cost", "severity", "fatal", "alpha"], 1.3, 2.2),
     ("Fatal share of crashes", ["loss_cost", "severity", "fatal", "share"], 0.008, 0.03),

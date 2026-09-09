@@ -1,0 +1,11 @@
+id,decision,rules,units,ours_total,ours_per_unit,tech_per_unit,min_binding,rel_product,obs_all_in,obs_liab,gap_vs_liab_pct,gap_vs_all_in_pct
+B01_progressive_transport_2025,price,,1,10952.91,10703,10702.91,False,1.4294,11112,7800,37.2,-3.7
+B02_progressive_specialty_2025,price,,1,8250,8000,5796.04,True,0.7741,8808,6200,29.0,-9.2
+B03_overdrive_castaldi_fl_reefer,price,,1,14708.92,14459,14458.92,False,1.931,15000,12000,20.5,-3.6
+B04_overdrive_poll_median_ga,price,,1,10475.39,10225,10225.39,False,1.3656,12500,12500,-18.2,-18.2
+B05_overdrive_new_authority_tx,refer,R01,1,13422.81,13173,13172.81,False,1.7593,14000,14000,-5.9,-5.9
+B06_freightwaves_established_in,price,,1,8250,8000,5349.81,True,0.7145,11250,11250,-28.9,-28.9
+B07_freightwaves_one_truck_il,price,,1,14675.47,14425,14425.47,False,1.9266,14500,12500,15.4,-0.5
+B08_atri_small_fleet_pa,price,,5,97763.94,19503,19502.79,False,2.6046,18137,18137,7.5,7.5
+B09_atri_industry_avg_wi,price,,3,24250,8000,6249.82,True,0.8347,8600,8600,-7.0,-7.0
+B10_geotab_small_fleet_nc,price,,3,29393.16,9714,9714.39,False,1.2974,14400,11500,-15.5,-32.5

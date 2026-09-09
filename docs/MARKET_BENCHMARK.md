@@ -2,7 +2,7 @@
 
 Primary auto liability, $1,000,000 CSL, for-hire trucking, 1–5 power units. Collected 2026-09-09. Feeds SOURCES.md row S16.
 
-**Status:** benchmark collected 2026-09-09; three calibration changes applied the same day (§ Applied changes). Before/after figures below.
+**Status:** benchmark collected 2026-09-09; three calibration changes applied the same day (§ Applied changes). Before/after figures below. The frequency anchor was then re-based on the crash file (crash rate 0.0625 → 0.045 [E], claims per crash 1.20 → 2.0, severity shares from crash flags); the table after that change is in § After the frequency re-basing.
 
 ## Method and caveats
 
@@ -75,6 +75,35 @@ Run: `python samples/make_benchmark_samples.py --run` (offline, fixtures). Our p
 - **Indexing to 2026-09 shifts everything about 5 points cheaper relative to market.** Median −5% becomes −11%. That is the ATRI premium trend still running at 6%; the config's own 8% severity trend already carries part of it, so this is not an argument for a further increase on its own.
 - **Small fleets still fit** (P8 −5%, P9 −7%, P10 −14%).
 - **P3 still reads high at +22%,** driven by vehicle age 1.20, two drivers 1.10 and venue 1.35 on a 39-year carrier with no tenure credit. That is the watch-list case, not a config change.
+
+## After the frequency re-basing (2026-09-09, later the same day)
+
+`config/rates.yaml`: `crash_rate_per_unit_year` 0.0625 → 0.045 [E], `crash_to_claim_ratio` 1.20 → 2.0 [S], severity shares 73.5 / 25 / 1.5 → 81.7 / 17.0 / 1.35 [E]. Rationale in `docs/RATIONALE.md` §4. The claims-per-crash value was chosen from this table: backing claim frequency out of the liability estimates (premium × 65% permissible ÷ 1.14 ALAE ÷ limited severity ÷ relativity product, at the measured crash rate for the profile's fleet size and tenure) gives 1.17 (P1), 1.95 (P4), 3.39 (P6), 2.32 (P7) and 2.82 (P9) claims per crash, median 2.3; because the industry runs above 100% combined those are floors. 2.0 holds the base loss cost within 1.4% of its pre-change value ($4,269 vs $4,328).
+
+| # | Per unit before re-basing | Per unit after | Floor binds? | Rel. product | Observed liab. est. | Gap vs liab. est. | Gap vs published |
+|---|---|---|---|---|---|---|---|
+| P1 | $10,851 | **$10,703** | no | 1.43 | $7,800 | +37% | −4% |
+| P2 | $8,000 | **$8,000** | yes | 0.77 | $6,200 | +29% | −9% |
+| P3 | $14,659 | **$14,459** | no | 1.93 | $12,000 | +21% | −4% |
+| P4 | $10,367 | **$10,225** | no | 1.37 | $12,500 | −18% | −18% |
+| P5 | $13,355 | **$13,173** | no | 1.76 | $14,000 | −6% | −6% |
+| P6 | $8,000 | **$8,000** | yes | 0.71 | $11,250 | −29% | −29% |
+| P7 | $14,625 | **$14,425** | no | 1.93 | $12,500 | +15% | −1% |
+| P8 | $17,167 | **$19,503** | no | 2.26 → 2.60 | $18,137 | +8% | +8% |
+| P9 | $8,000 | **$8,000** | yes | 0.83 | $8,600 | −7% | −7% |
+| P10 | $9,849 | **$9,714** | no | 1.30 | $11,500 | −16% | −33% |
+
+| Statistic (vs liability estimate) | Before re-basing | After |
+|---|---|---|
+| Median gap | −5.0% | +0.8% |
+| Mean gap | +3.0% | +3.4% |
+| Range | −29% to +39% | −29% to +37% |
+| Within ±20% | 6 of 10 | 6 of 10 |
+| Within ±20% vs published figure | 8 of 10 | 8 of 10 |
+
+Nine profiles moved by −1.4% (the base loss cost change). P8 is the exception: it carries one crash in 24 months, and the credibility surcharge measures that crash against the expected crash rate, which fell from 0.0625 to 0.045 — the same crash is now more surprising, so its own-experience relativity rose from 1.17 to 1.35. That is the intended behaviour of a lower, estimated base rate, and P8 stays inside the band.
+
+**Book impact** (offline book check): synthetic set −1.4% on clean risks, 86,512 max policy (was 76,182; a crash-surcharged 5-unit carrier); real-carrier sample total written premium $561k → $555k (−1.0%), floor binds on 2 of 34 written, unchanged.
 
 ## Reproduce
 

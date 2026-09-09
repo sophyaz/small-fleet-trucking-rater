@@ -1,4 +1,6 @@
-# Proposed [E] values from census × crash file — 2026-09-09 (NOT applied to config/rates.yaml)
+# Proposed [E] values from census × crash file — 2026-09-09
+
+**Status:** §1 crash rate **applied 2026-09-09** (0.045, range [0.036, 0.055]) jointly with `crash_to_claim_ratio` 1.20 → 2.0 and the severity shares (fatal 2.7% / injury 34% per crash ÷ 2.0 per claim) — see `docs/RATIONALE.md` §4–§5. §2 authority age: not applied, by design. §3 fleet size 1.18: proposed, not applied. §4 venue: not applied (frequency vs severity).
 
 Inputs: `data/raw/census.csv` (S3, SMS census input, 2,113,851 carriers) and `data/raw/crash_2023..2026.csv` (S4, 648,193 rows).
 Segment: interstate (`carrier_operation = A`), `authorized_for_hire`, not HM, not passenger, 1–5 power units → **394,864 carriers**.

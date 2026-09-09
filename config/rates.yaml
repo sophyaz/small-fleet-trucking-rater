@@ -15,14 +15,25 @@ meta:
 # Base segment: for-hire, 2-5 units, authority 3+ yrs, dry van, radius 51-200,
 # neutral venue state, average OOS, no crashes, drivers == units.
 loss_cost:
-  crash_rate_per_unit_year: 0.0625          # [S/B] DOT-recordable crashes per power-unit-year, base segment. VERIFY: measured 0.0363 (2-5 units, 3y+) / 0.0452 grossed up for unmatched crashes, docs/FREQUENCY_PROPOSAL_2026-09-09.md. Apply jointly with crash_to_claim_ratio: only the product is identified by market data
-  crash_rate_range: [0.04, 0.09]
-  crash_to_claim_ratio: 1.20                # [S] liability claims per DOT-recordable crash (adds non-recordable claims, removes not-at-fault). VERIFY vs any claims benchmark
-  # claim frequency = crash_rate x crash_to_claim_ratio  (= 0.075 at defaults)
+  # [E] 2026-09-09 (was 0.0625 [S/B]): census x crash file, base segment 2-5 units / authority 3y+, measured 0.0363
+  # (SE 0.0002, 30,775 crashes) grossed up by 1/0.802 for recordable crash rows with no DOT -> 0.0452.
+  # docs/FREQUENCY_PROPOSAL_2026-09-09.md section 1. Range = measured floor .. grossed-up + reporting-lag allowance.
+  crash_rate_per_unit_year: 0.045
+  crash_rate_range: [0.036, 0.055]
+  # [S] 2026-09-09 (was 1.20): liability claims per DOT-recordable crash (adds non-recordable third-party claims, removes
+  # not-at-fault). Only crash_rate x this ratio is identified: backing claim frequency out of the 2025-26 market price
+  # points (docs/MARKET_BENCHMARK.md, 65% permissible / 1.14 ALAE / limited severity / relativity) gives 1.2-3.4 claims
+  # per crash, median 2.3, and industry combined ratios above 100% make that a floor. 2.0 holds the base loss cost
+  # within 1.4% of the pre-change value ($4,269 vs $4,328). VERIFY against bound-book claims-per-crash from month one.
+  crash_to_claim_ratio: 2.0
+  # claim frequency = crash_rate x crash_to_claim_ratio  (= 0.090 at defaults)
   severity:                                 # ground-up mixture; limited mean computed numerically in rater/losscost.py
-    pdo:    {share: 0.735, dist: lognormal, mean: 18000,   cv: 1.2}
-    injury: {share: 0.250, dist: lognormal, mean: 140000,  cv: 2.5}
-    fatal:  {share: 0.015, dist: pareto,    threshold: 250000, alpha: 1.6}
+    # [E] shares 2026-09-09 (were 0.735 / 0.250 / 0.015 [S/B]): crash file gives fatal 2.7% and injury 34% of recordable
+    # crashes in the base segment; per CLAIM = share / crash_to_claim_ratio, assuming the extra non-recordable claims
+    # are property-damage-only. Means, CVs, threshold and alpha unchanged [S/B].
+    pdo:    {share: 0.8165, dist: lognormal, mean: 18000,   cv: 1.2}
+    injury: {share: 0.170,  dist: lognormal, mean: 140000,  cv: 2.5}
+    fatal:  {share: 0.0135, dist: pareto,    threshold: 250000, alpha: 1.6}
   severity_trend_annual: 0.08               # [B] ATRI social inflation / verdict growth. VERIFY
   trend_years: 1.5
 
