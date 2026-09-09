@@ -2,9 +2,10 @@
 # Conditions evaluate over the feature dict built in rater/features.py. Missing field => condition is False.
 rules:
   - {id: D01, action: decline, reason: "USDOT not found / no carrier record", when: {field: carrier_found, op: eq, value: false}}
-  - {id: D02, action: decline, reason: "Not allowed to operate / authority inactive", when: {field: allowed_to_operate, op: eq, value: false}}
+  - {id: D02, action: decline, reason: "Not allowed to operate (OOS order / revocation)", when: {field: allowed_to_operate, op: eq, value: false}}
   - {id: D03, action: decline, reason: "Federal out-of-service order in force", when: {field: oos_order, op: eq, value: true}}
   - {id: D04, action: decline, reason: "Safety rating Unsatisfactory", when: {field: safety_rating, op: in, value: [UNSATISFACTORY]}}
+  - {id: D05, action: decline, reason: "USDOT registration inactive (statusCode != A)", when: {field: usdot_status_active, op: eq, value: false}}
   - {id: D10, action: decline, reason: "Power units outside 1-5", when: {field: power_units, op: not_between, value: [1, 5]}}
   - {id: D11, action: decline, reason: "Hazmat / tanker / passenger / HHG / auto-hauler out of appetite", when: {field: out_of_appetite_commodity, op: eq, value: true}}
   - {id: D12, action: decline, reason: "Not a for-hire interstate carrier", when: {field: for_hire_interstate, op: eq, value: false}}
@@ -21,3 +22,5 @@ rules:
   - {id: R04, action: refer, reason: "MCS-150 not updated in > 2 years", when: {field: mcs150_age_years, op: gt, value: 2}}
   - {id: R05, action: refer, reason: "Zero drivers declared", when: {field: drivers, op: lte, value: 0}}
   - {id: R06, action: refer, reason: "Chameleon signal: shared address/phone with revoked carrier", when: {field: chameleon_flag, op: eq, value: true}}
+  - {id: R07, action: refer, reason: "No active common/contract for-hire authority on file", when: {field: active_for_hire_authority, op: eq, value: false}}
+  - {id: R08, action: refer, reason: "DOT absent from FMCSA census snapshot (new registration or inactive)", when: {field: in_census, op: eq, value: false}}

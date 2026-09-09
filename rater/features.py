@@ -34,11 +34,20 @@ def build(sub: dict, car: dict, vins: list, cfg=None) -> dict:
         f["flags"].append("units_defaulted_to_1")
     f["drivers"] = _first(sub.get("driver_count"), car.get("drivers") if found else None, f["power_units"])
     f["driver_unit_ratio"] = (f["drivers"] / f["power_units"]) if f["power_units"] else 1.0
-    f["unit_count_mismatch"] = bool(sub.get("declared_units") and census_units and
+    # census 0 is a real value (dormant / stale MCS-150), so test `is not None`, not truthiness
+    f["unit_count_mismatch"] = bool(sub.get("declared_units") is not None and census_units is not None and
                                     (abs(sub["declared_units"] - census_units) > 3 or
                                      max(sub["declared_units"], census_units) > 2 * min(sub["declared_units"], census_units)))
+    if found and census_units == 0:
+        f["flags"].append("census_units_zero")
     # authority / status
     f["allowed_to_operate"] = car.get("allowed_to_operate", True) if found else True
+    # allowedToOperate only reflects OOS orders / revocation; an inactive USDOT registration still says "Y"
+    f["usdot_status_active"] = (str(car.get("status_code") or "A").upper() == "A") if found else True
+    # enrich returns None when the signal is unavailable (synthetic fixture, no census file); None = no signal
+    f["active_for_hire_authority"] = _first(car.get("active_for_hire_authority"), True) if found else True
+    # census snapshot holds active carriers only; absence = registered after the snapshot or inactive
+    f["in_census"] = _first(car.get("in_census"), True) if found else True
     f["oos_order"] = bool(car.get("oos_date")) if found else False
     f["safety_rating"] = car.get("safety_rating") if found else None
     f["authority_age_years"] = _years_since(car.get("add_date")) if found else None
