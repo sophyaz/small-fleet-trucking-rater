@@ -38,7 +38,7 @@ All three in `config/rates.yaml`; the second and third also needed a few lines i
 2. **Stack cap:** the product of authority age × venue × radius is capped at 2.0 before the other factors apply. Uncapped it reached 2.75 on P5 ($20.9k against a published $8–20k band). Tag [S].
 3. **Mileage intensity is not applied when radius is long haul.** Both proxy the same exposure and fired together on P1, P3, P5 and P10. Tag [S].
 
-**Watch list, not applied** (one named renewal each, see RATIONALE.md §7): tenure credit above 3 years; vehicle age 1.20 on 20+ year trucks; 8% severity trend vs ATRI's 4–6% premium trend.
+**Watch list, not applied** (one named renewal each, see RATIONALE.md §7): tenure credit above 3 years; vehicle age 1.20 on 20+ year trucks. The third item, 8% severity trend vs ATRI's 4–6% premium trend, was applied later the same day (trend → 6%, see § After the frequency re-basing).
 
 ## Our price vs observed — before and after
 
@@ -104,6 +104,25 @@ Run: `python samples/make_benchmark_samples.py --run` (offline, fixtures). Our p
 Nine profiles moved by −1.4% (the base loss cost change). P8 is the exception: it carries one crash in 24 months, and the credibility surcharge measures that crash against the expected crash rate, which fell from 0.0625 to 0.045 — the same crash is now more surprising, so its own-experience relativity rose from 1.17 to 1.35. That is the intended behaviour of a lower, estimated base rate, and P8 stays inside the band.
 
 **Book impact** (offline book check): synthetic set −1.4% on clean risks, 86,512 max policy (was 76,182; a crash-surcharged 5-unit carrier); real-carrier sample total written premium $561k → $555k (−1.0%), floor binds on 2 of 34 written, unchanged.
+
+### Severity trend 8% → 6% (applied after the re-basing)
+
+Trend factor 1.122 → 1.091, so every technical premium moves −2.75%; floor-bound profiles do not move. Current figures (`data/derived/market_benchmark.csv`):
+
+| # | Per unit | Gap vs liab. est. | Gap vs published |
+|---|---|---|---|
+| P1 | $10,407 | +33% | −6% |
+| P2 | $8,000 (floor) | +29% | −9% |
+| P3 | $14,059 | +17% | −6% |
+| P4 | $9,943 | −21% | −21% |
+| P5 | $12,809 | −9% | −9% |
+| P6 | $8,000 (floor) | −29% | −29% |
+| P7 | $14,027 | +12% | −3% |
+| P8 | $18,964 | +5% | +5% |
+| P9 | $8,000 (floor) | −7% | −7% |
+| P10 | $9,446 | −18% | −34% |
+
+Median gap −1.2%, mean +1.4%, range −29% to +33%; 6 of 10 within ±20% of the liability estimate (P4 at −20.5% just outside), 7 of 10 within ±20% of the published figure. Real-carrier sample: written premium $555k → $542k (−2.4%), floor binds on 4 of 34 written (was 2).
 
 ## Reproduce
 

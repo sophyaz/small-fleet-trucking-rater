@@ -9,8 +9,8 @@ Rendered from `config/rates.yaml`. Do not edit by hand.
 ## 2. Base loss cost (per power-unit-year, base segment)
 - DOT-recordable crash rate: 0.045 / unit-year (range [0.036, 0.055]) × 2.0 claims per crash = 0.0900 claims / unit-year
 - Limited severity at base limit: $42,265 (mixture: pdo 81.7% lognormal; injury 17.0% lognormal; fatal 1.4% pareto)
-- Trend: 8% p.a. × 1.5 yrs = 1.122
-- **Base loss cost = $4,269 / unit-year**
+- Trend: 6% p.a. × 1.5 yrs = 1.091
+- **Base loss cost = $4,151 / unit-year**
 
 ## 3. Relativities (multiplicative, product capped to [0.6, 3.25])
 - Authority age (yrs): ≤1: 1.65, ≤3: 1.25, ≤99: 1.0

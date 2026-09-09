@@ -34,7 +34,10 @@ loss_cost:
     pdo:    {share: 0.8165, dist: lognormal, mean: 18000,   cv: 1.2}
     injury: {share: 0.170,  dist: lognormal, mean: 140000,  cv: 2.5}
     fatal:  {share: 0.0135, dist: pareto,    threshold: 250000, alpha: 1.6}
-  severity_trend_annual: 0.08               # [B] ATRI social inflation / verdict growth. VERIFY
+  # [B] 2026-09-09 (was 0.08): ATRI as reported in trade press - serious-case settlements +5.7% p.a., median nuclear
+  # verdict +50% 2013-2022 (~4.6% p.a.), liability premium trend +3.9% (2025) / +6.4% (Q1-2026). 6% sits inside that band;
+  # 8% was above every published series. VERIFY the settlement and verdict figures against the ATRI PDFs (SOURCES S12).
+  severity_trend_annual: 0.06
   trend_years: 1.5
 
 credibility:
