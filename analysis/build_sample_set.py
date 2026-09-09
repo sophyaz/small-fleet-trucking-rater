@@ -22,11 +22,13 @@ def main():
     samp = pd.concat(rows)
     out = os.path.join(ROOT, "samples", "submissions_real"); os.makedirs(out, exist_ok=True)
     for _, r in samp.iterrows():
-        sub = {"submission_id": f"real-{int(r.dot)}", "usdot": int(r.dot), "driver_count": int(r.get("drivers") or r.units),
-               "units": [], "radius": "intermediate_51_200", "commodity": "dry_van", "garaging_state": str(r.state),
+        dot = int(r["dot"])   # r.dot is the Series.dot() method, not the column
+        drivers = pd.to_numeric(r.get("drivers"), errors="coerce")
+        sub = {"submission_id": f"real-{dot}", "usdot": dot, "driver_count": int(drivers if pd.notna(drivers) and drivers > 0 else r["units"]),
+               "units": [], "radius": "intermediate_51_200", "commodity": "dry_van", "garaging_state": str(r["state"]),
                "limit": 1000000, "_note": "radius/commodity defaulted; VINs not public — add from submission if given"}
-        with open(os.path.join(out, f"{int(r.dot)}.json"), "w") as f: json.dump(sub, f, indent=1)
-        if not a.no_enrich: enrich.fetch_carrier(int(r.dot))
+        with open(os.path.join(out, f"{dot}.json"), "w") as f: json.dump(sub, f, indent=1)
+        if not a.no_enrich: enrich.fetch_carrier(dot)
     print(f"wrote {len(samp)} real-carrier submissions to {out}")
 
 if __name__ == "__main__":

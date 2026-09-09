@@ -1,0 +1,11 @@
+{
+ "submission_id": "real-4405689",
+ "usdot": 4405689,
+ "driver_count": 1,
+ "units": [],
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "PA",
+ "limit": 1000000,
+ "_note": "radius/commodity defaulted; VINs not public \u2014 add from submission if given"
+}

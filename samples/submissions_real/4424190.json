@@ -1,0 +1,11 @@
+{
+ "submission_id": "real-4424190",
+ "usdot": 4424190,
+ "driver_count": 2,
+ "units": [],
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "TX",
+ "limit": 1000000,
+ "_note": "radius/commodity defaulted; VINs not public \u2014 add from submission if given"
+}

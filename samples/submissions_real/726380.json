@@ -1,0 +1,11 @@
+{
+ "submission_id": "real-726380",
+ "usdot": 726380,
+ "driver_count": 2,
+ "units": [],
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "IA",
+ "limit": 1000000,
+ "_note": "radius/commodity defaulted; VINs not public \u2014 add from submission if given"
+}

@@ -1,0 +1,11 @@
+{
+ "submission_id": "real-4502893",
+ "usdot": 4502893,
+ "driver_count": 1,
+ "units": [],
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "NY",
+ "limit": 1000000,
+ "_note": "radius/commodity defaulted; VINs not public \u2014 add from submission if given"
+}
