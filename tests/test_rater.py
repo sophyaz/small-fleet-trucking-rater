@@ -113,6 +113,27 @@ def test_placeholder_mileage_gets_no_discount():
     f = features.build(sub, _live_shaped_carrier(mcs150_mileage=60000), [], cfg)   # 20k per unit on 3 units: real low mileage
     assert f["mileage_per_unit"] == 20000 and "mcs150_mileage_implausible" not in f["flags"]
 
+def test_vpic_live_shapes_classify_correctly():
+    """Field strings copied from live vPIC batch responses 2026-09-09 (data/raw/vpic_sample.json)."""
+    from rater import enrich, features
+    C8 = "Class 8: 33,001 lb and above (14,969 kg and above)"
+    live = {
+        "1FUJGLDR3CLBP8834": {"Make": "FREIGHTLINER", "Model": "Cascadia", "ModelYear": "2012", "GVWR": C8, "BodyClass": "Truck-Tractor", "VehicleType": "TRUCK", "ErrorCode": "0"},
+        "1XKYDP9XXFJ440749": {"Make": "KENWORTH", "Model": "T680", "ModelYear": "2015", "GVWR": C8, "BodyClass": "Truck-Tractor", "VehicleType": "TRUCK", "ErrorCode": "0"},
+        "1JJV532D9JL178490": {"Make": "WABASH VANS", "Model": "Dry Van Duraplate", "ModelYear": "2018", "GVWR": "", "BodyClass": "Trailer", "VehicleType": "TRAILER", "ErrorCode": "0"},
+        "1FTFW1ET9DFC10312": {"Make": "FORD", "Model": "F-150", "ModelYear": "2013", "GVWR": "Class 2F: 7,001 - 8,000 lb (3,175 - 3,629 kg)", "BodyClass": "Pickup", "VehicleType": "TRUCK", "ErrorCode": "0"},
+        # garbage string: vPIC still returns a Make and VehicleType=TRAILER, with code 400 (invalid characters)
+        "12345678901234567": {"Make": "SHERMAN + REILLY", "Model": "", "ModelYear": "", "GVWR": "", "BodyClass": "", "VehicleType": "TRAILER", "ErrorCode": "1,11,14,400"},
+    }
+    p = {v: enrich._parse_vin(v, r) for v, r in live.items()}
+    assert [p[v]["decoded"] for v in live] == [True, True, True, True, False]
+    assert not features._is_non_commercial(p["1FUJGLDR3CLBP8834"]) and not features._is_non_commercial(p["1XKYDP9XXFJ440749"])
+    assert features._is_non_commercial(p["1JJV532D9JL178490"]) and features._is_non_commercial(p["1FTFW1ET9DFC10312"])
+    # check-digit-only error (typo'd VIN) still decodes; class 3+ pickups stay commercial; SUVs (MPV) do not
+    assert enrich._parse_vin("X", {"Make": "PETERBILT", "ErrorCode": "1"})["decoded"]
+    assert not features._is_non_commercial({"vehicle_type": "TRUCK", "body_class": "Pickup", "gvwr": "Class 3: 10,001 - 14,000 lb (4,536 - 6,350 kg)"})
+    assert features._is_non_commercial({"vehicle_type": "MULTIPURPOSE PASSENGER VEHICLE (MPV)", "body_class": "Sport Utility Vehicle (SUV)/Multi-Purpose Vehicle (MPV)", "gvwr": "Class 1D: 5,001 - 6,000 lb (2,268 - 2,722 kg)"})
+
 def test_monotone_new_venture_costs_more():
     base = json.load(open(os.path.join(SUBS, "00_established_clean_ia.json")))
     cfg = rates(); import copy

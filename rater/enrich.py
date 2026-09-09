@@ -262,10 +262,23 @@ def _pct(v):
     return None if v is None else v / 100.0
 
 # ---------------- NHTSA vPIC ----------------
+# vPIC batch schema VERIFIED 2026-09-09 (raw JSON in data/raw/vpic_sample.json: 2 Class 8 tractors, 1 trailer, 1 pickup,
+# 1 malformed string). Field values seen live:
+#   VehicleType  UPPER: "TRUCK", "TRAILER" (also "PASSENGER CAR", "MULTIPURPOSE PASSENGER VEHICLE (MPV)", "MOTORCYCLE", "BUS", ...)
+#   BodyClass    Title: "Truck-Tractor", "Trailer", "Pickup"
+#   GVWR         "Class 8: 33,001 lb and above (14,969 kg and above)", "Class 2F: 7,001 - 8,000 lb (...)"; EMPTY for trailers
+#   ErrorCode    comma-separated, "0" clean. A GARBAGE string ("12345678901234567") still returns Make="SHERMAN + REILLY",
+#                VehicleType="TRAILER" with ErrorCode "1,11,14,400" -- so Make alone must not mean "decoded".
+# Error codes that mean the decode is not trustworthy (per vPIC error-code list): 5 errors in several positions,
+# 6 incomplete VIN, 7 manufacturer not registered with NHTSA, 8 no detailed data, 400 invalid characters.
+# 1 (check digit), 11 (model-year char), 14 (some positions unknown) are warnings; the WMI/VDS decode is still usable.
+VPIC_FATAL_CODES = {"5", "6", "7", "8", "400"}
+
 def decode_vins(vins: list) -> list:
-    """Returns list of dicts per VIN: vin, model_year, make, model, gvwr_class, body_class, vehicle_type, decoded(bool)."""
+    """Returns list of dicts per VIN: vin, model_year, make, model, gvwr, body_class, vehicle_type, error_code, decoded(bool)."""
     out, todo = {}, []
-    for v in vins:
+    norm = {v: str(v or "").strip().upper() for v in vins}
+    for v in set(norm.values()):
         c = _read("vin", v)
         if c: out[v] = c
         else: todo.append(v)
@@ -277,16 +290,18 @@ def decode_vins(vins: list) -> list:
                 r = requests.post(VPIC_BATCH, data={"format": "json", "data": ";".join(batch)}, timeout=20)
                 r.raise_for_status()
                 for res in r.json().get("Results", []):
-                    v = res.get("VIN", "").upper()
+                    v = str(res.get("VIN") or "").strip().upper()
                     parsed = _parse_vin(v, res)
                     _write("vin", v, parsed); out[v] = parsed
         except Exception as e:
             pass  # degrade below
-    return [out.get(v, {"vin": v, "decoded": False}) for v in vins]
+    return [out.get(norm[v], {"vin": v, "decoded": False}) for v in vins]
 
 def _parse_vin(v, res):
     gvwr = str(res.get("GVWR") or "")
-    return {"vin": v, "decoded": bool(res.get("Make")), "make": res.get("Make"), "model": res.get("Model"),
+    codes = {c.strip() for c in str(res.get("ErrorCode") or "").split(",") if c.strip()}
+    decoded = bool(res.get("Make")) and not (codes & VPIC_FATAL_CODES)
+    return {"vin": v, "decoded": decoded, "make": res.get("Make"), "model": res.get("Model"),
             "model_year": _int(res.get("ModelYear")), "gvwr": gvwr, "body_class": res.get("BodyClass"),
             "vehicle_type": res.get("VehicleType"), "error_code": res.get("ErrorCode")}
 

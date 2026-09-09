@@ -1,5 +1,5 @@
 """Turn (normalised submission, carrier enrichment, VIN decodes) into a flat feature dict used by rules and pricing."""
-import datetime as dt
+import datetime as dt, re
 from .config import rates
 
 def _years_since(s, today=None):
@@ -129,11 +129,17 @@ def build(sub: dict, car: dict, vins: list, cfg=None) -> dict:
     f["chameleon_flag"] = False   # VERIFY/TODO: analysis/chameleon.py builds address->revoked-DOT index from census file
     return f
 
+_LIGHT_GVWR = re.compile(r"\bCLASS\s*[12][A-H]?\b")   # vPIC: "Class 1A".."Class 1D", "Class 2E".."Class 2H" (<=10,000 lb)
+
 def _is_non_commercial(v):
+    """True for VINs that are not a rated power unit: trailers, cars/SUVs/motorcycles, and light-duty (GVWR class 1-2)
+    pickups/vans. Class 3+ pickups (F-350 etc.) stay commercial: hotshot fleets run them. Verified against live vPIC
+    strings 2026-09-09 (see data/raw/vpic_sample.json): VehicleType is UPPER, BodyClass Title-case, GVWR empty for trailers."""
     vt = str(v.get("vehicle_type") or "").upper()
     bc = str(v.get("body_class") or "").upper()
     gv = str(v.get("gvwr") or "").upper()
     if "TRAILER" in vt or "TRAILER" in bc: return True
-    if "PASSENGER CAR" in vt or "MOTORCYCLE" in vt: return True
-    if "CLASS 1" in gv or "CLASS 2" in gv: return True   # pickups / light duty
+    if any(k in vt for k in ("PASSENGER CAR", "MULTIPURPOSE PASSENGER VEHICLE", "MOTORCYCLE", "LOW SPEED VEHICLE", "OFF ROAD")):
+        return True
+    if _LIGHT_GVWR.search(gv): return True   # pickups / light duty
     return False
