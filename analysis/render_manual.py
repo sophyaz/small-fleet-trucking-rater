@@ -32,7 +32,7 @@ def main():
              f"- Avg vehicle age (vPIC): {band(R['vehicle_age_years_avg'])}",
              f"- Driver OOS ratio to segment avg (≥{R['oos_ratio_to_segment_avg']['min_inspections']} inspections): {band(R['oos_ratio_to_segment_avg']['driver'])}",
              f"- Vehicle OOS ratio: {band(R['oos_ratio_to_segment_avg']['vehicle'])}",
-             "- BASIC percentiles (where public): " + "; ".join(f"{k}: {band(v)}" for k, v in R["basic_percentile"].items()),
+             "- BASIC percentiles (**dormant on live data** — QCMobile returns \"Not Public\" for property carriers; applies only when a percentile is supplied another way): " + "; ".join(f"{k}: {band(v)}" for k, v in R["basic_percentile"].items()),
              f"- MCS-150 age (yrs): {band(R['mcs150_stale_years'])}",
              f"- MCS-150 mileage per unit: {band(R['mileage_intensity'])}; below {R.get('mileage_min_plausible_per_unit', 0):,} treated as unknown (1.00)"
              + (f"; not applied when radius is {', '.join(R['mileage_intensity_skip_radii'])}" if R.get("mileage_intensity_skip_radii") else ""),

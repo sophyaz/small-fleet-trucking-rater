@@ -103,6 +103,11 @@ relativities:
       - {max: 1.5, factor: 1.00}
       - {max: 3.0, factor: 1.10}
       - {max: 99,  factor: 1.20}
+  # DORMANT on live data (2026-09-09): QCMobile returns basicsPercentile "Not Public" for property carriers (53 of 53
+  # live-enriched carriers; FAST Act 2015), so these bands and rule D24 only fire from a percentile supplied some other way
+  # (PSP / carrier-submitted SMS login). The API does return measureValue and basicsViolationThreshold per BASIC; a
+  # measure-based band is the replacement. The 2025-26 SMS overhaul also renamed BASICs to "compliance categories",
+  # folded controlled substances into unsafe driving and split vehicle maintenance (SOURCES.md S7, unconfirmed).
   basic_percentile:
     unsafe_driving: [{max: 50, factor: 1.00}, {max: 65, factor: 1.10}, {max: 100, factor: 1.30}]
     hos_compliance: [{max: 50, factor: 1.00}, {max: 65, factor: 1.08}, {max: 100, factor: 1.20}]

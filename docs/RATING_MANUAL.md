@@ -23,7 +23,7 @@ Rendered from `config/rates.yaml`. Do not edit by hand.
 - Avg vehicle age (vPIC): ≤5: 0.95, ≤12: 1.0, ≤20: 1.1, ≤99: 1.2
 - Driver OOS ratio to segment avg (≥3 inspections): ≤0.5: 0.95, ≤1.5: 1.0, ≤3.0: 1.15, ≤99: 1.3
 - Vehicle OOS ratio: ≤0.5: 0.95, ≤1.5: 1.0, ≤3.0: 1.1, ≤99: 1.2
-- BASIC percentiles (where public): unsafe_driving: ≤50: 1.0, ≤65: 1.1, ≤100: 1.3; hos_compliance: ≤50: 1.0, ≤65: 1.08, ≤100: 1.2; vehicle_maintenance: ≤50: 1.0, ≤80: 1.05, ≤100: 1.12; driver_fitness: ≤50: 1.0, ≤80: 1.03, ≤100: 1.08; controlled_substances: ≤50: 1.0, ≤80: 1.1, ≤100: 1.3
+- BASIC percentiles (**dormant on live data** — QCMobile returns "Not Public" for property carriers; applies only when a percentile is supplied another way): unsafe_driving: ≤50: 1.0, ≤65: 1.1, ≤100: 1.3; hos_compliance: ≤50: 1.0, ≤65: 1.08, ≤100: 1.2; vehicle_maintenance: ≤50: 1.0, ≤80: 1.05, ≤100: 1.12; driver_fitness: ≤50: 1.0, ≤80: 1.03, ≤100: 1.08; controlled_substances: ≤50: 1.0, ≤80: 1.1, ≤100: 1.3
 - MCS-150 age (yrs): ≤2: 1.0, ≤99: 1.08
 - MCS-150 mileage per unit: ≤30000: 0.9, ≤90000: 1.0, ≤140000: 1.08, ≤9000000000: 1.15; below 5,000 treated as unknown (1.00); not applied when radius is long_haul_500_plus
 - Stack cap: product of authority_age × venue_state × radius capped at 2.0 before the other factors apply
