@@ -95,6 +95,8 @@ relativities:
   mcs150_stale_years:
     - {max: 2,  factor: 1.00}
     - {max: 99, factor: 1.08}
+  # [S] MCS-150 mileage per unit below this is a placeholder (1, 2, 30 miles seen on 6 of 45 real carriers) -> treated as unknown, factor 1.00
+  mileage_min_plausible_per_unit: 5000
   mileage_intensity:
     - {max: 30000,  factor: 0.90}
     - {max: 90000,  factor: 1.00}

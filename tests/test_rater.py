@@ -64,6 +64,55 @@ def test_inactive_registration_and_authority_rules():
     f = features.build(sub, _live_shaped_carrier(active_for_hire_authority=None, in_census=None), [])
     assert f["active_for_hire_authority"] is True and f["in_census"] is True
 
+def test_empty_operation_classification_is_unknown_not_private():
+    """Real DOTs 4634703, 5509576, ... (June-July 2026 registrations): QCMobile returns [] for operation-classification.
+    That must not fire D12; positive evidence of private / intrastate operation still must."""
+    from rater import features
+    sub = ingest.normalise(json.load(open(os.path.join(SUBS, "00_established_clean_ia.json"))))
+    f = features.build(sub, _live_shaped_carrier(operation_classification=[], common_authority_status=None,
+                                                 census_authorized_for_hire=True), [])
+    assert f["for_hire_interstate"] is True and "operation_classification_missing" in f["flags"]
+    r = rules.evaluate(f); ids = {x["id"] for x in r["rules_fired"]}
+    assert "D12" not in ids and "R09" in ids and r["decision"] == "refer"
+    f = features.build(sub, _live_shaped_carrier(operation_classification=["private property"]), [])
+    assert f["for_hire_interstate"] is False
+    f = features.build(sub, _live_shaped_carrier(carrier_operation="Intrastate Non-Hazmat"), [])
+    assert f["for_hire_interstate"] is False   # was never caught before: desc is title-case, check was lower-case
+    f = features.build(sub, _live_shaped_carrier(operation_classification=[], census_authorized_for_hire=False), [])
+    assert f["for_hire_interstate"] is False
+
+def test_lapsed_authority_declines_pending_applicant_refers():
+    from rater import features
+    sub = ingest.normalise(json.load(open(os.path.join(SUBS, "00_established_clean_ia.json"))))
+    # real DOT 3987512 shape: common I, contract N, bipdInsuranceOnFile 0 -> authority revoked, decline
+    lapsed = _live_shaped_carrier(bipd_insurance_on_file_k=0.0, bipd_required_k=750.0, active_for_hire_authority=False,
+                                  common_authority_status="I", contract_authority_status="N")
+    r = rules.evaluate(features.build(sub, lapsed, []))
+    assert r["decision"] == "decline" and any(x["id"] == "D25" for x in r["rules_fired"])
+    # real DOT 4529032 shape: N/N with no filing = applicant waiting on a BMC-91 -> refer only
+    pending = _live_shaped_carrier(bipd_insurance_on_file_k=0.0, bipd_required_k=750.0, active_for_hire_authority=False,
+                                   common_authority_status="N", contract_authority_status="N")
+    r = rules.evaluate(features.build(sub, pending, []))
+    assert r["decision"] == "refer" and not any(x["id"] == "D25" for x in r["rules_fired"])
+    # inactive authority but a filing IS on record (reinstatement in progress) -> not D25
+    r = rules.evaluate(features.build(sub, _live_shaped_carrier(bipd_insurance_on_file_k=750.0, common_authority_status="I"), []))
+    assert not any(x["id"] == "D25" for x in r["rules_fired"])
+    # unknown filing (synthetic fixture) never fires
+    r = rules.evaluate(features.build(sub, _live_shaped_carrier(bipd_insurance_on_file_k=None, common_authority_status="I"), []))
+    assert not any(x["id"] == "D25" for x in r["rules_fired"])
+
+def test_placeholder_mileage_gets_no_discount():
+    from rater import features
+    from rater.price import relativities
+    sub = ingest.normalise(json.load(open(os.path.join(SUBS, "00_established_clean_ia.json"))))
+    cfg = rates()
+    f = features.build(sub, _live_shaped_carrier(mcs150_mileage=1), [], cfg)
+    assert f["mileage_per_unit"] is None and "mcs150_mileage_implausible" in f["flags"]
+    f["cred_rate_relativity"], f["cred_Z"] = 1.0, 0.0
+    assert relativities(f, cfg)["mileage_intensity"] == (1.0, "n/a")
+    f = features.build(sub, _live_shaped_carrier(mcs150_mileage=60000), [], cfg)   # 20k per unit on 3 units: real low mileage
+    assert f["mileage_per_unit"] == 20000 and "mcs150_mileage_implausible" not in f["flags"]
+
 def test_monotone_new_venture_costs_more():
     base = json.load(open(os.path.join(SUBS, "00_established_clean_ia.json")))
     cfg = rates(); import copy

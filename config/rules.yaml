@@ -14,6 +14,11 @@ rules:
   - {id: D22, action: decline, reason: "Driver OOS rate > 3x segment avg with >= 5 inspections", when: {all: [{field: driver_oos_ratio, op: gt, value: 3.0}, {field: driver_inspections, op: gte, value: 5}]}}
   - {id: D23, action: decline, reason: "Insurance cancelled / coverage gap in last 24 months", when: {field: insurance_cancellation_24m, op: eq, value: true}}
   - {id: D24, action: decline, reason: "Unsafe Driving BASIC >= 90th percentile", when: {field: basic_unsafe_driving, op: gte, value: 90}}
+  # Every R07 refer in the 45-carrier real sample had bipdInsuranceOnFile = 0. Authority status N (never granted) with no
+  # filing is a pending applicant - they cannot get authority until an insurer files the BMC-91, so that is what a
+  # legitimate prospect looks like at quote time (R07 refers it). Status I (granted, later made inactive) with no filing
+  # is a lapsed/revoked authority: the FMCSA revokes for insurance lapse, and the carrier cannot legally run today.
+  - {id: D25, action: decline, reason: "MC authority inactive (previously granted) and no BI/PD filing on record", when: {all: [{field: bipd_insurance_on_file_k, op: lte, value: 0}, {any: [{field: common_authority_status, op: eq, value: I}, {field: contract_authority_status, op: eq, value: I}]}]}}
   - {id: D30, action: decline, reason: "Submitted VINs decode to non-commercial vehicles", when: {field: non_commercial_vin_share, op: gt, value: 0.5}}
   - {id: D31, action: decline, reason: "Declared units differ from census by >3 or >2x", when: {field: unit_count_mismatch, op: eq, value: true}}
   - {id: R01, action: refer, reason: "Authority < 6 months and no inspection history", when: {all: [{field: authority_age_years, op: lt, value: 0.5}, {field: total_inspections, op: eq, value: 0}]}}
@@ -24,3 +29,4 @@ rules:
   - {id: R06, action: refer, reason: "Chameleon signal: shared address/phone with revoked carrier", when: {field: chameleon_flag, op: eq, value: true}}
   - {id: R07, action: refer, reason: "No active common/contract for-hire authority on file", when: {field: active_for_hire_authority, op: eq, value: false}}
   - {id: R08, action: refer, reason: "DOT absent from FMCSA census snapshot (new registration or inactive)", when: {field: in_census, op: eq, value: false}}
+  - {id: R09, action: refer, reason: "QCMobile has no operation classification yet (registration too new) - for-hire status unverified", when: {field: operation_classification_known, op: eq, value: false}}

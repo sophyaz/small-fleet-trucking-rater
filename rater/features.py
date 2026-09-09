@@ -55,13 +55,29 @@ def build(sub: dict, car: dict, vins: list, cfg=None) -> dict:
         f["authority_age_years"] = 0.5; f["flags"].append("authority_age_unknown_assumed_0.5y")
     f["mcs150_age_years"] = _years_since(car.get("mcs150_date")) if found else None
     if f["mcs150_age_years"] is None: f["mcs150_age_years"] = 0.0
-    op = " ".join(car.get("operation_classification") or []) + " " + str(car.get("carrier_operation") or "")
+    # D12 needs POSITIVE evidence of private / intrastate operation. Registrations under ~60 days old come back from
+    # QCMobile with an empty operation-classification list and null authority fields (seen on 6 of 45 real carriers,
+    # all June-July 2026 add dates); an empty list is "unknown", not "not for hire". Those fall through to R01 / R07.
+    opclass = " ".join(car.get("operation_classification") or []).lower()
+    carrier_op = str(car.get("carrier_operation") or "").lower()
     f["for_hire_interstate"] = True
-    if found and op.strip():
-        if "auth. for hire" not in op and "authorized for hire" not in op:
+    f["operation_classification_known"] = True
+    if found:
+        if opclass.strip():
+            if "auth. for hire" not in opclass and "authorized for hire" not in opclass:
+                f["for_hire_interstate"] = False
+        elif car.get("census_authorized_for_hire") is False:   # QCMobile silent, census says not for-hire
             f["for_hire_interstate"] = False
-        if "intrastate" in op and "interstate" not in op:
+        else:   # unknown -> refer (R09), never a clean price: DOT 8877502 had 2 inspections so R01 did not catch it
+            f["operation_classification_known"] = False; f["flags"].append("operation_classification_missing")
+        if "intrastate" in carrier_op and "interstate" not in carrier_op:
             f["for_hire_interstate"] = False
+    # MC authority status letters (A active / I inactive / N none) and the BI/PD filing on record. None = unknown
+    # (synthetic fixture); rules treat a missing field as not fired.
+    f["common_authority_status"] = car.get("common_authority_status") if found else None
+    f["contract_authority_status"] = car.get("contract_authority_status") if found else None
+    f["bipd_insurance_on_file_k"] = car.get("bipd_insurance_on_file_k") if found else None
+    f["bipd_required_k"] = car.get("bipd_required_k") if found else None
     # commodity appetite from submission + census cargo flags
     cargo = " ".join(car.get("cargo") or [])
     f["out_of_appetite_commodity"] = sub["out_of_appetite_commodity"] or bool(car.get("hazmat_flag")) or bool(car.get("passenger_flag")) \
@@ -92,6 +108,11 @@ def build(sub: dict, car: dict, vins: list, cfg=None) -> dict:
     except ValueError:
         mil = None
     f["mileage_per_unit"] = (mil / max(1, census_units or f["power_units"])) if mil else None
+    # MCS-150 mileage of 1, 2, 30 ... per year is a placeholder, not a low-mileage risk. Below the plausibility floor
+    # treat it as unknown (factor 1.00) rather than granting the <=30k discount. Census 0 already maps to None above.
+    floor = cfg["relativities"].get("mileage_min_plausible_per_unit", 0)
+    if f["mileage_per_unit"] is not None and f["mileage_per_unit"] < floor:
+        f["mileage_per_unit"] = None; f["flags"].append("mcs150_mileage_implausible")
     # drivers detail
     f["driver_experience_min"] = sub.get("driver_experience_min")
     # vehicles

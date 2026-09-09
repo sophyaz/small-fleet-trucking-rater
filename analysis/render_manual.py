@@ -6,6 +6,7 @@ from rater.losscost import limited_mean
 
 def band(t): return ", ".join(f"≤{r['max']}: {r['factor']}" for r in t)
 def main():
+    if hasattr(sys.stdout, "reconfigure"): sys.stdout.reconfigure(encoding="utf-8")   # Windows console is cp1252
     c = rates(); lc, R, L = c["loss_cost"], c["relativities"], c["loadings"]
     lev = limited_mean(lc["severity"], c["meta"]["base_limit_csl"])["limited_mean"]
     trend = (1 + lc["severity_trend_annual"]) ** lc["trend_years"]
@@ -33,7 +34,7 @@ def main():
              f"- Vehicle OOS ratio: {band(R['oos_ratio_to_segment_avg']['vehicle'])}",
              "- BASIC percentiles (where public): " + "; ".join(f"{k}: {band(v)}" for k, v in R["basic_percentile"].items()),
              f"- MCS-150 age (yrs): {band(R['mcs150_stale_years'])}",
-             f"- MCS-150 mileage per unit: {band(R['mileage_intensity'])}",
+             f"- MCS-150 mileage per unit: {band(R['mileage_intensity'])}; below {R.get('mileage_min_plausible_per_unit', 0):,} treated as unknown (1.00)",
              f"- Own crash experience: Bühlmann Z = n/(n+{c['credibility']['k_unit_years']}), n = units × {c['credibility']['history_years']} yrs; own relativity capped at {c['credibility']['own_rate_cap_multiple']}×", "",
              "## 4. Loss cost → premium",
              f"- ALAE {L['alae_ratio']:.0%} of loss; expense {L['expense_ratio']:.0%}, reinsurance {L['reinsurance_ratio']:.0%}, profit/capital {L['profit_cost_of_capital']:.0%} of premium",
@@ -41,9 +42,9 @@ def main():
              f"- **Minimum premium ${L['minimum_premium_per_unit']:,} per unit**; policy fee ${L['policy_fee']}",
              f"- Implied permissible loss+ALAE ratio: {1 - L['expense_ratio'] - L['reinsurance_ratio'] - L['profit_cost_of_capital']:.0%}", "",
              "## 5. Limits offered", "- " + ", ".join(f"${x:,}" for x in c["limits"]["offered"]) + " — ILFs from `analysis/fit_severity.py`", "",
-             "## 6. Decline / refer rules", "- See `config/rules.yaml` (IDs D01–D31 decline, R01–R06 refer)."]
+             "## 6. Decline / refer rules", "- See `config/rules.yaml` (IDs D01–D31 decline, R01–R09 refer)."]
     os.makedirs("docs", exist_ok=True)
-    with open("docs/RATING_MANUAL.md", "w") as f: f.write("\n".join(lines) + "\n")
+    with open("docs/RATING_MANUAL.md", "w", encoding="utf-8") as f: f.write("\n".join(lines) + "\n")   # Σ, ≤ fail on cp1252
     print("\n".join(lines))
 
 if __name__ == "__main__":
