@@ -1,0 +1,28 @@
+{
+ "submission_id": "B03_overdrive_castaldi_fl_reefer",
+ "usdot": 9900103,
+ "drivers": [
+  {
+   "age": 39,
+   "cdl_years": 40
+  },
+  {
+   "age": 43,
+   "cdl_years": 15
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR70MLA8759"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "reefer",
+ "garaging_state": "FL",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 15000,
+  "observed_liability_est_per_unit": 12000,
+  "source": "Overdrive 2025-03-21: M. Castaldi, 1 truck (2003 Pete), FL, authority since 1986, reefer FL-AZ team, ~150k mi/yr, 'just north of $15,000'"
+ }
+}

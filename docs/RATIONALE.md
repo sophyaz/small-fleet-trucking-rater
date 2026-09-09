@@ -39,9 +39,9 @@ Enrichment never raises. Order: API → disk cache → fixture → segment defau
 
 **Severity.** Three-component mixture on the crash flags the public data does carry — property-damage-only (lognormal, mean $18k), injury (lognormal, mean $140k, CV 2.5), fatality (Pareto above $250k, α = 1.6) — limited at the policy limit by Monte Carlo (`rater/losscost.py`). Limited mean at $1m ≈ $51k. Severity trended at 8% p.a. for 1.5 years (ATRI verdict inflation; VERIFY).
 
-**Relativities.** Multiplicative, product capped to [0.60, 3.25]. Authority age is the largest (new venture 1.65×), then venue state (high 1.35×), radius (long haul 1.30×), then OOS ratios, BASICs, driver/unit ratio, vehicle age, commodity, MCS-150 staleness, mileage intensity. Each is tagged [S] selected or [B] benchmark-anchored in `config/rates.yaml`; the GLM output replaces the first three with [E].
+**Relativities.** Multiplicative, product capped to [0.60, 3.25]. Authority age is the largest (new venture 1.65×), then venue state (high 1.35×), radius (long haul 1.30×), then OOS ratios, BASICs, driver/unit ratio, vehicle age, commodity, MCS-150 staleness, mileage intensity. Each is tagged [S] selected or [B] benchmark-anchored in `config/rates.yaml`; the GLM output replaces the first three with [E]. Two stacking controls added 2026-09-09 after the market benchmark (`docs/MARKET_BENCHMARK.md`): the product of authority × venue × radius is capped at 2.0 (uncapped it reached 2.75 on a first-year Texas long-hauler, $20.9k against a published $8–20k band), and mileage intensity is not applied when radius is already long haul (both proxy the same exposure and fired together on 4 of 10 benchmark profiles).
 
-**Gross-up.** Loss cost × (1 + 14% ALAE) ÷ (1 − 22% expense − 6% reinsurance − 7% profit/capital) → technical unit premium; floored at **$6,500 per unit**; + $250 policy fee. The floor binds for ~40% of a synthetic book — for one-truck clean risks the rate model is not what sets the price.
+**Gross-up.** Loss cost × (1 + 14% ALAE) ÷ (1 − 22% expense − 6% reinsurance − 7% profit/capital) → technical unit premium; floored at **$8,000 per unit** (raised from $6,500 on 2026-09-09: every 2025–26 published source puts clean established one-truck liability at $7,500 or more, `docs/MARKET_BENCHMARK.md`); + $250 policy fee. The floor binds for roughly half of a synthetic book — for one-truck clean risks the rate model is not what sets the price.
 
 ## 5. Numbered assumptions
 
@@ -56,7 +56,8 @@ Enrichment never raises. Order: API → disk cache → fixture → segment defau
 | A7 | Fatal share of crashes | 1.5% | [B] LTBCF | ±$1.3–2.7k |
 | A8 | Severity trend | 8% p.a. | [B] ATRI | ±$1.5k |
 | A9 | Fatal tail α | 1.6 | [S] | ≈$0.3k at $1m — **truncated by the limit; matters at $2m+** |
-| A10 | Minimum premium / unit | $6,500 | [B] observed market floor | 0 on ref. carrier; sets price for ~40% of book |
+| A10 | Minimum premium / unit | $8,000 | [B] observed market floor (was $6,500; 2025–26 sources, MARKET_BENCHMARK.md) | 0 on ref. carrier; sets price for ~half of book |
+| A13 | Stack cap authority × venue × radius | 2.0 | [S] MARKET_BENCHMARK.md P5 | −$4–5k on ref. carrier if it binds |
 | A11 | Credibility k | 25 unit-years | [S] | governs how fast own crashes bite |
 | A12 | Segment OOS averages | 6.2% / 21.5% | [B] national averages; VERIFY for small carriers | small |
 
@@ -75,9 +76,10 @@ Enrichment never raises. Order: API → disk cache → fixture → segment defau
 4. **Self-reported MCS-150 fields** (units, drivers, mileage). Cross-checked against VIN count and inspection activity, but a carrier that never gets inspected is invisible.
 5. **Adverse selection.** An instant-quote entrant sees new ventures and carriers other insurers dropped. Watch quote-to-bind mix by authority-age bucket weekly; if <1-year carriers exceed their census share by 2×, the new-venture factor is too low.
 6. **Insurance-cancellation signal** currently comes from the submission, not L&I. Automate L&I before go-live.
+7. **Market-benchmark watch list (not applied, evidence too thin — one named renewal each):** a tenure credit above 3 years (authority age gives no credit beyond 3 yrs, so a 39-year carrier prices like a 4-year one); vehicle age 1.20 on 20+ year trucks (old iron matters more for physical damage than third-party loss); and the 8% severity trend against ATRI's 4–6% premium trend (premium lags loss trend, so not evidence of over-trending on its own). Revisit with bound-book data.
 
 ## 8. What this attracts, and roadmap
 
-**Book attracted:** small, mostly newer, general-freight carriers in mid-venue states, priced $7–15k per unit; high-venue long-haul new ventures priced $20k+ where the market will often beat us; clean established owner-operators at the $6.5k floor where we are competitive but the census share is small. Declines concentrate on authority/status, appetite and data-integrity rules.
+**Book attracted:** small, mostly newer, general-freight carriers in mid-venue states, priced $7–15k per unit; high-venue long-haul new ventures priced ~$15–16k after the stack cap (was $20k+), inside the published $8–20k band; clean established owner-operators at the $8k floor, at the bottom of the published $7.5–11k range. Declines concentrate on authority/status, appetite and data-integrity rules.
 
 **Roadmap:** (1) replace A1/A3/A5 with GLM estimates; (2) L&I automation; (3) MVR/PSP at bind; (4) telematics discount; (5) physical damage using vPIC stated value; (6) re-fit relativities on 12 months of quote-to-bind and claims; (7) price elasticity by segment.

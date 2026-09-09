@@ -1,0 +1,56 @@
+{
+ "submission_id": "B08_atri_small_fleet_pa",
+ "usdot": 9900108,
+ "drivers": [
+  {
+   "age": 32,
+   "cdl_years": 4
+  },
+  {
+   "age": 52,
+   "cdl_years": 6
+  },
+  {
+   "age": 45,
+   "cdl_years": 9
+  },
+  {
+   "age": 43,
+   "cdl_years": 12
+  },
+  {
+   "age": 30,
+   "cdl_years": 15
+  },
+  {
+   "age": 46,
+   "cdl_years": 20
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR120MLA389"
+  },
+  {
+   "vin": "1FUJGLDR121MLA912"
+  },
+  {
+   "vin": "1FUJGLDR122MLA696"
+  },
+  {
+   "vin": "1FUJGLDR123MLA132"
+  },
+  {
+   "vin": "1FUJGLDR124MLA238"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "general_freight",
+ "garaging_state": "PA",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 18137,
+  "observed_liability_est_per_unit": 18137,
+  "source": "ATRI 2025 Ops Costs via CCJ: fleets <=25 trucks 20.3c/mi liability premiums (2024) x 85,991 mi = $17,456; +3.9% for 2025 = $18,137"
+ }
+}

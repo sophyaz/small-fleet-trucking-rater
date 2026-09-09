@@ -1,0 +1,57 @@
+{
+ "_synthetic": true,
+ "_benchmark": "FreightWaves Checkpoint 2026-03-26: auto liability $7,500-$15,000+/tractor, experienced OO, established authority, late-model tractor",
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900106,
+    "legalName": "B06 FREIGHTWAVES ESTABLISHED IN LLC",
+    "phyState": "IN",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 1,
+    "totalDrivers": 1,
+    "driverOosRate": 3.0,
+    "vehicleOosRate": 15.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 6,
+    "vehicleInsp": 7,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2021-09-09",
+    "mcs150Date": "2026-03-11",
+    "mcs150Mileage": 80000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

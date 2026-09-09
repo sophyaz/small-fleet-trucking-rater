@@ -1,0 +1,57 @@
+{
+ "_synthetic": true,
+ "_benchmark": "ATRI 2025 Ops Costs via CCJ: fleets <=25 trucks 20.3c/mi liability premiums (2024) x 85,991 mi = $17,456; +3.9% for 2025 = $18,137",
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900108,
+    "legalName": "B08 ATRI SMALL FLEET PA LLC",
+    "phyState": "PA",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 5,
+    "totalDrivers": 6,
+    "driverOosRate": 6.0,
+    "vehicleOosRate": 22.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 22,
+    "vehicleInsp": 26,
+    "crashTotal": 1,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 1,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2018-09-09",
+    "mcs150Date": "2026-03-11",
+    "mcs150Mileage": 430000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

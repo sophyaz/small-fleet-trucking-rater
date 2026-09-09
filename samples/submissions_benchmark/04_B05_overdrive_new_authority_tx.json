@@ -1,0 +1,24 @@
+{
+ "submission_id": "B05_overdrive_new_authority_tx",
+ "usdot": 9900105,
+ "drivers": [
+  {
+   "age": 34,
+   "cdl_years": 6
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR90MLA5693"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "TX",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 14000,
+  "observed_liability_est_per_unit": 14000,
+  "source": "Overdrive insurance guide (2025): new-authority quotes $8k-$20k+, '$10,000 or more a year for $1M primary liability'"
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "submission_id": "B04_overdrive_poll_median_ga",
+ "usdot": 9900104,
+ "drivers": [
+  {
+   "age": 46,
+   "cdl_years": 10
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR80MLA5970"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "GA",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 12500,
+  "observed_liability_est_per_unit": 12500,
+  "source": "Overdrive 2024 reader poll (pub. 2025-03): liability, 24% >$15k, 48% <$10k -> modal band $10-15k, one-truck independents"
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "submission_id": "B02_progressive_specialty_2025",
+ "usdot": 9900102,
+ "drivers": [
+  {
+   "age": 30,
+   "cdl_years": 12
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR60MLA2095"
+  }
+ ],
+ "radius": "local_0_50",
+ "commodity": "building_materials",
+ "garaging_state": "CO",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 8808,
+  "observed_liability_est_per_unit": 6200,
+  "source": "Progressive: 2025 new for-hire specialty policies, $734/mo per power unit, liability+PD, no violations"
+ }
+}

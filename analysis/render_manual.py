@@ -34,7 +34,9 @@ def main():
              f"- Vehicle OOS ratio: {band(R['oos_ratio_to_segment_avg']['vehicle'])}",
              "- BASIC percentiles (where public): " + "; ".join(f"{k}: {band(v)}" for k, v in R["basic_percentile"].items()),
              f"- MCS-150 age (yrs): {band(R['mcs150_stale_years'])}",
-             f"- MCS-150 mileage per unit: {band(R['mileage_intensity'])}; below {R.get('mileage_min_plausible_per_unit', 0):,} treated as unknown (1.00)",
+             f"- MCS-150 mileage per unit: {band(R['mileage_intensity'])}; below {R.get('mileage_min_plausible_per_unit', 0):,} treated as unknown (1.00)"
+             + (f"; not applied when radius is {', '.join(R['mileage_intensity_skip_radii'])}" if R.get("mileage_intensity_skip_radii") else ""),
+             *([f"- Stack cap: product of {' × '.join(R['stack_cap']['factors'])} capped at {R['stack_cap']['max']} before the other factors apply"] if R.get("stack_cap") else []),
              f"- Own crash experience: Bühlmann Z = n/(n+{c['credibility']['k_unit_years']}), n = units × {c['credibility']['history_years']} yrs; own relativity capped at {c['credibility']['own_rate_cap_multiple']}×", "",
              "## 4. Loss cost → premium",
              f"- ALAE {L['alae_ratio']:.0%} of loss; expense {L['expense_ratio']:.0%}, reinsurance {L['reinsurance_ratio']:.0%}, profit/capital {L['profit_cost_of_capital']:.0%} of premium",

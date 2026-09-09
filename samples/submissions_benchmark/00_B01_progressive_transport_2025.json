@@ -1,0 +1,24 @@
+{
+ "submission_id": "B01_progressive_transport_2025",
+ "usdot": 9900101,
+ "drivers": [
+  {
+   "age": 58,
+   "cdl_years": 8
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR50MLA4799"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "CO",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 11112,
+  "observed_liability_est_per_unit": 7800,
+  "source": "Progressive: 2025 new for-hire transport policies, $926/mo per power unit, liability+PD, no violations"
+ }
+}

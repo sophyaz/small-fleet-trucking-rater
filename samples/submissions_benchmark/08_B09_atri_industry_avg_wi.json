@@ -1,0 +1,38 @@
+{
+ "submission_id": "B09_atri_industry_avg_wi",
+ "usdot": 9900109,
+ "drivers": [
+  {
+   "age": 54,
+   "cdl_years": 8
+  },
+  {
+   "age": 31,
+   "cdl_years": 14
+  },
+  {
+   "age": 36,
+   "cdl_years": 22
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR130MLA922"
+  },
+  {
+   "vin": "1FUJGLDR131MLA665"
+  },
+  {
+   "vin": "1FUJGLDR132MLA570"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "WI",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 8600,
+  "observed_liability_est_per_unit": 8600,
+  "source": "ATRI 2026 update via FleetOwner 2026-07-22: $0.106/mi all-fleet 2025; Midwest $0.10 x 85,991 mi = $8,600/unit (liability+cargo)"
+ }
+}

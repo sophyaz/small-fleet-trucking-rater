@@ -1,0 +1,57 @@
+{
+ "_synthetic": true,
+ "_benchmark": "FreightWaves 2025-05-08 (MarketWatch): one-truck liability+cargo $12-17k in 2025 (was $11-16k late-2023)",
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900107,
+    "legalName": "B07 FREIGHTWAVES ONE TRUCK IL LLC",
+    "phyState": "IL",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 1,
+    "totalDrivers": 1,
+    "driverOosRate": 0.0,
+    "vehicleOosRate": 33.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 3,
+    "vehicleInsp": 3,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2024-09-09",
+    "mcs150Date": "2026-03-11",
+    "mcs150Mileage": 95000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

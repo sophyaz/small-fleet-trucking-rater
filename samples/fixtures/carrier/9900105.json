@@ -1,0 +1,57 @@
+{
+ "_synthetic": true,
+ "_benchmark": "Overdrive insurance guide (2025): new-authority quotes $8k-$20k+, '$10,000 or more a year for $1M primary liability'",
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900105,
+    "legalName": "B05 OVERDRIVE NEW AUTHORITY TX LLC",
+    "phyState": "TX",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 1,
+    "totalDrivers": 1,
+    "driverOosRate": null,
+    "vehicleOosRate": null,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 0,
+    "vehicleInsp": 0,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2026-05-23",
+    "mcs150Date": "2026-03-11",
+    "mcs150Mileage": 100000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

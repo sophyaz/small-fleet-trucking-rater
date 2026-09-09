@@ -33,6 +33,12 @@ credibility:
 
 relativities:
   total_cap: {min: 0.60, max: 3.25}
+  # [S] 2026-09-09: authority x venue x radius compounded to 2.75 on a first-year TX long-hauler ($20.9k vs a published
+  # $8-20k band, docs/MARKET_BENCHMARK.md P5). Cap the product of these three before the other factors apply.
+  stack_cap: {factors: [authority_age, venue_state, radius], max: 2.0}
+  # [S] 2026-09-09: mileage intensity and long-haul radius proxy the same exposure and fired together on 4 of 10
+  # benchmark profiles (P1, P3, P5, P10). Skip the mileage band when radius is already long haul.
+  mileage_intensity_skip_radii: [long_haul_500_plus]
   authority_age_years:
     - {max: 1,   factor: 1.65}
     - {max: 3,   factor: 1.25}
@@ -108,7 +114,7 @@ loadings:
   expense_ratio: 0.22
   reinsurance_ratio: 0.06
   profit_cost_of_capital: 0.07
-  minimum_premium_per_unit: 6500
+  minimum_premium_per_unit: 8000   # [B] 2026-09-09: was 6500; every 2025-26 source puts clean established one-truck liability at >= $7,500 (docs/MARKET_BENCHMARK.md P1, P6, P9, DAT)
   policy_fee: 250
 
 limits:

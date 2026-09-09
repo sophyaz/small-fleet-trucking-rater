@@ -1,0 +1,57 @@
+{
+ "_synthetic": true,
+ "_benchmark": "ATRI 2026 update via FleetOwner 2026-07-22: $0.106/mi all-fleet 2025; Midwest $0.10 x 85,991 mi = $8,600/unit (liability+cargo)",
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900109,
+    "legalName": "B09 ATRI INDUSTRY AVG WI LLC",
+    "phyState": "WI",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 3,
+    "totalDrivers": 3,
+    "driverOosRate": 5.0,
+    "vehicleOosRate": 20.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 10,
+    "vehicleInsp": 12,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2016-09-09",
+    "mcs150Date": "2026-03-11",
+    "mcs150Mileage": 258000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

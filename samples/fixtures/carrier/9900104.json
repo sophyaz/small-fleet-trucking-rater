@@ -1,0 +1,57 @@
+{
+ "_synthetic": true,
+ "_benchmark": "Overdrive 2024 reader poll (pub. 2025-03): liability, 24% >$15k, 48% <$10k -> modal band $10-15k, one-truck independents",
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900104,
+    "legalName": "B04 OVERDRIVE POLL MEDIAN GA LLC",
+    "phyState": "GA",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 1,
+    "totalDrivers": 1,
+    "driverOosRate": 5.0,
+    "vehicleOosRate": 20.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 5,
+    "vehicleInsp": 6,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2020-09-09",
+    "mcs150Date": "2026-03-11",
+    "mcs150Mileage": 90000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}

@@ -25,13 +25,14 @@ Rendered from `config/rates.yaml`. Do not edit by hand.
 - Vehicle OOS ratio: ≤0.5: 0.95, ≤1.5: 1.0, ≤3.0: 1.1, ≤99: 1.2
 - BASIC percentiles (where public): unsafe_driving: ≤50: 1.0, ≤65: 1.1, ≤100: 1.3; hos_compliance: ≤50: 1.0, ≤65: 1.08, ≤100: 1.2; vehicle_maintenance: ≤50: 1.0, ≤80: 1.05, ≤100: 1.12; driver_fitness: ≤50: 1.0, ≤80: 1.03, ≤100: 1.08; controlled_substances: ≤50: 1.0, ≤80: 1.1, ≤100: 1.3
 - MCS-150 age (yrs): ≤2: 1.0, ≤99: 1.08
-- MCS-150 mileage per unit: ≤30000: 0.9, ≤90000: 1.0, ≤140000: 1.08, ≤9000000000: 1.15; below 5,000 treated as unknown (1.00)
+- MCS-150 mileage per unit: ≤30000: 0.9, ≤90000: 1.0, ≤140000: 1.08, ≤9000000000: 1.15; below 5,000 treated as unknown (1.00); not applied when radius is long_haul_500_plus
+- Stack cap: product of authority_age × venue_state × radius capped at 2.0 before the other factors apply
 - Own crash experience: Bühlmann Z = n/(n+25), n = units × 2 yrs; own relativity capped at 3.0×
 
 ## 4. Loss cost → premium
 - ALAE 14% of loss; expense 22%, reinsurance 6%, profit/capital 7% of premium
 - Technical unit premium = loss cost × (1+ALAE) / (1 − expense − reinsurance − profit)
-- **Minimum premium $6,500 per unit**; policy fee $250
+- **Minimum premium $8,000 per unit**; policy fee $250
 - Implied permissible loss+ALAE ratio: 65%
 
 ## 5. Limits offered

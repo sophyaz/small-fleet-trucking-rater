@@ -1,0 +1,24 @@
+{
+ "submission_id": "B06_freightwaves_established_in",
+ "usdot": 9900106,
+ "drivers": [
+  {
+   "age": 38,
+   "cdl_years": 9
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR100MLA351"
+  }
+ ],
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "IN",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 11250,
+  "observed_liability_est_per_unit": 11250,
+  "source": "FreightWaves Checkpoint 2026-03-26: auto liability $7,500-$15,000+/tractor, experienced OO, established authority, late-model tractor"
+ }
+}

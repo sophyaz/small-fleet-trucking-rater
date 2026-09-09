@@ -1,0 +1,24 @@
+{
+ "submission_id": "B07_freightwaves_one_truck_il",
+ "usdot": 9900107,
+ "drivers": [
+  {
+   "age": 30,
+   "cdl_years": 7
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR110MLA682"
+  }
+ ],
+ "radius": "regional_201_500",
+ "commodity": "dry_van",
+ "garaging_state": "IL",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 14500,
+  "observed_liability_est_per_unit": 12500,
+  "source": "FreightWaves 2025-05-08 (MarketWatch): one-truck liability+cargo $12-17k in 2025 (was $11-16k late-2023)"
+ }
+}

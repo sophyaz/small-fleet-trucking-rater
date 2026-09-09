@@ -1,0 +1,38 @@
+{
+ "submission_id": "B10_geotab_small_fleet_nc",
+ "usdot": 9900110,
+ "drivers": [
+  {
+   "age": 51,
+   "cdl_years": 5
+  },
+  {
+   "age": 35,
+   "cdl_years": 9
+  },
+  {
+   "age": 49,
+   "cdl_years": 11
+  }
+ ],
+ "units": [
+  {
+   "vin": "1FUJGLDR140MLA146"
+  },
+  {
+   "vin": "1FUJGLDR141MLA872"
+  },
+  {
+   "vin": "1FUJGLDR142MLA583"
+  }
+ ],
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "NC",
+ "limit": 1000000,
+ "_benchmark": {
+  "observed_annual_per_unit_as_published": 14400,
+  "observed_liability_est_per_unit": 11500,
+  "source": "Geotab 2026-08-20: small fleet $10,800-$18,000+/truck bundled; OO with authority $9,000-$17,000"
+ }
+}

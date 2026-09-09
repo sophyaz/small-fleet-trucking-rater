@@ -35,8 +35,19 @@ def relativities(f: dict, cfg: dict) -> dict:
         if f.get(key) is not None:
             out[key] = _band(table, f[key])
     out["mcs150_stale"] = _band(R["mcs150_stale_years"], f["mcs150_age_years"])
-    out["mileage_intensity"] = _band(R["mileage_intensity"], f.get("mileage_per_unit"))
+    if f["radius"] in (R.get("mileage_intensity_skip_radii") or []):
+        out["mileage_intensity"] = (1.0, f"skipped: radius {f['radius']} already prices mileage")
+    else:
+        out["mileage_intensity"] = _band(R["mileage_intensity"], f.get("mileage_per_unit"))
     out["experience_credibility"] = (f["cred_rate_relativity"], f"Z={f['cred_Z']:.2f}")
+    # stack cap: the product of the named factors (authority x venue x radius) is capped before anything else applies
+    sc = R.get("stack_cap")
+    if sc:
+        prod = 1.0
+        for k in sc["factors"]:
+            prod *= out[k][0]
+        if prod > float(sc["max"]):
+            out["stack_cap"] = (float(sc["max"]) / prod, f"{'x'.join(sc['factors'])}={prod:.3f} capped at {sc['max']}")
     return out
 
 def price(submission: dict, cfg=None) -> dict:

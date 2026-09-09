@@ -1,0 +1,57 @@
+{
+ "_synthetic": true,
+ "_benchmark": "Progressive: 2025 new for-hire specialty policies, $734/mo per power unit, liability+PD, no violations",
+ "carrier": {
+  "content": {
+   "carrier": {
+    "dotNumber": 9900102,
+    "legalName": "B02 PROGRESSIVE SPECIALTY 2025 LLC",
+    "phyState": "CO",
+    "allowedToOperate": "Y",
+    "statusCode": "A",
+    "totalPowerUnits": 1,
+    "totalDrivers": 1,
+    "driverOosRate": 5.0,
+    "vehicleOosRate": 20.0,
+    "driverOosRateNationalAverage": "6.67",
+    "vehicleOosRateNationalAverage": "22.26",
+    "driverInsp": 3,
+    "vehicleInsp": 4,
+    "crashTotal": 0,
+    "fatalCrash": 0,
+    "injCrash": 0,
+    "towawayCrash": 0,
+    "safetyRating": null,
+    "oosDate": null,
+    "addDate": "2021-09-09",
+    "mcs150Date": "2026-03-11",
+    "mcs150Mileage": 40000,
+    "hazmatFlag": "N",
+    "pcFlag": "N",
+    "carrierOperation": {
+     "carrierOperationDesc": "Interstate"
+    }
+   }
+  }
+ },
+ "basics": {
+  "content": []
+ },
+ "cargo-carried": {
+  "content": [
+   {
+    "cargoClassDesc": "General Freight"
+   }
+  ]
+ },
+ "operation-classification": {
+  "content": [
+   {
+    "operationClassDesc": "Auth. For Hire"
+   }
+  ]
+ },
+ "authority": {
+  "content": []
+ }
+}
