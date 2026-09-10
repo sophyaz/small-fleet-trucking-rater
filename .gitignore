@@ -1,6 +1,16 @@
+# Bulk downloads (1 GB+): re-pull with the SODA URLs in docs/SOURCES.md S3/S4
 data/raw/*
 !data/raw/.gitkeep
+# ...but keep the small archived source evidence (raw API responses and data dictionaries)
+!data/raw/qcmobile_samples/
+!data/raw/vpic_sample.json
+!data/raw/census_readme.txt
+!data/raw/crash_data_dictionary.pdf
+# Cache: the sqlite index over census.csv is rebuilt locally; the API response caches are kept so a fresh clone
+# reproduces the real-carrier book check offline (checked: no webKey in any response file)
 data/cache/*
+!data/cache/carrier/
+!data/cache/vin/
 __pycache__/
 *.pyc
 .env

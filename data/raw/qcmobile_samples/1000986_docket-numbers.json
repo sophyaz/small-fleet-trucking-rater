@@ -1,0 +1,16 @@
+{
+ "content": [
+  {
+   "docketNumber": 429079,
+   "docketNumberId": 305558,
+   "dotNumber": 1000986,
+   "prefix": "MC"
+  }
+ ],
+ "retrievalDate": "2026-09-09T16:00:39.349+0000",
+ "_links": {
+  "self": {
+   "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/1000986/mc-numbers"
+  }
+ }
+}

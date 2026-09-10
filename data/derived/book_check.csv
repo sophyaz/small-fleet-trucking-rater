@@ -28,5 +28,5 @@ file,usdot,decision,premium,units,unit_premium,rel_product,rules,flags,error
 51_edge_missing_usdot.json,,decline,,1,10461.42,1.4369,D01;R05,usdot_missing_or_invalid;units_missing_use_census;radius_missing_default_intermediate;commodity_missing_default_unknown;garaging_state_missing_use_census;units_defaulted_to_1;authority_age_unknown_assumed_0.5y,
 52_edge_bad_vins_no_radius.json,9900001,price,16250,2,8000,0.8919,,driver_count_missing_use_census;invalid_vin:NOTAVIN;invalid_vin:;radius_missing_default_intermediate;commodity_missing_default_unknown;garaging_state_missing_use_census,
 53_edge_zero_drivers.json,9900005,refer,8250,1,8000,0.6,R05,invalid_vin:1FUJGLDR40LLA5555,
-54_edge_garbage_types.json,9900001,price,24250,3,8000,0.7585,,drivers_not_a_list_ignored;driver_count_missing_use_census;units_not_a_list_ignored;units_missing_use_census;radius_missing_default_intermediate;commodity_missing_default_unknown;garaging_state_missing_use_census,
+54_edge_garbage_types.json,9900001,price,24250,3,8000,0.7585,,drivers_not_a_list_ignored;driver_count_missing_use_census;units_not_a_list_ignored;units_missing_use_census;radius_miles:200->intermediate_51_200;commodity_missing_default_unknown;garaging_state_missing_use_census;limit_parsed:1m->1000000,
 ,,error,,,,,,,unreadable json: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)

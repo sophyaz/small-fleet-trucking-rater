@@ -1,0 +1,26 @@
+{
+ "content": [
+  {
+   "carrierAuthority": {
+    "applicantID": 341361,
+    "authority": "N",
+    "authorizedForBroker": "N",
+    "authorizedForHouseholdGoods": "N",
+    "authorizedForPassenger": "N",
+    "authorizedForProperty": "Y",
+    "brokerAuthorityStatus": "N",
+    "commonAuthorityStatus": "A",
+    "contractAuthorityStatus": "N",
+    "docketNumber": 429079,
+    "dotNumber": 1000986,
+    "prefix": "MC"
+   },
+   "_links": {
+    "self": {
+     "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/1000986/authority/341361"
+    }
+   }
+  }
+ ],
+ "retrievalDate": "2026-09-09T16:00:36.169+0000"
+}

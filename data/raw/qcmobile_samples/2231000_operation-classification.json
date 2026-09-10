@@ -1,0 +1,17 @@
+{
+ "content": [
+  {
+   "id": {
+    "dotNumber": 2231000,
+    "operationClassId": 1
+   },
+   "operationClassDesc": "Authorized For Hire"
+  }
+ ],
+ "retrievalDate": "2026-09-09T16:00:29.072+0000",
+ "_links": {
+  "self": {
+   "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/2231000/operation-classification"
+  }
+ }
+}

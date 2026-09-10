@@ -1,0 +1,24 @@
+{
+ "content": [
+  {
+   "id": {
+    "dotNumber": 1000986,
+    "operationClassId": 1
+   },
+   "operationClassDesc": "Authorized For Hire"
+  },
+  {
+   "id": {
+    "dotNumber": 1000986,
+    "operationClassId": 3
+   },
+   "operationClassDesc": "Private Property"
+  }
+ ],
+ "retrievalDate": "2026-09-09T16:00:37.612+0000",
+ "_links": {
+  "self": {
+   "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/1000986/operation-classification"
+  }
+ }
+}

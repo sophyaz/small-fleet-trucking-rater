@@ -1,17 +1,23 @@
 {
   "title": "Submission",
+  "description": "Canonical submission shape. rater/ingest.py is lenient: keys are matched case-insensitively and through the aliases listed per field; only usdot is needed to get a decision. Everything else is coerced, defaulted, and the assumption recorded in the result's flags.",
   "type": "object",
   "required": ["usdot"],
   "properties": {
-    "submission_id": {"type": "string"},
-    "usdot": {"type": ["integer", "string"]},
-    "drivers": {"type": "array", "items": {"type": "object", "properties": {"age": {"type": "number"}, "cdl_years": {"type": "number"}, "years_with_carrier": {"type": "number"}}}},
-    "driver_count": {"type": "integer"},
-    "units": {"type": "array", "items": {"type": "object", "properties": {"vin": {"type": "string"}}}},
-    "radius": {"type": "string", "enum": ["local_0_50", "intermediate_51_200", "regional_201_500", "long_haul_500_plus"]},
-    "commodity": {"type": "string"},
-    "garaging_state": {"type": "string"},
-    "limit": {"type": "integer"},
-    "insurance_history": {"type": "object", "properties": {"cancellation_24m": {"type": "boolean"}, "prior_carrier": {"type": "string"}}}
+    "submission_id": {"type": "string", "description": "Optional label. Aliases: id, name, carrier_name, legal_name. Default: sub-<usdot>."},
+    "usdot": {"type": ["integer", "string"], "description": "USDOT number. Aliases: dot, dot_number, usdot_number, us_dot. Non-digits are stripped ('USDOT 1234' -> 1234). Missing -> decline D01."},
+    "drivers": {"type": "array", "items": {"type": "object", "properties": {"age": {"type": "number"}, "cdl_years": {"type": "number"}, "years_with_carrier": {"type": "number"}}},
+                "description": "One object per driver. A bare number or numeric string is accepted as a count. Missing -> FMCSA census driver count."},
+    "driver_count": {"type": "integer", "description": "Alternative to drivers[]. Aliases: num_drivers, number_of_drivers, total_drivers."},
+    "units": {"type": "array", "items": {"type": "object", "properties": {"vin": {"type": "string"}}},
+              "description": "Power units. Aliases: vins, vehicles, trucks. Items may be {vin: ...} or bare VIN strings; a bare integer is accepted as a unit count with no VINs. Invalid VINs are flagged and skipped. Missing -> FMCSA census power-unit count."},
+    "power_units": {"type": ["integer", "array"], "description": "Optional unit count (aliases: unit_count, num_units, truck_count) or a VIN list. If it disagrees with the VIN list the larger number is rated and a flag is set."},
+    "radius": {"type": ["string", "number"], "enum": ["local_0_50", "intermediate_51_200", "regional_201_500", "long_haul_500_plus"],
+               "description": "Operating radius band. Aliases: operating_radius, radius_miles. Also accepts local/intermediate/regional/long_haul, a number of miles (<=50 local, <=200 intermediate, <=500 regional, else long haul) or '300 miles'. Missing -> intermediate."},
+    "commodity": {"type": "string", "description": "Hauled commodity (dry_van, reefer, flatbed, general_freight, building_materials, machinery_heavy, grain_feed, logs_lumber, intermodal). Aliases: cargo, commodity_type, freight. Hazmat / tanker / passenger / HHG / auto hauler / livestock / oilfield / garbage -> decline D11. Missing -> unknown (1.10)."},
+    "garaging_state": {"type": "string", "description": "Two-letter state. Aliases: state, domicile_state, phy_state. Missing -> FMCSA physical state."},
+    "limit": {"type": ["integer", "string"], "description": "CSL in dollars. Accepts 1000000, '1,000,000', '1m', '750k'. Default 1000000."},
+    "insurance_history": {"type": "object", "properties": {"cancellation_24m": {"type": "boolean"}, "prior_carrier": {"type": "string"}},
+                          "description": "Self-declared. cancellation_24m true -> decline D23 (L&I automation is roadmap item 2)."}
   }
 }

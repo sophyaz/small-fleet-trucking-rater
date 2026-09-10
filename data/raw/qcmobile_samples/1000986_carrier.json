@@ -1,0 +1,87 @@
+{
+ "content": {
+  "_links": {
+   "basics": {
+    "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/1000986/basics"
+   },
+   "cargo carried": {
+    "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/1000986/cargo-carried"
+   },
+   "operation classification": {
+    "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/1000986/operation-classification"
+   },
+   "docket numbers": {
+    "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/1000986/docket-numbers"
+   },
+   "carrier active-For-hire authority": {
+    "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/1000986/authority"
+   },
+   "self": {
+    "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/1000986"
+   }
+  },
+  "carrier": {
+   "allowedToOperate": "Y",
+   "bipdInsuranceOnFile": "750",
+   "bipdInsuranceRequired": "Y",
+   "bipdRequiredAmount": "750",
+   "bondInsuranceOnFile": "0",
+   "bondInsuranceRequired": "u",
+   "brokerAuthorityStatus": "N",
+   "cargoInsuranceOnFile": "0",
+   "cargoInsuranceRequired": "u",
+   "carrierOperation": {
+    "carrierOperationCode": "A",
+    "carrierOperationDesc": "Interstate"
+   },
+   "censusTypeId": {
+    "censusType": "C",
+    "censusTypeDesc": "CARRIER",
+    "censusTypeId": 1
+   },
+   "commonAuthorityStatus": "A",
+   "contractAuthorityStatus": "N",
+   "crashTotal": 0,
+   "dbaName": null,
+   "dotNumber": 1000986,
+   "driverInsp": 4,
+   "driverOosInsp": 0,
+   "driverOosRate": 0,
+   "driverOosRateNationalAverage": "5.51",
+   "ein": 753014950,
+   "fatalCrash": 0,
+   "hazmatInsp": 0,
+   "hazmatOosInsp": 0,
+   "hazmatOosRate": 0,
+   "hazmatOosRateNationalAverage": "4.5",
+   "injCrash": 0,
+   "isPassengerCarrier": "N",
+   "issScore": null,
+   "legalName": "SCHROEDER FARMING INC",
+   "mcs150Outdated": "N",
+   "oosDate": null,
+   "oosRateNationalAverageYear": "2009-2010",
+   "phyCity": "VAIL",
+   "phyCountry": "US",
+   "phyState": "IA",
+   "phyStreet": "116 HWY 30",
+   "phyZipcode": "51465",
+   "reviewDate": "2021-07-12",
+   "reviewType": "N",
+   "safetyRating": "C",
+   "safetyRatingDate": "2014-03-31",
+   "safetyReviewDate": "2021-07-12",
+   "safetyReviewType": "N",
+   "snapshotDate": null,
+   "statusCode": "A",
+   "totalDrivers": 3,
+   "totalPowerUnits": 3,
+   "towawayCrash": 0,
+   "vehicleInsp": 1,
+   "vehicleOosInsp": 1,
+   "vehicleOosRate": 100,
+   "vehicleOosRateNationalAverage": "20.72"
+  }
+ },
+ "retrievalDate": "2026-09-09T16:00:34.709+0000"
+}

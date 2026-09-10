@@ -13,6 +13,8 @@ rules:
   - {id: D21, action: decline, reason: "Fatal crash in window with >=1 other crash", when: {all: [{field: fatal_crashes, op: gte, value: 1}, {field: crashes_24m, op: gte, value: 2}]}}
   - {id: D22, action: decline, reason: "Driver OOS rate > 3x segment avg with >= 5 inspections", when: {all: [{field: driver_oos_ratio, op: gt, value: 3.0}, {field: driver_inspections, op: gte, value: 5}]}}
   - {id: D23, action: decline, reason: "Insurance cancelled / coverage gap in last 24 months", when: {field: insurance_cancellation_24m, op: eq, value: true}}
+  # DORMANT on live data: QCMobile returns basicsPercentile "Not Public" for property carriers (53 of 53 enriched), so
+  # basic_unsafe_driving is only set from a fixture or a percentile supplied another way (PSP / carrier SMS login).
   - {id: D24, action: decline, reason: "Unsafe Driving BASIC >= 90th percentile", when: {field: basic_unsafe_driving, op: gte, value: 90}}
   # Every R07 refer in the 45-carrier real sample had bipdInsuranceOnFile = 0. Authority status N (never granted) with no
   # filing is a pending applicant - they cannot get authority until an insurer files the BMC-91, so that is what a
@@ -26,6 +28,8 @@ rules:
   - {id: R03, action: refer, reason: "Safety rating Conditional", when: {field: safety_rating, op: in, value: [CONDITIONAL]}}
   - {id: R04, action: refer, reason: "MCS-150 not updated in > 2 years", when: {field: mcs150_age_years, op: gt, value: 2}}
   - {id: R05, action: refer, reason: "Zero drivers declared", when: {field: drivers, op: lte, value: 0}}
+  # STUB / DORMANT: rater/features.py sets chameleon_flag = False unconditionally. The address/phone index over revoked
+  # carriers (docs/CLAUDE_CODE_PROMPTS.md Prompt 8) is not built, so this rule never fires today.
   - {id: R06, action: refer, reason: "Chameleon signal: shared address/phone with revoked carrier", when: {field: chameleon_flag, op: eq, value: true}}
   - {id: R07, action: refer, reason: "No active common/contract for-hire authority on file", when: {field: active_for_hire_authority, op: eq, value: false}}
   - {id: R08, action: refer, reason: "DOT absent from FMCSA census snapshot (new registration or inactive)", when: {field: in_census, op: eq, value: false}}

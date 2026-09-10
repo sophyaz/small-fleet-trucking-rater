@@ -134,6 +134,33 @@ def test_vpic_live_shapes_classify_correctly():
     assert not features._is_non_commercial({"vehicle_type": "TRUCK", "body_class": "Pickup", "gvwr": "Class 3: 10,001 - 14,000 lb (4,536 - 6,350 kg)"})
     assert features._is_non_commercial({"vehicle_type": "MULTIPURPOSE PASSENGER VEHICLE (MPV)", "body_class": "Sport Utility Vehicle (SUV)/Multi-Purpose Vehicle (MPV)", "gvwr": "Class 1D: 5,001 - 6,000 lb (2,268 - 2,722 kg)"})
 
+def test_input_aliases_and_numeric_radius():
+    """A reviewer's file that does not follow config/schema.json to the letter must still be priced, not declined D01."""
+    canon = json.load(open(os.path.join(SUBS, "00_established_clean_ia.json")))
+    alt = {"DOT_NUMBER": " USDOT 9900001 ", "vins": [u["vin"] for u in canon["units"]], "State": "ia",
+           "radius": 300, "cargo": "Dry Van", "drivers": "3", "limit": "1m"}
+    r = price(alt)
+    assert r["decision"] == "price" and r["usdot"] == 9900001, r
+    b = r["breakdown"]
+    assert b["relativities"]["radius"]["band"] == "regional_201_500" and b["limit"] == 1000000 and b["units"] == 3
+    fl = set(r["flags"])
+    assert {"alias:DOT_NUMBER->usdot", "alias:vins->units", "alias:State->garaging_state", "alias:cargo->commodity",
+            "drivers_given_as_count", "radius_miles:300->regional_201_500", "limit_parsed:1m->1000000"} <= fl, fl
+    # the canonical file still produces no alias flags, and identical radius/units handling
+    assert not any(f.startswith("alias:") for f in price(canon)["flags"])
+    # bare unit count, VIN string, miles-as-text, list commodity
+    n = ingest.normalise({"usdot": 1, "power_units": 2, "radius": "500+ miles", "commodity": ["reefer"], "units": None})
+    assert n["declared_units"] == 2 and n["vins"] == [] and n["radius"] == "long_haul_500_plus" and n["commodity"] == "reefer"
+    n = ingest.normalise({"usdot": 1, "units": "1FUJGLDR00LLA6929", "radius": "regional", "limit": "750,000"})
+    assert n["vins"] == ["1FUJGLDR00LLA6929"] and n["declared_units"] == 1 and n["limit"] == 750000
+
+def test_book_summary_runs():
+    from rater import book
+    res = book.run([SUBS])
+    txt = book.summarise(res)
+    assert "Decline rate" in txt and "Errored submissions (1)" in txt and "55_edge_not_json.json: unreadable json" in txt
+    assert {r["decision"] for r in res} == {"price", "refer", "decline", "error"}
+
 def test_monotone_new_venture_costs_more():
     base = json.load(open(os.path.join(SUBS, "00_established_clean_ia.json")))
     cfg = rates(); import copy

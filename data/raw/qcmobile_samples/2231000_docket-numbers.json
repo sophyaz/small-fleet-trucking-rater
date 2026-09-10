@@ -1,0 +1,16 @@
+{
+ "content": [
+  {
+   "docketNumber": 462425,
+   "docketNumberId": 589473,
+   "dotNumber": 2231000,
+   "prefix": "MC"
+  }
+ ],
+ "retrievalDate": "2026-09-09T16:00:29.801+0000",
+ "_links": {
+  "self": {
+   "href": "https://mobile.fmcsa.dot.gov/qc/services/carriers/2231000/mc-numbers"
+  }
+ }
+}

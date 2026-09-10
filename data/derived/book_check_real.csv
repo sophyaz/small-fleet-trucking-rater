@@ -27,7 +27,7 @@ file,usdot,decision,premium,units,unit_premium,rel_product,rules,flags,error
 4451621.json,4451621,refer,11057.25,1,10807.25,1.4844,R07,units_missing_use_census,
 4458228.json,4458228,decline,,1,12644.49,1.7367,D22,units_missing_use_census,
 4458764.json,4458764,refer,19314.7,2,9532.35,1.3093,R07,units_missing_use_census,
-4465489.json,4465489,decline,,1,12808.6,1.7593,D02;D03;D05,units_missing_use_census,
+4465489.json,4465489,decline,,1,10807.25,1.4844,D02;D03;D05,units_missing_use_census,
 4468054.json,4468054,refer,9760.38,1,9510.38,1.3062,R07,units_missing_use_census,
 4491235.json,4491235,price,16068.62,1,15818.62,2.1727,,units_missing_use_census,
 4502893.json,4502893,refer,13058.6,1,12808.6,1.7593,R07,units_missing_use_census,
