@@ -28,15 +28,19 @@ Rendered from `config/rates.yaml`. Do not edit by hand.
 - MCS-150 mileage per unit: ≤30000: 0.9, ≤90000: 1.0, ≤140000: 1.08, ≤9000000000: 1.15; below 5,000 treated as unknown (1.00); not applied when radius is long_haul_500_plus
 - Stack cap: product of authority_age × venue_state × radius capped at 2.0 before the other factors apply
 - Own crash experience: Bühlmann Z = n/(n+25), n = units × 2 yrs; own relativity capped at 3.0×
+  - Off-balanced: divided by its expectation at that fleet size under Poisson(segment rate), so the cap does not leak rate (E[rel] was 0.958 measured)
 
 ## 4. Loss cost → premium
 - ALAE 14% of loss; expense 22%, reinsurance 6%, profit/capital 7% of premium
 - Technical unit premium = loss cost × (1+ALAE) / (1 − expense − reinsurance − profit)
 - **Minimum premium $8,000 per unit**; policy fee $250
+  - Scaled by the own-experience relativity when that relativity is a surcharge (never a discount), so an adverse crash record cannot fall back to the clean-risk floor
 - Implied permissible loss+ALAE ratio: 65%
 
 ## 5. Limits offered
 - $750,000, $1,000,000, $2,000,000 — ILFs from `analysis/fit_severity.py`
+- **Enforced**: a limit off this list declines (D32); above the $1,000,000 base refers for manual excess pricing (R12), because the tail is not calibrated at $2m+
 
 ## 6. Decline / refer rules
-- See `config/rules.yaml` (IDs D01–D31 decline, R01–R09 refer).
+- See `config/rules.yaml`. D01, D02, D03, D04, D05, D10, D11, D12, D20, D21, D22, D23, D24, D25, D30, D31, D32 decline;
+  R01, R02, R03, R04, R05, R06, R07, R08, R09, R10, R11, R12 refer.

@@ -104,7 +104,13 @@ def test_reviewer_formats_folder_prices_and_never_errors_unexpectedly():
     res = book.run([FORMATS])
     live = [r for r in res if r["_file"] != "09_broken.json"]
     assert all(r["decision"] in ("price", "refer", "decline") for r in live)
-    assert sum(1 for r in live if r["decision"] == "price") >= 12
+    assert sum(1 for r in live if r["decision"] == "price") >= 11
+    # Nothing here refers or declines for a reason other than one of the known ones: R02 (the fake DOT, priced on
+    # segment defaults), R10 (adverse own crash record) and R12 ($2m limit, ILF too thin to bind automatically).
+    # Guards the count above against drifting downward for a reason nobody looked at.
+    for r in live:
+        if r["decision"] != "price":
+            assert {x["id"] for x in r["rules_fired"]} <= {"R02", "R10", "R12"}, (r["_file"], r["rules_fired"])
     # an unknown DOT is referred on segment defaults, never an error or a thin-data decline
     unknown = next(r for r in res if str(r.get("usdot")) == "9999999999")
     assert unknown["decision"] == "refer" and unknown["premium"] and any(x["id"] == "R02" for x in unknown["rules_fired"])

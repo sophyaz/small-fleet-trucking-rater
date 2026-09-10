@@ -13,6 +13,7 @@ Start here:
 | [docs/SOURCES.md](docs/SOURCES.md) | Every dataset and benchmark: URL, what it feeds, archive status |
 | [docs/MARKET_BENCHMARK.md](docs/MARKET_BENCHMARK.md) | Ten observed 2025–26 price points vs our rater, and the calibration changes they drove |
 | [docs/FREQUENCY_PROPOSAL_2026-09-09.md](docs/FREQUENCY_PROPOSAL_2026-09-09.md) | Census × crash-file GLM: what was adopted, what was rejected and why |
+| [docs/DEMO_RUNBOOK.md](docs/DEMO_RUNBOOK.md) | Running someone else's carriers live: where their files go, the exact commands, and what each decline/refer means |
 
 ## Quick start
 
@@ -81,7 +82,7 @@ The ingest is deliberately lenient so files that do not follow the schema to the
 
 A file may hold one submission (JSON object) or many — a **JSON array**, a **`.jsonl`** feed, or a **`.csv`** with one row per carrier (header spellings resolve through the same alias table). Each carrier is its own result row, tagged `<file>#<i>`. `python -m rater <folder>` runs a book check as well.
 
-Current results (offline, run 2026-09-10): synthetic adversarial set of 31 → 12 priced / 5 referred / 13 declined / 1 unreadable file; 45 real carriers drawn from the FMCSA census → 17 priced / 17 referred / 11 declined (decline rate 24.4%, refer rate 37.8%); 10 market-benchmark mirrors → 9 priced / 1 referred; 16 carriers across the four container shapes in `samples/reviewer_formats` → 14 priced / 1 referred / 1 deliberately corrupt file. Details and per-rule counts in [docs/DELIVERABLES.md](docs/DELIVERABLES.md).
+Current results (offline, run 2026-09-10): synthetic adversarial set of 31 → 12 priced / 5 referred / 13 declined / 1 unreadable file; 45 real carriers drawn from the FMCSA census → 16 priced / 18 referred / 11 declined (decline rate 24.4%, refer rate 40.0%); 68 cold-start carriers the rules were never tuned on → 49 priced / 8 referred / 11 declined, 0 errors; 10 market-benchmark mirrors → 9 priced / 1 referred; 16 carriers across the four container shapes in `samples/reviewer_formats` → 12 priced / 3 referred / 1 deliberately corrupt file. Details and per-rule counts in [docs/DELIVERABLES.md](docs/DELIVERABLES.md).
 
 ## How it works
 

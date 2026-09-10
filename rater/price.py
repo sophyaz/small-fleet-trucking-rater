@@ -60,6 +60,8 @@ def price(submission: dict, cfg=None) -> dict:
         lc = losscost.expected_loss_per_unit(f, cfg)
         cred = losscost.credibility_relativity(f, lc["base_frequency"], cfg)
         f["cred_rate_relativity"] = cred["cred_rate_relativity"]; f["cred_Z"] = cred["Z"]
+        # D20 tests the uncapped ratio, not the priced relativity - see losscost.credibility_relativity
+        f["own_crash_rate_ratio"] = cred["own_crash_rate_ratio"]
         verdict = rules.evaluate(f)
         rel = relativities(f, cfg)
         product = 1.0
@@ -73,7 +75,12 @@ def price(submission: dict, cfg=None) -> dict:
         loaded_loss = loss_cost_unit + alae
         denom = 1 - L["expense_ratio"] - L["reinsurance_ratio"] - L["profit_cost_of_capital"]
         tech_unit = loaded_loss / denom
-        min_unit = L["minimum_premium_per_unit"]
+        # The floor is the market price for a CLEAN risk. Scaled by the experience relativity when that is a
+        # surcharge, so an adverse crash record cannot fall back to the clean-risk floor (never scaled by a
+        # discount: max(1.0, .) keeps every clean risk at the $8,000 anchor). config/rates.yaml loadings.
+        min_unit_base = L["minimum_premium_per_unit"]
+        exp_scale = max(1.0, cred["cred_rate_relativity"]) if L.get("minimum_premium_experience_scaled") else 1.0
+        min_unit = min_unit_base * exp_scale
         unit_premium = max(tech_unit, min_unit)
         units = f["power_units"]
         premium = unit_premium * units + L["policy_fee"]
@@ -83,7 +90,8 @@ def price(submission: dict, cfg=None) -> dict:
             "relativity_product_raw": round(product, 4), "relativity_product_capped": round(product_capped, 4),
             "relativities": {k: {"factor": round(v[0], 4), "band": v[1]} for k, v in rel.items()},
             "loss_cost_per_unit": round(loss_cost_unit, 2), "alae_per_unit": round(alae, 2),
-            "technical_premium_per_unit": round(tech_unit, 2), "minimum_premium_per_unit": min_unit,
+            "technical_premium_per_unit": round(tech_unit, 2), "minimum_premium_per_unit": round(min_unit, 2),
+            "minimum_premium_base": min_unit_base, "minimum_premium_experience_scale": round(exp_scale, 4),
             "min_premium_binding": tech_unit < min_unit, "unit_premium": round(unit_premium, 2),
             "policy_fee": L["policy_fee"], "implied_loss_ratio": round(loaded_loss / unit_premium, 3),
             "loadings": {k: L[k] for k in ("alae_ratio", "expense_ratio", "reinsurance_ratio", "profit_cost_of_capital")},

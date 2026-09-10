@@ -167,3 +167,85 @@ def test_monotone_new_venture_costs_more():
     p0 = price(base, cfg)["breakdown"]["relativity_product_raw"]
     c2 = copy.deepcopy(cfg); c2["relativities"]["authority_age_years"][0]["factor"] = 2.0
     assert price(base, c2)["breakdown"]["relativity_product_raw"] >= p0
+
+# --- 2026-09-10 fixes: dead crash rule, credibility off-balance, unenforced limits ------------------------
+
+def _crash_carrier(crashes, fatal=0, units=None):
+    """A real cached carrier with its crash counts overridden, so the crash rules can be exercised offline."""
+    from rater import enrich
+    real = enrich.fetch_carrier(1000986)
+    return {**real, "crashes_total": crashes, "fatal_crashes": fatal, "injury_crashes": 0,
+            "safety_rating": None, "power_units": units}
+
+def _price_with(carrier, **sub):
+    from rater import enrich
+    orig = enrich.fetch_carrier
+    enrich.fetch_carrier = lambda dot: carrier
+    try:
+        return price({"usdot": 1000986, "commodity": "dry_van", **sub})
+    finally:
+        enrich.fetch_carrier = orig
+
+def test_d20_threshold_is_reachable_in_the_1_to_5_unit_segment():
+    """D20 used to test cred_rate_relativity > 3.0. That relativity caps the own rate at 3x and then credibility-
+    weights it, so its ceiling is 1 + 2Z = 1.571 at five units: the rule could not fire for any carrier in
+    appetite, and a 2-unit carrier with 12 crashes in 24 months priced clean at the minimum premium."""
+    cfg = rates(); cr = cfg["credibility"]
+    ceiling = max((u * cr["history_years"] / (u * cr["history_years"] + cr["k_unit_years"])) * (cr["own_rate_cap_multiple"] - 1) + 1
+                  for u in range(1, 6))
+    d20 = next(r for r in rules.load_rules() if r["id"] == "D20")
+    assert d20["when"]["all"][0]["field"] == "own_crash_rate_ratio", "D20 must test the uncapped ratio"
+    assert d20["when"]["all"][0]["value"] > 1.0
+    assert ceiling < 3.0, "sanity: the old threshold really was unreachable"
+    r = _price_with(_crash_carrier(12), power_units=2, driver_count=2, garaging_state="IA", radius="local_0_50")
+    assert r["decision"] == "decline" and any(x["id"] == "D20" for x in r["rules_fired"])
+
+def test_adverse_crash_record_cannot_price_at_the_clean_floor():
+    """The $8,000 floor is the market price for a clean risk. Applied flat it levelled the book: a carrier with
+    three crashes in 24 months paid exactly what a crash-free one paid, because its surcharge sat under the floor."""
+    clean = _price_with(_crash_carrier(0), power_units=1, driver_count=1, garaging_state="IA", radius="local_0_50")
+    crashed = _price_with(_crash_carrier(1), power_units=1, driver_count=1, garaging_state="IA", radius="local_0_50")
+    assert clean["breakdown"]["unit_premium"] == clean["breakdown"]["minimum_premium_base"]
+    assert clean["breakdown"]["min_premium_binding"] and crashed["breakdown"]["min_premium_binding"]
+    # both sit under the technical premium, i.e. both are floor-priced - and they must still differ
+    assert crashed["breakdown"]["unit_premium"] > clean["breakdown"]["unit_premium"]
+    # one crash on one truck is priced, not referred: at Z = 0.07 the model's own position is that it is noise
+    assert clean["decision"] == "price" and crashed["decision"] == "price"
+    # A second crash cannot show up in PRICE on a one-truck fleet: own_rate_cap_multiple = 3.0 is already saturated
+    # by the first (1 crash / 2 unit-years = 11x segment), so 1 and 5 crashes cost the same. That saturation is
+    # deliberate - the cap is what stops a noisy one-truck record dominating - but it is exactly why the crash
+    # rules gate on the raw COUNT as well as the ratio: past the cap, only the rules can tell the two apart.
+    twice = _price_with(_crash_carrier(2), power_units=1, driver_count=1, garaging_state="IA", radius="local_0_50")
+    assert twice["breakdown"]["unit_premium"] == crashed["breakdown"]["unit_premium"]
+    assert twice["decision"] == "refer" and any(x["id"] == "R10" for x in twice["rules_fired"])
+    assert _price_with(_crash_carrier(3), power_units=1, driver_count=1,
+                       garaging_state="IA", radius="local_0_50")["decision"] == "decline"
+
+def test_credibility_is_balanced():
+    """The 3x cap truncates the upside of the own-experience relativity but nothing truncates the downside, so
+    without the off-balance divisor E[cred_rel] < 1 and the whole procedure is a 4-7% discount on every risk."""
+    from rater.losscost import credibility_relativity, _expected_relativity
+    import copy
+    cfg = rates(); cr = cfg["credibility"]; seg = cfg["loss_cost"]["crash_rate_per_unit_year"]
+    off = copy.deepcopy(cfg); off["credibility"]["offbalance_correction"] = False
+    for units in (1, 2, 3, 5):
+        n = units * cr["history_years"]; Z = n / (n + cr["k_unit_years"])
+        expected_uncorrected = _expected_relativity(n, seg, cr["own_rate_cap_multiple"], Z)
+        assert expected_uncorrected < 0.98, (units, expected_uncorrected)   # the leakage this fixes
+        # with the correction on, a carrier whose record IS the segment average prices at 1.00
+        cred = credibility_relativity({"power_units": units, "crashes_24m": 0}, None, cfg)
+        cred_off = credibility_relativity({"power_units": units, "crashes_24m": 0}, None, off)
+        assert cred["cred_rate_relativity"] > cred_off["cred_rate_relativity"]
+        assert abs(cred["offbalance_divisor"] - expected_uncorrected) < 1e-9
+
+def test_offered_limits_are_enforced():
+    """limits.offered was documentation, not a rule: a $5m CSL bound at 9.3% above the $1m price."""
+    cfg = rates()
+    base = dict(power_units=2, driver_count=2, garaging_state="TX", radius="long_haul_500_plus")
+    at_1m = _price_with(_crash_carrier(0), limit=1000000, **base)
+    at_2m = _price_with(_crash_carrier(0), limit=2000000, **base)
+    at_5m = _price_with(_crash_carrier(0), limit=5000000, **base)
+    assert 5000000 not in cfg["limits"]["offered"]
+    assert at_1m["decision"] == "price"
+    assert at_2m["decision"] == "refer" and any(x["id"] == "R12" for x in at_2m["rules_fired"])
+    assert at_5m["decision"] == "decline" and any(x["id"] == "D32" for x in at_5m["rules_fired"])

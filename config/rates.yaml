@@ -44,6 +44,16 @@ credibility:
   k_unit_years: 25            # [S] Z = n/(n+k)
   history_years: 2
   own_rate_cap_multiple: 3.0
+  # [S] 2026-09-10: OFF-BALANCE CORRECTION. own_rate_cap_multiple truncates the upside of the own-experience
+  # relativity but nothing truncates the downside (no crashes -> own_rel = 0), so E[cred_rel] < 1 by construction:
+  # measured 0.958 across 113 real / operating / holdout carriers, 84% of them below 1.00, and the closed-form
+  # expectation under Poisson(segment rate) is 0.945-0.961 depending on fleet size. The segment crash rate was
+  # measured across ALL carriers including crash-free ones, so the base loss cost already contains them; crediting
+  # them again is a 4-7% rate leakage (~$1m of premium on the $23.6m portfolio, against a $1.65m profit load).
+  # With this on, the relativity is divided by its own expectation at that fleet size, so the procedure is balanced
+  # by construction and a clean carrier is credited only for being better than the segment AVERAGE, not for being
+  # better than a capped worst case. Set false to reproduce the pre-2026-09-10 (leaking) behaviour.
+  offbalance_correction: true
 
 relativities:
   total_cap: {min: 0.60, max: 3.25}
@@ -134,10 +144,23 @@ loadings:
   reinsurance_ratio: 0.06
   profit_cost_of_capital: 0.07
   minimum_premium_per_unit: 8000   # [B] 2026-09-09: was 6500; every 2025-26 source puts clean established one-truck liability at >= $7,500 (docs/MARKET_BENCHMARK.md P1, P6, P9, DAT)
+  # [S] 2026-09-10: the $8,000 floor is the observed market price for a CLEAN risk, so a risk with adverse own crash
+  # experience must not be able to fall to it. Applied flat, the floor levelled the book: a 2-unit carrier with 12
+  # crashes in 24 months (67x the segment rate) priced at exactly the same $8,000/unit as a crash-free one, because
+  # its surcharge sat under the floor. The floor binds on ~40% of the operating book, so this was not an edge case.
+  # The floor is now scaled by the experience relativity when that relativity is a surcharge (never a discount:
+  # max(1.0, .)), which leaves every clean risk at the market-anchored $8,000. Set false for the old flat floor.
+  minimum_premium_experience_scaled: true
   policy_fee: 250
 
+# [S] 2026-09-10: `offered` is now ENFORCED (rules D32 / R12), not documentation. It previously was not, so any limit
+# submitted bound at the mixture's limited mean: a $5m CSL priced 9.3% above the $1m price ($27,732 vs $25,365) when
+# market trucking ILFs sit near 1.3-1.5 at $2m alone. The thin tail (ILF(2m) = 1.058, RATIONALE section 6) is a known
+# calibration gap; the fix is to stop the rater silently issuing a bindable price at a limit it cannot rate, not to
+# pretend the ILF is right. Anything off this list declines; $2m is offered but refers for manual excess pricing.
 limits:
   offered: [750000, 1000000, 2000000]
+  base: 1000000
 
 segment_averages:
   driver_oos_rate: 0.062

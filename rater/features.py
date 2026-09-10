@@ -86,6 +86,14 @@ def build(sub: dict, car: dict, vins: list, cfg=None) -> dict:
     f["radius"] = sub["radius"]
     f["state"] = sub.get("garaging_state") or car.get("state") or None
     f["limit"] = sub["limit"]
+    # limits.offered is enforced (D32 / R12). Without this the rater happily bound any limit through the mixture's
+    # limited mean -- a $5m CSL came out 9.3% above $1m, against market trucking ILFs of 1.3-1.5 at $2m alone.
+    lim_cfg = cfg.get("limits") or {}
+    offered = lim_cfg.get("offered") or []
+    f["limit_in_offered_set"] = (f["limit"] in offered) if offered else True
+    f["limit_above_base"] = f["limit"] > (lim_cfg.get("base") or cfg["meta"]["base_limit_csl"])
+    if not f["limit_in_offered_set"]:
+        f["flags"].append(f"limit_not_offered:{f['limit']}")
     # crashes
     f["crashes_24m"] = int(_first(car.get("crashes_total"), 0)) if found else 0
     f["fatal_crashes"] = int(_first(car.get("fatal_crashes"), 0)) if found else 0

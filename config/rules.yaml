@@ -9,8 +9,16 @@ rules:
   - {id: D10, action: decline, reason: "Power units outside 1-5", when: {field: power_units, op: not_between, value: [1, 5]}}
   - {id: D11, action: decline, reason: "Hazmat / tanker / passenger / HHG / auto-hauler out of appetite", when: {field: out_of_appetite_commodity, op: eq, value: true}}
   - {id: D12, action: decline, reason: "Not a for-hire interstate carrier", when: {field: for_hire_interstate, op: eq, value: false}}
-  - {id: D20, action: decline, reason: "Credibility-weighted crash rate > 3x segment", when: {field: cred_rate_relativity, op: gt, value: 3.0}}
+  # D20 tests own_crash_rate_ratio (UNCAPPED own rate / segment rate), not cred_rate_relativity. The old threshold
+  # was cred_rate_relativity > 3.0, which cannot occur: the relativity caps the own rate at 3x and then credibility-
+  # weights it, so its maximum is 1 + 2Z = 1.148 at one unit and 1.571 at five. The rule was dead for every carrier
+  # in the 1-5 unit appetite, and a 2-unit carrier with 12 crashes in 24 months priced clean at the floor. The gate
+  # on the raw count keeps a single crash on a one-truck fleet (ratio 11x on 2 unit-years) out of the decline path:
+  # that is mostly noise at Z = 0.07 and is handled by price alone. 3+ crashes AND 4x segment is not noise here.
+  - {id: D20, action: decline, reason: "Own crash rate > 4x segment on 3+ crashes in 24 months", when: {all: [{field: own_crash_rate_ratio, op: gt, value: 4.0}, {field: crashes_24m, op: gte, value: 3}]}}
   - {id: D21, action: decline, reason: "Fatal crash in window with >=1 other crash", when: {all: [{field: fatal_crashes, op: gte, value: 1}, {field: crashes_24m, op: gte, value: 2}]}}
+  # Enforcing limits.offered. Previously any submitted limit bound through the limited mean of the severity mixture.
+  - {id: D32, action: decline, reason: "Limit outside the offered set (750k / 1m / 2m CSL)", when: {field: limit_in_offered_set, op: eq, value: false}}
   - {id: D22, action: decline, reason: "Driver OOS rate > 3x segment avg with >= 5 inspections", when: {all: [{field: driver_oos_ratio, op: gt, value: 3.0}, {field: driver_inspections, op: gte, value: 5}]}}
   - {id: D23, action: decline, reason: "Insurance cancelled / coverage gap in last 24 months", when: {field: insurance_cancellation_24m, op: eq, value: true}}
   # DORMANT on live data: QCMobile returns basicsPercentile "Not Public" for property carriers (53 of 53 enriched), so
@@ -34,3 +42,16 @@ rules:
   - {id: R07, action: refer, reason: "No active common/contract for-hire authority on file", when: {field: active_for_hire_authority, op: eq, value: false}}
   - {id: R08, action: refer, reason: "DOT absent from FMCSA census snapshot (new registration or inactive)", when: {field: in_census, op: eq, value: false}}
   - {id: R09, action: refer, reason: "QCMobile has no operation classification yet (registration too new) - for-hire status unverified", when: {field: operation_classification_known, op: eq, value: false}}
+  # Adverse own crash experience short of the D20 decline. The count gate is 2, not 1, on purpose: 16 of the 18
+  # carriers with any crash across the 113 real / holdout / operating carriers have exactly ONE, and at Z = 0.07
+  # on a one-truck fleet the model's own position is that a single crash is mostly noise (RATIONALE section 4).
+  # Gating at 1 made R10 the most-fired rule in the book and took the holdout refer rate to 50%, which is a worse
+  # answer than the problem it was fixing. A single crash is now handled by price alone - and it is no longer free,
+  # because the minimum premium scales with the experience relativity (loadings.minimum_premium_experience_scaled).
+  # A SECOND crash inside 24 months on a 1-5 unit fleet is not noise, and that is what a human should see.
+  - {id: R10, action: refer, reason: "Two or more crashes in 24 months at > 3x segment rate", when: {all: [{field: own_crash_rate_ratio, op: gt, value: 3.0}, {field: crashes_24m, op: gte, value: 2}]}}
+  # A fatality with no second crash is not D21, but it is never a clean automatic price at this fleet size.
+  - {id: R11, action: refer, reason: "Fatal crash in the 24-month window", when: {field: fatal_crashes, op: gte, value: 1}}
+  # $2m is offered but the severity tail is not calibrated for it: ILF(2m) = 1.058 against market 1.3-1.5
+  # (RATIONALE section 6, gap G13). Refer for manual excess pricing rather than bind a known-thin ILF.
+  - {id: R12, action: refer, reason: "Limit above $1m base - ILF thin at 2m, price the excess manually", when: {field: limit_above_base, op: eq, value: true}}

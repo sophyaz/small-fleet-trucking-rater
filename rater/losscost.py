@@ -33,6 +33,19 @@ def expected_loss_per_unit(features: dict, cfg=None) -> dict:
     return {"base_frequency": freq, "limited_severity": sev["limited_mean"], "trend_factor": trend,
             "base_loss_cost_per_unit": base, "severity_components": sev["components"]}
 
+def _expected_relativity(n_unit_years: float, seg_rate: float, cap: float, Z: float, terms: int = 60) -> float:
+    """E[cred_rel] for a carrier of this size whose true crash rate IS the segment rate.
+
+    Crashes over the window are Poisson(seg_rate x n). own_rel = min(cap, (X/n) / seg_rate) has its upper tail
+    truncated by `cap` and its lower tail bounded at zero by X >= 0, so the expectation is strictly below 1 and
+    the whole procedure is a discount unless it is divided out. See the note in config/rates.yaml (credibility)."""
+    lam = seg_rate * n_unit_years
+    e, p = 0.0, math.exp(-lam)
+    for x in range(terms):
+        e += p * min(cap, (x / n_unit_years) / seg_rate)
+        p *= lam / (x + 1)
+    return Z * e + (1 - Z)
+
 def credibility_relativity(features: dict, base_freq: float, cfg=None) -> dict:
     """Bühlmann-style blend of carrier-own crash rate with segment rate. Returns relativity to apply."""
     cfg = cfg or rates()
@@ -42,7 +55,17 @@ def credibility_relativity(features: dict, base_freq: float, cfg=None) -> dict:
     Z = n_unit_years / (n_unit_years + cr["k_unit_years"])
     crash_freq_seg = cfg["loss_cost"]["crash_rate_per_unit_year"]   # segment DOT-recordable crash rate
     own_rate = features.get("crashes_24m", 0) / n_unit_years
-    own_rel = min(cr["own_rate_cap_multiple"], own_rate / crash_freq_seg) if crash_freq_seg else 1.0
+    # Uncapped ratio of own crash rate to segment. The CAPPED version below is what prices (a 1-truck carrier's
+    # single crash is mostly noise); the uncapped one is what the crash-experience decline rule D20 tests, because
+    # after capping and credibility-weighting the relativity cannot exceed 1 + 2Z = 1.571 anywhere in a 1-5 unit
+    # book, which is why D20's old threshold of 3.0 could never fire on any carrier in appetite.
+    own_ratio_raw = (own_rate / crash_freq_seg) if crash_freq_seg else 0.0
+    own_rel = min(cr["own_rate_cap_multiple"], own_ratio_raw) if crash_freq_seg else 1.0
     rel = Z * own_rel + (1 - Z) * 1.0
+    expected = 1.0
+    if cr.get("offbalance_correction") and crash_freq_seg:
+        expected = _expected_relativity(n_unit_years, crash_freq_seg, cr["own_rate_cap_multiple"], Z)
+        rel = rel / expected if expected else rel
     return {"Z": Z, "unit_years": n_unit_years, "own_crash_rate": own_rate, "segment_crash_rate": crash_freq_seg,
-            "own_relativity_capped": own_rel, "cred_rate_relativity": rel}
+            "own_crash_rate_ratio": own_ratio_raw, "own_relativity_capped": own_rel,
+            "offbalance_divisor": expected, "cred_rate_relativity": rel}
