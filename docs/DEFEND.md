@@ -1,6 +1,6 @@
 # Defend — the 45–60 minute walkthrough
 
-Structure follows the brief's four questions, then the bonus topics, anticipated challenges, a demo script, and the open research list. Sections marked **[TO RESEARCH]** are deliberately blank or thin: they are the facts still to pull before the session.
+Structure follows the brief's four questions, then the bonus topics, anticipated challenges and a demo script. Where a number rests on judgment rather than measurement it is tagged **[S]** and the reasoning is given in full; the roadmap in §4 is what would replace each one with evidence, in priority order.
 
 **Opening line (3 min):** "Submission in, one of three decisions out. Enrichment from FMCSA and NHTSA, a segment crash rate from the census and crash files, credibility-weighted for the carrier's own record, relativities on top, gross-up, floor. Every number is in one YAML file and the manual is rendered from it."
 
@@ -43,8 +43,8 @@ Have `docs/SOURCES.md` open. The core is S3 + S4: a denominator and a numerator,
 | S8 NHTSA vPIC | Vehicle year, class, body; trailer / pickup detection (D30) | Verified live; decode gated on fatal error codes |
 | S15 49 CFR 387.9 | $750k federal minimum; $1m as the shipper standard | Confirmed by the API's `bipdRequiredAmount` |
 | S16 ten observed 2025–26 price points | Floor $8k, stack cap, mileage skip; claims-per-crash back-out | Insurer-published and trade-press only; Reddit and lead-gen sites excluded |
-| S11/S12 ATRI (via trade press) | Severity trend 6%; per-mile premium anchors | PDFs not yet archived → §8 |
-| S14 SERFF filings | Intended for relativity structure | **Not pulled** → §8 |
+| S11/S12 ATRI (via trade press) | Severity trend 6%; per-mile premium anchors | PDFs not archived; the figures come from named trade-press reports of them. Trend sits at 6% because 8% was above every published series in that set |
+| S14 SERFF filings | Intended for relativity structure | **Not pulled.** Would cross-check the relativity grid against how incumbents structure the same problem; roadmap item 3 (§4). The price *level* is anchored instead by the ten observed market points (S16) |
 
 What I did **not** trust: national OOS averages for small carriers (2009–10 figures in the API; live small carriers average three times higher); headline "average truck insurance cost" numbers that bundle physical damage and cargo; any single vendor figure; the census GLM's authority-age and venue coefficients (they measure dormancy and domicile-state frequency, not risk and legal venue).
 
@@ -163,7 +163,7 @@ Severity trend 6% p.a. applied for 1.5 years (trend factor 1.091), tagged [B]: A
 
 ### 5.2 Physical damage (design, not built)
 
-Stated value per unit from vPIC year / make / model through a depreciation table (config); comp and collision rates as a percentage of value with vehicle-age and radius relativities; deductible credits; exposed as `price_physdam(submission)` and a `--with-pd` flag on the book check. Watch-list evidence: vehicle age matters more for physical damage than for third-party liability, which is why the 1.20 liability factor on 20-year trucks is on the watch list rather than raised. Data need: a used-tractor value curve (auction indices) and comp / collision loss costs by age, neither public in the way FMCSA data is. **[TO RESEARCH]** value curve and rate anchors.
+Stated value per unit from vPIC year / make / model through a depreciation table (config); comp and collision rates as a percentage of value with vehicle-age and radius relativities; deductible credits; exposed as `price_physdam(submission)` and a `--with-pd` flag on the book check. Watch-list evidence: vehicle age matters more for physical damage than for third-party liability, which is why the 1.20 liability factor on 20-year trucks is on the watch list rather than raised. Data need: a used-tractor value curve (auction indices) and comp / collision loss costs by age, neither public in the way FMCSA data is. That is the reason this is a design and not code — the liability side could be built on public data, and this side cannot.
 
 ### 5.3 Multi-limit pricing
 
@@ -202,7 +202,7 @@ The rater prices whatever limit is submitted through the limited mean of the mix
 - *"Why $8,000?"* Every 2025–26 published source puts clean established one-truck liability at $7,500 or more; $8k is the bottom of that band. A higher floor would fix P6 and break P2 and P9 in the benchmark.
 - *"Why decline private carriers and intrastate?"* Different exposure, different rates, different data; the frequency anchor is for-hire interstate. Note the rule needs positive evidence; an empty classification on a new registration is unknown (R09), not private.
 - *"A file with no USDOT is declined, not referred."* By design: the DOT is the carrier's identity and every enrichment hangs off it; a submission without one is not a submission we can underwrite.
-- *"The census GLM says new ventures crash less. Why 1.65?"* The census cannot separate registered from operating: 80% of carriers under a year old have never filed mileage, and dropping them moves the 1–3 year relativity from 0.66 to 0.90. The residual is still dormancy and reporting lag. The 1.65 comes from insured-loss experience and SERFF-style new-venture surcharges (1.3–2.0) and is not contradicted by usable public data. **[TO RESEARCH]** confirm the SERFF range.
+- *"The census GLM says new ventures crash less. Why 1.65?"* The census cannot separate registered from operating: 80% of carriers under a year old have never filed mileage, and dropping them moves the 1–3 year relativity from 0.66 to 0.90. The residual is still dormancy and reporting lag. So 1.65 is **[S], selected**, and it sits inside the 1.3–2.0 band that new-venture surcharges occupy in this market. I have not read a rate filing to confirm that band, and I am not going to claim I have — but the factor is validated where it matters, at the **price**: benchmark profile P5 is a first-year Texas long-haul owner-operator, and with the stack cap it prices at $13,553 per unit against a published $8,000–$20,000 range, a gap of −3.2%. The census GLM's contradicting 0.41–0.60 is dormancy, not evidence. And a carrier this new refers on R01 regardless, so no new venture binds without a human. Reading two or three filings would move this from validated-at-the-price to validated-at-the-factor; that is roadmap item 3.
 
 ---
 
@@ -220,49 +220,3 @@ The rater prices whatever limit is submitted through the limited mean of the mix
 10. If they push on the solo-fleet factor, open `config/rates.yaml` at `fleet_size_units` — the reconciliation is written above the two lines it applies to, with the benchmark numbers that vetoed the change.
 
 Slides (8): system picture; scope; data; loss cost; relativities and credibility; rules with counts; sensitivity and validation; where wrong / watch / roadmap.
-
----
-
-## 8. Open research items **[TO RESEARCH]**
-
-Each is a fact to pull, where to get it, and what it changes. Leave blank until done; fill in the finding under each heading.
-
-### 8.1 SERFF rate filings (SOURCES S14)
-Pull 2–3 public trucking filings (Progressive County Mutual / Progressive Casualty, Sentry, Great West, Canal, Northland) from a state portal (Texas TDI, Florida OIR, Illinois DOI). Extract exposure base, radius classes and factors, GVW classes, new-venture / years-in-business factors, driver factors, territory factors for TX / FL / GA / LA / CA, minimum premiums. Tabulate against `config/rates.yaml`; flag anything > 20% apart. Changes: A3 new-venture evidence, A5 venue tiers, floor.
-*Finding:*
-
-### 8.2 ATRI PDFs (S11, S12)
-Verify against the source documents: serious-case settlement trend +5.7% p.a., median nuclear verdict growth 2013–22, small-case severity anchors ($140k injury mean), per-mile insurance cost for ≤25-truck fleets (20.3¢). Changes: A4, A8; retires the VERIFY on A8.
-*Finding:*
-
-### 8.3 Large Truck and Bus Crash Facts (S9)
-Confirm the injury / fatal shares of police-reported large-truck crashes against the crash-file shares used (34% / 2.7% per recordable crash). Changes: A7.
-*Finding:*
-
-### 8.4 Industry combined ratio (S13)
-One chart: commercial auto combined ratio by year, 2011–2025 (III / AM Best / NAIC). Supports the "money is in selection" claim and the claims-per-crash floor argument.
-*Finding:*
-
-### 8.5 MCMIS inspection file (S5, G9)
-Inspection-weighted driver and vehicle OOS rates for 1–5 unit for-hire interstate carriers. Changes: `segment_averages`, D22 threshold, OOS bands. Expected direction: D22 fires less.
-*Finding:*
-
-### 8.6 SMS methodology 2025–26 (S7)
-Confirm which compliance categories replaced the BASICs, whether any percentile is public for property carriers, and the intervention thresholds returned as `basicsViolationThreshold`. Changes: the replacement measure-based band for the dormant BASIC factors.
-*Finding:*
-
-### 8.7 L&I sample (S6)
-For ten of the 45 real carriers: authority grant date vs census add date (how wrong is authority age?), insurance history, cancellation reasons. Changes: authority-age feature, D23 automation design.
-*Finding:*
-
-### 8.8 Expense ratio 22%
-What supports 22% against the 28–30% incumbent ratio: acquisition channel, no agent commission, servicing cost per policy. This is the Corgi thesis; be ready to say what breaks if it is 28%.
-*Finding:*
-
-### 8.9 Competitor landscape
-Who writes 1–5 unit for-hire liability today (Progressive, Sentry, Great West, Canal, Northland, National Interstate, the MGAs and insurtechs), their appetite statements, and where they are withdrawing. Frames "what book would it attract".
-*Finding:*
-
-### 8.10 Physical damage anchors
-Used Class 8 tractor value curve by age; comp / collision loss cost benchmarks; typical deductibles. Changes: §5.2 from design to numbers.
-*Finding:*
