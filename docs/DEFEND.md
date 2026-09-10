@@ -71,7 +71,7 @@ What I did **not** trust: national OOS averages for small carriers (2009–10 fi
 10. **Packaging** (2026-09-10): input aliases so unseen file formats run; caches committed so a fresh clone reproduces; cross-platform runner; these two documents.
 11. **Cold start** (`e9692a8`, `0162245`): the rules had been tuned on the 45-carrier draw, so a fresh 68 carriers were sourced across three tracks — none previously cached, tracks A and B from 19 states the original draw never touched — plus a curveball folder in the file shapes a broker actually sends. Run once, no retuning. It is what turned "it generalises" from a design claim into a measurement, and it produced the dormancy finding in §2.1.
 
-Tools: Python (pandas, numpy, scipy, statsmodels for the NB GLM), seeded Monte Carlo for limited severity and the portfolio, Socrata SODA for the bulk pulls, QCMobile and vPIC REST, pytest. Claude Code was used as the build assistant; the prompts that drove each live-data step are archived in `docs/CLAUDE_CODE_PROMPTS.md` with their status, so the process is inspectable.
+Tools: Python (pandas, numpy, scipy, statsmodels for the NB GLM), seeded Monte Carlo for limited severity and the portfolio, Socrata SODA for the bulk pulls, QCMobile and vPIC REST, pytest. Claude Code was used as the build assistant; the prompt log for each live-data step was kept with its status, and is available on request, so the process is inspectable.
 
 ---
 
@@ -219,7 +219,7 @@ The rater prices whatever limit is submitted through the limited mean of the mix
 9. `config/rates.yaml` open on the loss-cost block; `data/derived/tornado.csv`; `docs/MARKET_BENCHMARK.md` after table.
 10. If they push on the solo-fleet factor, open `config/rates.yaml` at `fleet_size_units` — the reconciliation is written above the two lines it applies to, with the benchmark numbers that vetoed the change.
 
-Slides (8): system picture; scope; data; loss cost; relativities and credibility; rules with counts; sensitivity and validation; where wrong / watch / roadmap (`docs/PRESENTATION_OUTLINE.md`).
+Slides (8): system picture; scope; data; loss cost; relativities and credibility; rules with counts; sensitivity and validation; where wrong / watch / roadmap.
 
 ---
 
@@ -227,7 +227,7 @@ Slides (8): system picture; scope; data; loss cost; relativities and credibility
 
 Each is a fact to pull, where to get it, and what it changes. Leave blank until done; fill in the finding under each heading.
 
-### 8.1 SERFF rate filings (SOURCES S14, Prompt 5)
+### 8.1 SERFF rate filings (SOURCES S14)
 Pull 2–3 public trucking filings (Progressive County Mutual / Progressive Casualty, Sentry, Great West, Canal, Northland) from a state portal (Texas TDI, Florida OIR, Illinois DOI). Extract exposure base, radius classes and factors, GVW classes, new-venture / years-in-business factors, driver factors, territory factors for TX / FL / GA / LA / CA, minimum premiums. Tabulate against `config/rates.yaml`; flag anything > 20% apart. Changes: A3 new-venture evidence, A5 venue tiers, floor.
 *Finding:*
 

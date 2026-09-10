@@ -61,7 +61,7 @@ def load_crashes(years):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--years", type=int, default=3); a = ap.parse_args()
     if not os.path.exists(os.path.join(RAW, "census.csv")):
-        sys.exit("census.csv not found in data/raw — see docs/SOURCES.md and docs/CLAUDE_CODE_PROMPTS.md (Prompt 2)")
+        sys.exit("census.csv not found in data/raw — pull it with the Socrata URL in docs/SOURCES.md row S3")
     cen = load_census(); cr, yrs = load_crashes(a.years)
     print(f"census segment carriers: {len(cen):,}; crashes in window: {len(cr):,}")
     agg = cr.groupby("dot").agg(crashes=("dot", "size"), fatal=("fatal", lambda s: (s > 0).sum()), inj=("inj", lambda s: (s > 0).sum())).reset_index()

@@ -18,3 +18,9 @@ __pycache__/
 .env
 .venv/
 .pytest_cache/
+# Presentation prep: kept local, not part of the submission. The rest of docs/ IS the submission --
+# RATIONALE and SOURCES are what the brief asks for by name, so do not widen this to the folder.
+docs/WALKTHROUGH.md
+docs/DEMO_RUNBOOK.md
+docs/PRESENTATION_OUTLINE.md
+docs/CLAUDE_CODE_PROMPTS.md

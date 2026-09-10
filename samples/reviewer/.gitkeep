@@ -1,1 +1,1 @@
-# Reviewer carriers land here during the walkthrough. See docs/DEMO_RUNBOOK.md
+# Drop submissions here in any shape (json / jsonl / csv), then: python -m rater.book samples/reviewer

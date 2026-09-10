@@ -13,7 +13,6 @@ Start here:
 | [docs/SOURCES.md](docs/SOURCES.md) | Every dataset and benchmark: URL, what it feeds, archive status |
 | [docs/MARKET_BENCHMARK.md](docs/MARKET_BENCHMARK.md) | Ten observed 2025–26 price points vs our rater, and the calibration changes they drove |
 | [docs/FREQUENCY_PROPOSAL_2026-09-09.md](docs/FREQUENCY_PROPOSAL_2026-09-09.md) | Census × crash-file GLM: what was adopted, what was rejected and why |
-| [docs/DEMO_RUNBOOK.md](docs/DEMO_RUNBOOK.md) | Running someone else's carriers live: where their files go, the exact commands, and what each decline/refer means |
 
 ## Quick start
 

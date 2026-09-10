@@ -40,8 +40,9 @@ rules:
   - {id: R03, action: refer, reason: "Safety rating Conditional", when: {field: safety_rating, op: in, value: [CONDITIONAL]}}
   - {id: R04, action: refer, reason: "MCS-150 not updated in > 2 years", when: {field: mcs150_age_years, op: gt, value: 2}}
   - {id: R05, action: refer, reason: "Zero drivers declared", when: {field: drivers, op: lte, value: 0}}
-  # STUB / DORMANT: rater/features.py sets chameleon_flag = False unconditionally. The address/phone index over revoked
-  # carriers (docs/CLAUDE_CODE_PROMPTS.md Prompt 8) is not built, so this rule never fires today.
+  # STUB / DORMANT: rater/features.py sets chameleon_flag = False unconditionally. Firing it needs an index of the
+  # physical address and phone of every revoked carrier in the census file, matched against this carrier's own
+  # address within three years before its add date. That index is not built, so this rule never fires today.
   - {id: R06, action: refer, reason: "Chameleon signal: shared address/phone with revoked carrier", when: {field: chameleon_flag, op: eq, value: true}}
   - {id: R07, action: refer, reason: "No active common/contract for-hire authority on file", when: {field: active_for_hire_authority, op: eq, value: false}}
   - {id: R08, action: refer, reason: "DOT absent from FMCSA census snapshot (new registration or inactive)", when: {field: in_census, op: eq, value: false}}
