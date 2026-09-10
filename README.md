@@ -43,6 +43,8 @@ Python 3.10+; dependencies are pyyaml, numpy, pandas, requests, scipy, statsmode
 
 If the API is unreachable, the carrier is priced on segment defaults and referred (rule R02) rather than declined or errored. Without a key and without `RATER_OFFLINE=1`, an unknown DOT behaves the same way.
 
+**Registration dates come from the census, not the API.** QCMobile returns no `addDate`, MCS-150 date or hazmat/passenger flag, so those come from an FMCSA census snapshot. `data/raw/census.csv` is 731 MB and gitignored, so the repo ships **`data/census_slim.csv.gz`** — the same columns for the 1.95 M carriers with ≤ 6 power units, 19.3 MB — and `rater/enrich.py` indexes that automatically when the full file is absent. A clone therefore gets the same authority ages, and the same decisions, as the machine this was built on. Rebuild it with `python -m analysis.build_census_slim` after re-pulling the census.
+
 ## Submission format
 
 Only `usdot` is needed to get a decision. Everything else is coerced, defaulted from the FMCSA record, and the assumption recorded in the result's `flags`. Canonical form ([config/schema.json](config/schema.json)):
@@ -61,23 +63,25 @@ Only `usdot` is needed to get a decision. Everything else is coerced, defaulted 
 }
 ```
 
-The ingest is deliberately lenient so files that do not follow the schema to the letter still run. Keys are matched case-insensitively and through aliases; values are coerced:
+The ingest is deliberately lenient so files that do not follow the schema to the letter still run. Keys are matched case-insensitively and through aliases; values are coerced; a submission nested one level down (`{"carrier": {...}}`) is unwrapped. Every assumption lands in the result's `flags`:
 
 | Field | Also accepted as | Value forms accepted |
 |---|---|---|
-| `usdot` | `dot`, `dot_number`, `usdot_number`, `us_dot` | `1000986`, `"1000986"`, `"USDOT 1000986"` |
+| `usdot` | `dot`, `dot_number`, `usdot_number`, `us_dot` | `1000986`, `"1000986"`, `1000986.0`, `"USDOT 1000986"` |
 | `units` | `vins`, `vehicles`, `trucks`; count via `power_units`, `unit_count`, `num_units` | list of `{"vin": ...}`, list of VIN strings, one VIN string, or a bare unit count (no VINs) |
 | `drivers` | `driver_count`, `num_drivers`, `total_drivers` | list of driver objects, or a count |
 | `radius` | `operating_radius`, `radius_miles` | band name, `local`/`intermediate`/`regional`/`long_haul`, a number of miles (`300`), or `"500+ miles"` |
 | `commodity` | `cargo`, `commodity_type`, `freight` | free text (`"Dry Van"`, `"reefer"`, `"flatbed"`, ...) |
-| `garaging_state` | `state`, `domicile_state`, `phy_state` | two-letter code, any case |
+| `garaging_state` | `state`, `domicile_state`, `phy_state` | two-letter code or full name (`"Iowa"`), any case |
 | `limit` | `csl`, `liability_limit` | `1000000`, `"1,000,000"`, `"1m"`, `"750k"` |
 
 ## What the book check prints
 
 `python -m rater.book <folders or files> [--csv out.csv] [--jsonl out.jsonl]` prints priced / referred / declined / errored counts, decline and refer rates, how many risks sit at the minimum premium, the premium distribution (total policy and per power unit), a histogram of rules fired, every errored submission with its reason, and one line per submission. An unreadable file is reported, not fatal.
 
-Current results (offline, run 2026-09-10): synthetic adversarial set of 31 → 12 priced / 5 referred / 13 declined / 1 unreadable file; 45 real carriers drawn from the FMCSA census → 17 priced / 17 referred / 11 declined (decline rate 24.4%, refer rate 37.8%); 10 market-benchmark mirrors → 9 priced / 1 referred. Details and per-rule counts in [docs/DELIVERABLES.md](docs/DELIVERABLES.md).
+A file may hold one submission (JSON object) or many — a **JSON array**, a **`.jsonl`** feed, or a **`.csv`** with one row per carrier (header spellings resolve through the same alias table). Each carrier is its own result row, tagged `<file>#<i>`. `python -m rater <folder>` runs a book check as well.
+
+Current results (offline, run 2026-09-10): synthetic adversarial set of 31 → 12 priced / 5 referred / 13 declined / 1 unreadable file; 45 real carriers drawn from the FMCSA census → 17 priced / 17 referred / 11 declined (decline rate 24.4%, refer rate 37.8%); 10 market-benchmark mirrors → 9 priced / 1 referred; 16 carriers across the four container shapes in `samples/reviewer_formats` → 14 priced / 1 referred / 1 deliberately corrupt file. Details and per-rule counts in [docs/DELIVERABLES.md](docs/DELIVERABLES.md).
 
 ## How it works
 
@@ -112,8 +116,10 @@ analysis/     build_frequency_tables.py (census × crash file → crash rates, N
               fit_severity.py (ILFs), sensitivity.py (tornado), synthetic_backtest.py, portfolio.py (1-in-200, capital, ROC),
               render_manual.py
 samples/      submissions/ (25 synthetic carriers + 6 edge cases), submissions_real/ (45 census-drawn carriers),
-              submissions_benchmark/ (10 market price-point mirrors), fixtures/ (fake API responses for the synthetic sets),
+              submissions_benchmark/ (10 market price-point mirrors), reviewer_formats/ (16 carriers in 9 files across
+              4 container shapes), fixtures/ (fake API responses for the synthetic sets),
               make_synthetic_samples.py, make_benchmark_samples.py
+data/         census_slim.csv.gz (committed 19 MB census subset: registration dates for a clone with no bulk file)
 data/raw/     bulk downloads (gitignored, 1 GB: census.csv, crash_2023..2026.csv) + archived API samples and data
               dictionaries (committed)
 data/cache/   carrier/ and vin/ API responses (committed so the real-carrier book check reproduces offline);

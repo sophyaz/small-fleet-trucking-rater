@@ -1,19 +1,59 @@
-"""Book check: python -m rater.book samples/submissions [--csv out.csv]"""
-import argparse, glob, json, os, statistics, collections
+"""Book check: python -m rater.book samples/submissions [--csv out.csv]
+
+A file may hold one submission (JSON object), many (JSON array, .jsonl, or .csv with one row per carrier).
+Anything unreadable becomes an error row rather than stopping the run."""
+import argparse, csv as csvmod, glob, json, os, statistics, collections
 from .price import price
+
+EXTS = ("*.json", "*.jsonl", "*.ndjson", "*.csv")
+
+def _err(name, msg):
+    return {"submission_id": name, "_file": name, "decision": "error", "error": msg,
+            "premium": None, "rules_fired": [], "flags": [], "breakdown": {}}
+
+def _load(fp):
+    """(list of submission dicts, error message or None). One file may carry many carriers."""
+    ext = os.path.splitext(fp)[1].lower()
+    try:
+        if ext in (".jsonl", ".ndjson"):
+            subs, bad = [], 0
+            with open(fp, encoding="utf-8-sig") as f:
+                for line in f:
+                    if not line.strip(): continue
+                    try: subs.append(json.loads(line))
+                    except Exception: bad += 1
+            if bad and not subs: return [], f"unreadable jsonl: {bad} bad lines, none parsed"
+            return subs, (f"{bad} unparseable lines skipped" if bad else None)
+        if ext == ".csv":
+            with open(fp, newline="", encoding="utf-8-sig") as f:
+                # ingest.py resolves header spellings (dot_number, vins, state, power_units, ...) via its alias table
+                return [{k: v for k, v in row.items() if k and str(v).strip() != ""} for row in csvmod.DictReader(f)], None
+        with open(fp, encoding="utf-8-sig") as f:
+            data = json.load(f)
+        return (data if isinstance(data, list) else [data]), None
+    except Exception as e:
+        return [], f"unreadable {ext.lstrip('.') or 'file'}: {e}"
 
 def run(paths):
     files = []
     for p in paths:
-        files += sorted(glob.glob(os.path.join(p, "*.json"))) if os.path.isdir(p) else [p]
+        if os.path.isdir(p):
+            for pat in EXTS: files += glob.glob(os.path.join(p, pat))
+        else:
+            files.append(p)
     results = []
-    for fp in files:
-        try:
-            with open(fp) as f: sub = json.load(f)
-        except Exception as e:
-            results.append({"submission_id": os.path.basename(fp), "decision": "error", "error": f"unreadable json: {e}", "premium": None, "rules_fired": [], "breakdown": {}})
-            continue
-        r = price(sub); r["_file"] = os.path.basename(fp); results.append(r)
+    for fp in sorted(set(files)):
+        name = os.path.basename(fp)
+        subs, note = _load(fp)
+        if not subs:
+            results.append(_err(name, note or "no submissions in file")); continue
+        for i, sub in enumerate(subs):
+            r = price(sub if isinstance(sub, dict) else {})
+            r["_file"] = name if len(subs) == 1 else f"{name}#{i}"
+            if not r.get("submission_id") or r["submission_id"] == "sub-?":
+                r["submission_id"] = r["_file"]
+            if note: r.setdefault("flags", []).append(note)
+            results.append(r)
     return results
 
 def summarise(results):

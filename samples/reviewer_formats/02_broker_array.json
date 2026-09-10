@@ -1,0 +1,5 @@
+[
+  {"usdot": 1546699, "power_units": 1, "driver_count": 1, "radius": "local", "commodity": "dry_van", "state": "NY"},
+  {"dot_number": 3168362, "vins": ["1FUJGLDR01LLA7103", "1FUJGLDR02LLA7656", "1FUJGLDR00LLA6929"], "num_drivers": 3, "radius_miles": 600, "cargo": "flatbed", "garage_state": "TX"},
+  {"USDOT": 3962955, "unit_count": 1, "drivers": [{"age": 44, "cdl_years": 15}], "operating_radius": "intermediate", "freight": "Refrigerated"}
+]

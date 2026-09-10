@@ -1,0 +1,11 @@
+{
+  "id": "messy-but-ratable",
+  "us_dot_number": " USDOT 4307909 ",
+  "drivers": null,
+  "units": null,
+  "radius": {"miles": 400},
+  "freight": ["General Freight"],
+  "limit": "1000/1000/1000",
+  "notes": {"internal": [1, 2, {"seen_before": null}]},
+  "domicile_state": "texas"
+}

@@ -24,7 +24,7 @@ data/raw/qcmobile_samples/). Summary of what the live API actually returns:
 
 Set FMCSA_WEBKEY in env or in a .env file at repo root (gitignored). Offline mode (RATER_OFFLINE=1) reads only
 samples/fixtures + data/cache (the census sqlite is local, so it is used in offline mode too)."""
-import csv, json, os, sqlite3, time
+import csv, gzip, json, os, sqlite3, time
 from .config import DATA_DIR, ROOT
 
 CACHE = os.path.join(DATA_DIR, "cache")
@@ -33,6 +33,9 @@ QC_BASE = "https://mobile.fmcsa.dot.gov/qc/services/carriers"
 QC_SUB_ENDPOINTS = ("basics", "authority", "cargo-carried", "operation-classification", "docket-numbers")
 VPIC_BATCH = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVINValuesBatch/"
 CENSUS_CSV = os.path.join(DATA_DIR, "raw", "census.csv")
+# Committed fallback: the same columns for 1-6 unit carriers, gzipped (python -m analysis.build_census_slim).
+# Without one of these two files a live-fetched carrier has no registration date -- see the module docstring.
+CENSUS_SLIM = os.path.join(DATA_DIR, "census_slim.csv.gz")
 CENSUS_DB = os.path.join(CACHE, "census.sqlite")
 OFFLINE = os.environ.get("RATER_OFFLINE", "0") == "1"
 WEBKEY = os.environ.get("FMCSA_WEBKEY", "")
@@ -64,24 +67,37 @@ CENSUS_COLS = ("dot_number", "legal_name", "carrier_operation", "hm_flag", "pc_f
                "mcs150_mileage", "mcs150_mileage_year", "add_date", "nbr_power_unit", "driver_total",
                "authorized_for_hire", "exempt_for_hire", "private_only")
 _CENSUS_CON = None
+# "full" = data/raw/census.csv (every carrier); "slim" = the committed 1-6 unit extract; None = neither on disk.
+# A DOT absent from the slim file may simply be a large carrier, so absence is NOT evidence of a dead registration:
+# census_is_complete() reports which, and _parse_carrier turns that into "unknown" rather than firing R08.
+CENSUS_SOURCE = None
 
 def _census_con():
-    """sqlite index over data/raw/census.csv (2.1M rows, unsorted); built once, rebuilt if the CSV changes."""
-    global _CENSUS_CON
+    """sqlite index over the census snapshot; built once, rebuilt when the source file changes.
+
+    Prefers data/raw/census.csv (2.1M rows, gitignored, 731 MB). Falls back to the committed
+    data/census_slim.csv.gz so a fresh clone still has registration dates and MCS-150 fields."""
+    global _CENSUS_CON, CENSUS_SOURCE
     if _CENSUS_CON is not None:
         return _CENSUS_CON or None
-    if not os.path.exists(CENSUS_CSV):
+    if os.path.exists(CENSUS_CSV):
+        src, opener, CENSUS_SOURCE = CENSUS_CSV, open, "full"
+    elif os.path.exists(CENSUS_SLIM):
+        src, opener, CENSUS_SOURCE = CENSUS_SLIM, lambda p, **kw: gzip.open(p, "rt", **kw), "slim"
+    else:
         _CENSUS_CON = False
         return None
     os.makedirs(CACHE, exist_ok=True)
-    stamp = f"{os.path.getsize(CENSUS_CSV)}:{int(os.path.getmtime(CENSUS_CSV))}"
-    con = sqlite3.connect(CENSUS_DB, check_same_thread=False)
+    stamp = f"{CENSUS_SOURCE}:{os.path.getsize(src)}:{int(os.path.getmtime(src))}"
+    # one index per source, so a machine that has both does not re-index 731 MB every time it switches
+    db = CENSUS_DB if CENSUS_SOURCE == "full" else CENSUS_DB.replace(".sqlite", "_slim.sqlite")
+    con = sqlite3.connect(db, check_same_thread=False)
     con.execute("create table if not exists meta (key text primary key, value text)")
     cur = con.execute("select value from meta where key='stamp'").fetchone()
     if not cur or cur[0] != stamp:
         con.execute("drop table if exists census")
         con.execute(f"create table census ({', '.join(CENSUS_COLS)}, primary key (dot_number))")
-        with open(CENSUS_CSV, newline="", encoding="utf-8", errors="replace") as f:
+        with opener(src, newline="", encoding="utf-8", errors="replace") as f:
             rdr = csv.DictReader(f)
             buf = []
             for row in rdr:
@@ -95,6 +111,11 @@ def _census_con():
         con.commit()
     _CENSUS_CON = con
     return con
+
+def census_is_complete() -> bool:
+    """True only when the full census is indexed, i.e. when a missing row really means 'not in the snapshot'."""
+    _census_con()
+    return CENSUS_SOURCE == "full"
 
 def census_row(usdot) -> dict | None:
     """Registration fields for a DOT from the local census snapshot, or None if the file/row is absent."""
@@ -211,8 +232,9 @@ def _parse_carrier(raw: dict) -> dict:
         active_auth = (common.upper() == "A" or contract.upper() == "A"
                        or any(str(a.get("commonAuthorityStatus", "")).upper() == "A"
                               or str(a.get("contractAuthorityStatus", "")).upper() == "A" for a in auth))
-    # None = census not consulted (synthetic fixture, or no census file on this machine)
-    in_census = None if (raw.get("_synthetic") or not os.path.exists(CENSUS_CSV)) else bool(cen)
+    # A row found is a row found. A row MISSING only means "not in the snapshot" when the full census is indexed:
+    # with the slim 1-6 unit extract, or no census file at all, absence is no signal and must stay None (R08 silent).
+    in_census = True if cen else (None if (raw.get("_synthetic") or not census_is_complete()) else False)
     return {
         "found": True, "raw": raw,
         "legal_name": c.get("legalName"), "state": c.get("phyState") or cen.get("phy_state"),

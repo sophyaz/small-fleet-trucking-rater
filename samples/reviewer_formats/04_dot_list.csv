@@ -1,0 +1,5 @@
+dot_number,power_units,driver_count,radius_miles,cargo,state,limit
+1240222,1,1,150,dry van,IA,1000000
+3194871,5,6,700,logs,LA,1m
+4307909,1,1,40,general freight,OH,750k
+9999999999,1,1,200,dry van,TX,1m

@@ -1,5 +1,5 @@
 """python -m rater path/to/submission.json  -> pretty-printed pricing result (never a traceback)."""
-import json, sys
+import json, os, sys
 from .price import price
 
 def main(argv):
@@ -7,6 +7,10 @@ def main(argv):
         print(json.dumps({"decision": "error", "error": "usage: python -m rater path/to/submission.json"}))
         return 2
     path = argv[1]
+    if os.path.isdir(path):   # a folder is a book check, not a single submission
+        from . import book
+        print(book.summarise(book.run([path])))
+        return 0
     try:
         with open(path, encoding="utf-8-sig") as f:
             sub = json.load(f)

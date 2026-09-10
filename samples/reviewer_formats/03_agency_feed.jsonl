@@ -1,0 +1,3 @@
+{"usdot": 4330448, "power_units": 1, "driver_count": 1, "radius": "regional_201_500", "commodity": "dry_van"}
+{"dot": 4405689, "trucks": ["1FUJGLDR02LLA7656"], "total_drivers": 1, "radius": 45, "commodity": "general freight"}
+{"usdot": 4424190, "n_units": 2, "n_drivers": 3, "radius": "long haul", "cargo_type": "machinery", "home_state": "CA", "csl": "2m"}

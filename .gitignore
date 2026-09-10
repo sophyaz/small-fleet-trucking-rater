@@ -11,6 +11,8 @@ data/raw/*
 data/cache/*
 !data/cache/carrier/
 !data/cache/vin/
+# data/census_slim.csv.gz IS committed (19 MB, python -m analysis.build_census_slim): without a census snapshot a
+# live-fetched carrier has no registration date, so a fresh clone would price a different book. Not ignored here.
 __pycache__/
 *.pyc
 .env

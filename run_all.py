@@ -22,6 +22,9 @@ STEPS = [
     ("tests", [PY, "-m", "pytest", "-q", "tests"]),
     ("book check: synthetic", [PY, "-m", "rater.book", "samples/submissions", "--csv", "data/derived/book_check.csv", "--jsonl", "data/derived/book_check.jsonl"]),
     ("book check: market benchmark", [PY, "samples/make_benchmark_samples.py", "--run"]),
+    # reviewer-shaped inputs: array / jsonl / csv / wrapped / spreadsheet exports, plus one deliberately broken file
+    ("book check: reviewer formats", [PY, "-m", "rater.book", "samples/reviewer_formats",
+                                      "--csv", "data/derived/book_check_formats.csv"]),
 ]
 if os.path.isdir(os.path.join(ROOT, "samples", "submissions_real")):
     STEPS.append(("book check: real carriers", [PY, "-m", "rater.book", "samples/submissions_real", "--csv", "data/derived/book_check_real.csv", "--jsonl", "data/derived/book_check_real.jsonl"]))

@@ -15,6 +15,20 @@ COMMODITY_ALIASES = {"dryvan": "dry_van", "van": "dry_van", "refrigerated": "ree
                      "logs": "logs_lumber", "machinery": "machinery_heavy", "grain": "grain_feed"}
 OUT_OF_APPETITE = {"hazmat", "tanker", "passenger", "household_goods", "hhg", "auto_hauler", "autos", "livestock", "oilfield", "garbage"}
 VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$")
+STATE_NAMES = {
+    "alabama": "AL", "alaska": "AK", "arizona": "AZ", "arkansas": "AR", "california": "CA", "colorado": "CO",
+    "connecticut": "CT", "delaware": "DE", "district_of_columbia": "DC", "florida": "FL", "georgia": "GA",
+    "hawaii": "HI", "idaho": "ID", "illinois": "IL", "indiana": "IN", "iowa": "IA", "kansas": "KS",
+    "kentucky": "KY", "louisiana": "LA", "maine": "ME", "maryland": "MD", "massachusetts": "MA",
+    "michigan": "MI", "minnesota": "MN", "mississippi": "MS", "missouri": "MO", "montana": "MT",
+    "nebraska": "NE", "nevada": "NV", "new_hampshire": "NH", "new_jersey": "NJ", "new_mexico": "NM",
+    "new_york": "NY", "north_carolina": "NC", "north_dakota": "ND", "ohio": "OH", "oklahoma": "OK",
+    "oregon": "OR", "pennsylvania": "PA", "puerto_rico": "PR", "rhode_island": "RI", "south_carolina": "SC",
+    "south_dakota": "SD", "tennessee": "TN", "texas": "TX", "utah": "UT", "vermont": "VT", "virginia": "VA",
+    "washington": "WA", "west_virginia": "WV", "wisconsin": "WI", "wyoming": "WY",
+}
+# A reviewer's file may wrap the submission one level down: {"carrier": {...}}, {"submission": {...}}.
+WRAPPER_KEYS = ("carrier", "submission", "account", "risk", "insured", "applicant", "data", "payload")
 
 # Canonical key -> accepted spellings (compared lower-case, with spaces/hyphens collapsed to underscores).
 KEY_ALIASES = {
@@ -64,6 +78,22 @@ def _to_number(v):
     x = float(m.group(1)) * {"": 1, "k": 1_000, "m": 1_000_000}[m.group(2)]
     return int(x) if x == int(x) else x
 
+def _unwrap(sub: dict, flags: list) -> dict:
+    """A reviewer file may nest the submission one level down: {"carrier": {...}}, {"submission": {...}}.
+    If the top level carries no USDOT but a nested dict does, merge that dict over the parent so fields at
+    either level are still read."""
+    if not isinstance(sub, dict) or _pick(sub, "usdot", []) is not None:
+        return sub
+    cands = [(k, v) for k, v in sub.items() if isinstance(v, dict) and _pick(v, "usdot", []) is not None]
+    if len(cands) > 1:   # ambiguous: prefer a recognised wrapper name
+        named = [(k, v) for k, v in cands if _norm_key(k) in WRAPPER_KEYS]
+        cands = named
+    if len(cands) != 1:
+        return sub
+    k, v = cands[0]
+    flags.append(f"unwrapped:{k}")
+    return {**{kk: vv for kk, vv in sub.items() if kk != k}, **v}
+
 def _radius_from_miles(miles: float) -> str:
     if miles <= 50: return "local_0_50"
     if miles <= 200: return "intermediate_51_200"
@@ -73,13 +103,21 @@ def _radius_from_miles(miles: float) -> str:
 def normalise(sub: dict) -> dict:
     flags = []
     sub = sub if isinstance(sub, dict) else {}
+    sub = _unwrap(sub, flags)
     usdot_raw = _pick(sub, "usdot", flags)
     sid = _pick(sub, "submission_id", flags)
     out = {"submission_id": str(sid or f"sub-{usdot_raw if usdot_raw is not None else '?'}")}
-    # USDOT
-    raw = str(usdot_raw if usdot_raw is not None else "").strip()
-    digits = re.sub(r"\D", "", raw)
-    out["usdot"] = int(digits) if digits else None
+    # USDOT. Parse as a number first: a DOT arriving as a float (9900001.0, what Excel / pandas JSON produces)
+    # would otherwise have its decimal point stripped and become 99000010 -- a different, possibly real carrier.
+    n = _to_number(usdot_raw)
+    if n is not None and n > 0:
+        out["usdot"] = int(n)
+    else:
+        raw = str(usdot_raw if usdot_raw is not None else "").strip()
+        digits = re.sub(r"\D", "", raw)
+        out["usdot"] = int(digits) if digits else None
+        if out["usdot"] is not None:   # "USDOT 1000986", "MC-429079" (a docket number, not a DOT): show the source
+            flags.append(f"usdot_parsed_from_text:{raw[:32]}")
     if out["usdot"] is None:
         flags.append("usdot_missing_or_invalid")
     # drivers: a list of dicts (canonical), a list of names, a count, or a numeric string
@@ -153,6 +191,10 @@ def normalise(sub: dict) -> dict:
         flags.append("units_missing_use_census")
     # radius: band name, alias, or a number of miles (int, float or numeric string)
     r_raw = _pick(sub, "radius", flags)
+    if isinstance(r_raw, dict):   # {"radius": {"miles": 400}}
+        lookup = {_norm_key(k): v for k, v in r_raw.items()}
+        r_raw = next((lookup[k] for k in ("miles", "value", "radius", "max", "average", "avg", "band") if lookup.get(k) is not None), None)
+        flags.append(f"radius_object_unwrapped:{r_raw}")
     r = str(r_raw if r_raw is not None else "").strip().lower().replace(" ", "_").replace("-", "_") if not isinstance(r_raw, (int, float)) or isinstance(r_raw, bool) else ""
     out["radius"] = r if r in RADII else RADIUS_ALIASES.get(r.replace("_", "-") if re.fullmatch(r"\d+_\d+", r) else r)
     if out["radius"] is None:
@@ -178,13 +220,21 @@ def normalise(sub: dict) -> dict:
         flags.append("commodity_missing_default_unknown")
     # state
     st = str(_pick(sub, "garaging_state", flags) or "").strip().upper()
+    if len(st) > 2:   # "Iowa", "New Jersey"
+        full = STATE_NAMES.get(_norm_key(st))
+        if full:
+            flags.append(f"state_name:{st}->{full}"); st = full
     out["garaging_state"] = st if len(st) == 2 else None
     if out["garaging_state"] is None:
         flags.append("garaging_state_missing_use_census")
     # limit
     lim_raw = _pick(sub, "limit", flags)
     lim = _to_number(lim_raw)
-    if lim_raw is not None and lim is None:
+    if lim is None and re.fullmatch(r"\s*\d+\s*/\s*\d+\s*/\s*\d+\s*", str(lim_raw or "")):
+        # split limits ("250/500/100", "1000/1000/1000"). We only write CSL, so do not invent a combined
+        # single limit -- price the $1m CSL and flag it for the underwriter.
+        flags.append(f"limit_split_form_not_offered:{str(lim_raw).strip()}_priced_as_1m_csl")
+    elif lim_raw is not None and lim is None:
         flags.append("limit_not_numeric_default_1m")
     elif isinstance(lim_raw, str) and lim is not None:
         flags.append(f"limit_parsed:{lim_raw}->{int(lim)}")

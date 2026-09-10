@@ -1,0 +1,11 @@
+{
+  "submission_id": "nested-wrapper",
+  "effective_date": "2026-10-01",
+  "producer": "Acme Agency",
+  "carrier": {
+    "usdot": 4145823,
+    "vins": ["1FUJGLDR3CLBP8834"],
+    "radius": "regional",
+    "commodity": "reefer"
+  }
+}

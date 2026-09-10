@@ -1,0 +1,10 @@
+{
+  "Carrier Name": "Excel export - float DOT, full state name, counts as strings",
+  "DOT Number": 1240222.0,
+  "Power Units": "1",
+  "Drivers": "1",
+  "Operating Radius": 300,
+  "Cargo": "Dry Van",
+  "State": "Iowa",
+  "Limit": "1m"
+}
