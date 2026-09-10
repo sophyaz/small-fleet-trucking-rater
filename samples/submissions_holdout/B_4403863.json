@@ -1,0 +1,15 @@
+{
+ "submission_id": "holdout-B-4403863",
+ "usdot": 4403863,
+ "driver_count": 1,
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "AL",
+ "limit": 1000000,
+ "units": [
+  {
+   "vin": "1XPWD49X4CD161369"
+  }
+ ],
+ "power_units": 1
+}

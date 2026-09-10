@@ -1,0 +1,15 @@
+{
+ "submission_id": "holdout-B-4312840",
+ "usdot": 4312840,
+ "driver_count": 2,
+ "radius": "regional_201_500",
+ "commodity": "general_freight",
+ "garaging_state": "NC",
+ "limit": 1000000,
+ "units": [
+  {
+   "vin": "1FT8W3AT9FED72038"
+  }
+ ],
+ "power_units": 2
+}

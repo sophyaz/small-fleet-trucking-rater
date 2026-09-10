@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-3989969",
+ "usdot": 3989969,
+ "driver_count": 1,
+ "radius": "local_0_50",
+ "commodity": "dry_van",
+ "garaging_state": "WA",
+ "limit": 1000000,
+ "power_units": 1
+}

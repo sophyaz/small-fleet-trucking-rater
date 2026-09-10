@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-1794860",
+ "usdot": 1794860,
+ "driver_count": 1,
+ "power_units": 1,
+ "radius": "local_0_50",
+ "commodity": "general_freight",
+ "garaging_state": "QC",
+ "limit": 1000000
+}

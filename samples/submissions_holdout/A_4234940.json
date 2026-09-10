@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4234940",
+ "usdot": 4234940,
+ "driver_count": 1,
+ "radius": "regional_201_500",
+ "commodity": "general_freight",
+ "garaging_state": "NJ",
+ "limit": 1000000,
+ "power_units": 1
+}

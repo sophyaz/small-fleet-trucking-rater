@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-3541199",
+ "usdot": 3541199,
+ "driver_count": 4,
+ "radius": "local_0_50",
+ "commodity": "auto_hauler",
+ "garaging_state": "MI",
+ "limit": 1000000,
+ "power_units": 3
+}

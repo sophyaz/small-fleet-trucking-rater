@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4356576",
+ "usdot": 4356576,
+ "driver_count": 1,
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "TN",
+ "limit": 1000000,
+ "power_units": 1
+}

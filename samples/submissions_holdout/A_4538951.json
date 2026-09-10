@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4538951",
+ "usdot": 4538951,
+ "driver_count": 1,
+ "radius": "local_0_50",
+ "commodity": "flatbed",
+ "garaging_state": "NC",
+ "limit": 1000000,
+ "power_units": 1
+}

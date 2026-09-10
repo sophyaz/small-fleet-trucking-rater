@@ -1,0 +1,15 @@
+{
+ "submission_id": "holdout-B-2291268",
+ "usdot": 2291268,
+ "driver_count": 1,
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "AR",
+ "limit": 1000000,
+ "units": [
+  {
+   "vin": "1XP5DB9X46D885311"
+  }
+ ],
+ "power_units": 1
+}

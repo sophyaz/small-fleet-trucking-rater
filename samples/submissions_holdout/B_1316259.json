@@ -1,0 +1,15 @@
+{
+ "submission_id": "holdout-B-1316259",
+ "usdot": 1316259,
+ "driver_count": 2,
+ "radius": "local_0_50",
+ "commodity": "dry_van",
+ "garaging_state": "MN",
+ "limit": 1000000,
+ "units": [
+  {
+   "vin": "1XKWD49XXPR236509"
+  }
+ ],
+ "power_units": 2
+}

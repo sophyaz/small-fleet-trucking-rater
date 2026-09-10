@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-4341494",
+ "usdot": 4341494,
+ "driver_count": 6,
+ "power_units": 3,
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "ON",
+ "limit": 1000000
+}

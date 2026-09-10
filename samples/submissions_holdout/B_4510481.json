@@ -1,0 +1,15 @@
+{
+ "submission_id": "holdout-B-4510481",
+ "usdot": 4510481,
+ "driver_count": 1,
+ "radius": "regional_201_500",
+ "commodity": "reefer",
+ "garaging_state": "CO",
+ "limit": 1000000,
+ "units": [
+  {
+   "vin": "1FT8W4DT5TED68825"
+  }
+ ],
+ "power_units": 1
+}

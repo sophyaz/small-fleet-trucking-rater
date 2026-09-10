@@ -1,0 +1,15 @@
+{
+ "submission_id": "holdout-B-4547641",
+ "usdot": 4547641,
+ "driver_count": 1,
+ "radius": "local_0_50",
+ "commodity": "general_freight",
+ "garaging_state": "ID",
+ "limit": 1000000,
+ "units": [
+  {
+   "vin": "4V4NC9EH3NN315325"
+  }
+ ],
+ "power_units": 1
+}

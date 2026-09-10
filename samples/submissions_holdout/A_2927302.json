@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-2927302",
+ "usdot": 2927302,
+ "driver_count": 1,
+ "radius": "regional_201_500",
+ "commodity": "tanker_non_haz",
+ "garaging_state": "IN",
+ "limit": 1000000,
+ "power_units": 1
+}

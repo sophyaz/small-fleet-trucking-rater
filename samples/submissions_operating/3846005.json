@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-3846005",
+ "usdot": 3846005,
+ "driver_count": 1,
+ "power_units": 1,
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "MI",
+ "limit": 1000000
+}

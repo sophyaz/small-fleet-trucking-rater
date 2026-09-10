@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-603166",
+ "usdot": 603166,
+ "driver_count": 4,
+ "radius": "long_haul_500_plus",
+ "commodity": "general_freight",
+ "garaging_state": "AR",
+ "limit": 1000000,
+ "power_units": 5
+}

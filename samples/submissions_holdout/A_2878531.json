@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-2878531",
+ "usdot": 2878531,
+ "driver_count": 3,
+ "radius": "intermediate_51_200",
+ "commodity": "reefer",
+ "garaging_state": "AL",
+ "limit": 1000000,
+ "power_units": 1
+}

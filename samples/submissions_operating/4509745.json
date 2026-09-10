@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-4509745",
+ "usdot": 4509745,
+ "driver_count": 1,
+ "power_units": 1,
+ "radius": "local_0_50",
+ "commodity": "reefer",
+ "garaging_state": "SD",
+ "limit": 1000000
+}

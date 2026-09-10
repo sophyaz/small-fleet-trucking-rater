@@ -1,0 +1,6 @@
+{"usdot": 4234940, "power_units": 1, "radius": "local", "commodity": "dry_van"}
+{"usdot": "not-a-number", "power_units": 1}
+{"power_units": 2, "commodity": "dry_van"}
+{"usdot": 99999999, "power_units": 1}
+{"usdot": 4239469, "power_units": -4, "drivers": "three", "radius": "banana", "limit": "lots", "commodity": 12345}
+{ this is not json at all

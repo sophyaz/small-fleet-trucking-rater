@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4568852",
+ "usdot": 4568852,
+ "driver_count": 4,
+ "radius": "local_0_50",
+ "commodity": "general_freight",
+ "garaging_state": "IN",
+ "limit": 1000000,
+ "power_units": 1
+}

@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4763731",
+ "usdot": 4763731,
+ "driver_count": 1,
+ "radius": "regional_201_500",
+ "commodity": "reefer",
+ "garaging_state": "NV",
+ "limit": 1000000,
+ "power_units": 1
+}

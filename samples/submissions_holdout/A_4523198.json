@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4523198",
+ "usdot": 4523198,
+ "driver_count": 1,
+ "radius": "long_haul_500_plus",
+ "commodity": "general_freight",
+ "garaging_state": "AL",
+ "limit": 1000000,
+ "power_units": 1
+}

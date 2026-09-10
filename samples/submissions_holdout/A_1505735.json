@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-1505735",
+ "usdot": 1505735,
+ "driver_count": 1,
+ "radius": "intermediate_51_200",
+ "commodity": "general_freight",
+ "garaging_state": "MN",
+ "limit": 1000000,
+ "power_units": 1
+}

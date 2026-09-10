@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-4469425",
+ "usdot": 4469425,
+ "driver_count": 1,
+ "power_units": 1,
+ "radius": "local_0_50",
+ "commodity": "flatbed",
+ "garaging_state": "NC",
+ "limit": 1000000
+}

@@ -1,0 +1,27 @@
+[
+ {
+  "carrier": {
+   "USDOT": "USDOT 3989969",
+   "vins": [
+    "1FUJGLDR3CLBP8834"
+   ],
+   "operating_radius": "500+ miles",
+   "cargo": "General Freight",
+   "domicile_state": "Indiana",
+   "csl": 1000000,
+   "num_drivers": 2
+  }
+ },
+ {
+  "carrier": {
+   "dot_number": 4180399.0,
+   "power_units": 2,
+   "driver_count": 2,
+   "radius": {
+    "miles": 150
+   },
+   "commodity": "dry van",
+   "state": "MI"
+  }
+ }
+]

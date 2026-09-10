@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4363012",
+ "usdot": 4363012,
+ "driver_count": 3,
+ "radius": "long_haul_500_plus",
+ "commodity": "reefer",
+ "garaging_state": "NC",
+ "limit": 1000000,
+ "power_units": 3
+}

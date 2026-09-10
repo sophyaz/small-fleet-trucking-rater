@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4180399",
+ "usdot": 4180399,
+ "driver_count": 1,
+ "radius": "regional_201_500",
+ "commodity": "general_freight",
+ "garaging_state": "WA",
+ "limit": 1000000,
+ "power_units": 1
+}

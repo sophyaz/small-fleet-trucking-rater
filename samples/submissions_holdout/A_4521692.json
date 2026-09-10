@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4521692",
+ "usdot": 4521692,
+ "driver_count": 1,
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "DE",
+ "limit": 1000000,
+ "power_units": 1
+}

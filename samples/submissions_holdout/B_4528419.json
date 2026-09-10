@@ -1,0 +1,15 @@
+{
+ "submission_id": "holdout-B-4528419",
+ "usdot": 4528419,
+ "driver_count": 1,
+ "radius": "long_haul_500_plus",
+ "commodity": "general_freight",
+ "garaging_state": "KS",
+ "limit": 1000000,
+ "units": [
+  {
+   "vin": "1FUJGLDR0DSBV3297"
+  }
+ ],
+ "power_units": 1
+}

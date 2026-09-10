@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-4474195",
+ "usdot": 4474195,
+ "driver_count": 1,
+ "power_units": 1,
+ "radius": "local_0_50",
+ "commodity": "general_freight",
+ "garaging_state": "TN",
+ "limit": 1000000
+}

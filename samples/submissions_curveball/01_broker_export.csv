@@ -1,0 +1,5 @@
+DOT Number,Company,# Trucks,Drivers,Radius (mi),Freight,State,Limit
+1505735,Acme Hauling LLC,2,2,250,Dry Van,Tennessee,"1,000,000"
+2878531,Bell Transport,1,1,45,reefer,co,1M
+2927302,Cobb Freight Inc,3,4,600,Flat Bed,KANSAS,750k
+3541199,Dune Logistics,1,1,,,,

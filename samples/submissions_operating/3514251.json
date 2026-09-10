@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-3514251",
+ "usdot": 3514251,
+ "driver_count": 1,
+ "power_units": 1,
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "CO",
+ "limit": 1000000
+}

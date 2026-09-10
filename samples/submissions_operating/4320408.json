@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-4320408",
+ "usdot": 4320408,
+ "driver_count": 1,
+ "power_units": 1,
+ "radius": "local_0_50",
+ "commodity": "flatbed",
+ "garaging_state": "KS",
+ "limit": 1000000
+}

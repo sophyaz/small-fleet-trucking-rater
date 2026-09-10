@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-2060909",
+ "usdot": 2060909,
+ "driver_count": 6,
+ "power_units": 5,
+ "radius": "regional_201_500",
+ "commodity": "flatbed",
+ "garaging_state": "MD",
+ "limit": 1000000
+}

@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-4239469",
+ "usdot": 4239469,
+ "driver_count": 1,
+ "radius": "intermediate_51_200",
+ "commodity": "flatbed",
+ "garaging_state": "CT",
+ "limit": 1000000,
+ "power_units": 1
+}

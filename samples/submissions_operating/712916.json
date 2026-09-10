@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-712916",
+ "usdot": 712916,
+ "driver_count": 2,
+ "power_units": 3,
+ "radius": "long_haul_500_plus",
+ "commodity": "general_freight",
+ "garaging_state": "MI",
+ "limit": 1000000
+}

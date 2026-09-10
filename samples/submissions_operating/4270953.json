@@ -1,0 +1,10 @@
+{
+ "submission_id": "op-4270953",
+ "usdot": 4270953,
+ "driver_count": 1,
+ "power_units": 1,
+ "radius": "long_haul_500_plus",
+ "commodity": "dry_van",
+ "garaging_state": "AZ",
+ "limit": 1000000
+}

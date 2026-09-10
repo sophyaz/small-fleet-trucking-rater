@@ -1,0 +1,10 @@
+{
+ "submission_id": "holdout-A-6133988",
+ "usdot": 6133988,
+ "driver_count": 1,
+ "radius": "intermediate_51_200",
+ "commodity": "dry_van",
+ "garaging_state": "CO",
+ "limit": 1000000,
+ "power_units": 1
+}
