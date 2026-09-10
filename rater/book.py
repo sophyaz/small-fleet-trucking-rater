@@ -106,7 +106,9 @@ def main():
                 w.writerow([r.get("_file"), r.get("usdot"), r["decision"], r.get("premium"), b.get("units"), b.get("unit_premium"),
                             b.get("relativity_product_capped"), ";".join(x["id"] for x in r.get("rules_fired", [])), ";".join(r.get("flags", [])), r.get("error")])
     if a.jsonl:
-        with open(a.jsonl, "w") as f:
+        # newline="\n" so a Windows run does not rewrite every line with CRLF and dirty the tree on each
+        # run_all.py: the rows are identical, but `git status` stops being a useful signal during a demo.
+        with open(a.jsonl, "w", newline="\n", encoding="utf-8") as f:
             for r in res: f.write(json.dumps({k: v for k, v in r.items() if k != "features"}, default=str) + "\n")
 
 if __name__ == "__main__":
