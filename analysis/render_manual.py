@@ -46,7 +46,7 @@ def main():
              *([f"  - Scaled by the own-experience relativity when that relativity is a surcharge (never a discount), so an adverse crash record cannot fall back to the clean-risk floor"] if L.get('minimum_premium_experience_scaled') else []),
              f"- Implied permissible loss+ALAE ratio: {1 - L['expense_ratio'] - L['reinsurance_ratio'] - L['profit_cost_of_capital']:.0%}", "",
              "## 5. Limits offered", "- " + ", ".join(f"${x:,}" for x in c["limits"]["offered"]) + " — ILFs from `analysis/fit_severity.py`",
-             f"- **Enforced**: a limit off this list declines (D32); above the ${c['limits'].get('base', c['meta']['base_limit_csl']):,} base refers for manual excess pricing (R12), because the tail is not calibrated at $2m+", "",
+             f"- **Enforced**: a limit below the federal minimum or above the top limit offered declines (D32); a limit inside that band but off this list refers to confirm what was requested (R13, a stray digit is not a coverage request); above the ${c['limits'].get('base', c['meta']['base_limit_csl']):,} base refers for manual excess pricing (R12), because the tail is not calibrated at $2m+", "",
              "## 6. Decline / refer rules",
              "- See `config/rules.yaml`. " + ", ".join(sorted(r["id"] for r in rules() if r["action"] == "decline")) + " decline;",
              "  " + ", ".join(sorted(r["id"] for r in rules() if r["action"] == "refer")) + " refer."]

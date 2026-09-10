@@ -39,7 +39,7 @@ Rendered from `config/rates.yaml`. Do not edit by hand.
 
 ## 5. Limits offered
 - $750,000, $1,000,000, $2,000,000 — ILFs from `analysis/fit_severity.py`
-- **Enforced**: a limit off this list declines (D32); above the $1,000,000 base refers for manual excess pricing (R12), because the tail is not calibrated at $2m+
+- **Enforced**: a limit below the federal minimum or above the top limit offered declines (D32); a limit inside that band but off this list refers to confirm what was requested (R13, a stray digit is not a coverage request); above the $1,000,000 base refers for manual excess pricing (R12), because the tail is not calibrated at $2m+
 
 ## 6. Decline / refer rules
 - See `config/rules.yaml`. D01, D02, D03, D04, D05, D10, D11, D12, D20, D21, D22, D23, D24, D25, D30, D31, D32 decline;
