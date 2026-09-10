@@ -2,7 +2,7 @@
 Real unseen DOTs, messy headers, human-typed values, and a few genuinely bad rows."""
 import csv, json, os, glob
 
-ROOT = r"C:\Users\sophi\trucking-rater\trucking-rater"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "samples", "submissions_curveball")
 os.makedirs(OUT, exist_ok=True)
 for f in glob.glob(os.path.join(OUT, "*")): os.remove(f)

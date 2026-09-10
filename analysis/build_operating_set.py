@@ -10,10 +10,10 @@ overstates the decline rate.
 """
 import json, os, glob, sys
 import pandas as pd
-sys.path.insert(0, r"C:\Users\sophi\trucking-rater\trucking-rater")
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
 from rater import enrich
 
-ROOT = r"C:\Users\sophi\trucking-rater\trucking-rater"
 RAW = os.path.join(ROOT, "data", "raw")
 OUT = os.path.join(ROOT, "samples", "submissions_operating")
 FOCUS = {"TX", "CA", "FL", "GA", "IL", "LA", "NY", "IA", "OH", "PA"}

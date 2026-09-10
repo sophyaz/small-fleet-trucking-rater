@@ -11,7 +11,7 @@ Rules of the draw:
 import json, os, sys, glob
 import pandas as pd
 
-ROOT = r"C:\Users\sophi\trucking-rater\trucking-rater"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(ROOT, "data", "raw")
 OUT = os.path.join(ROOT, "samples", "submissions_holdout")
 FOCUS_ALREADY_USED = {"TX", "CA", "FL", "GA", "IL", "LA", "NY", "IA", "OH", "PA"}
