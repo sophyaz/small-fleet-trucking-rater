@@ -265,6 +265,8 @@ def normalise(sub: dict) -> dict:
         flags.append("limit_not_numeric_default_1m")
     elif isinstance(lim_raw, str) and lim is not None:
         flags.append(f"limit_parsed:{lim_raw}->{int(lim)}")
+    if lim is not None and lim <= 0:   # "limit": 0 / -5 fell through to the $1m default with no flag at all,
+        flags.append(f"limit_non_positive:{lim}->default_1m")   # the one assumption in this file that was silent
     out["limit"] = int(lim) if lim is not None and lim > 0 else 1000000
     ih = _pick(sub, "insurance_history", flags) or {}
     ih = ih if isinstance(ih, dict) else {}

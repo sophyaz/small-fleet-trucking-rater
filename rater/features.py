@@ -86,12 +86,21 @@ def build(sub: dict, car: dict, vins: list, cfg=None) -> dict:
     f["radius"] = sub["radius"]
     f["state"] = sub.get("garaging_state") or car.get("state") or None
     f["limit"] = sub["limit"]
-    # limits.offered is enforced (D32 / R12). Without this the rater happily bound any limit through the mixture's
+    # limits.offered is enforced (D32 / R12 / R13). Without this the rater bound any limit through the mixture's
     # limited mean -- a $5m CSL came out 9.3% above $1m, against market trucking ILFs of 1.3-1.5 at $2m alone.
     lim_cfg = cfg.get("limits") or {}
     offered = lim_cfg.get("offered") or []
+    base = lim_cfg.get("base") or cfg["meta"]["base_limit_csl"]
     f["limit_in_offered_set"] = (f["limit"] in offered) if offered else True
-    f["limit_above_base"] = f["limit"] > (lim_cfg.get("base") or cfg["meta"]["base_limit_csl"])
+    # Three different problems, three different answers. Below the federal minimum we cannot legally write the
+    # risk at all, and above the top offered limit they are asking for a layer we do not rate: both decline (D32).
+    # A limit that is merely not one of the three we quote -- $900k, or $1,000,001, which is a typo, not a request
+    # -- is a data-entry problem, and hard-declining an otherwise good submission over a stray digit is the wrong
+    # answer when the brief grades handling of bad input. That refers (R13) and prices at the submitted limit.
+    f["limit_outside_writable_range"] = bool(offered) and not (min(offered) <= f["limit"] <= max(offered))
+    f["limit_off_grid"] = (not f["limit_in_offered_set"]) and not f["limit_outside_writable_range"]
+    # R12 is about the $2m excess layer specifically, not about a limit that rounds a dollar above base
+    f["limit_excess_layer"] = f["limit_in_offered_set"] and f["limit"] > base
     if not f["limit_in_offered_set"]:
         f["flags"].append(f"limit_not_offered:{f['limit']}")
     # crashes

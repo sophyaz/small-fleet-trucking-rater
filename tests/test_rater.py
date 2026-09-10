@@ -239,13 +239,30 @@ def test_credibility_is_balanced():
         assert abs(cred["offbalance_divisor"] - expected_uncorrected) < 1e-9
 
 def test_offered_limits_are_enforced():
-    """limits.offered was documentation, not a rule: a $5m CSL bound at 9.3% above the $1m price."""
+    """limits.offered was documentation, not a rule: a $5m CSL bound at 9.3% above the $1m price.
+
+    Three different problems get three different answers, because a stray digit is not a coverage request:
+    outside the writable band declines, off-grid inside it refers, an offered excess limit refers."""
     cfg = rates()
     base = dict(power_units=2, driver_count=2, garaging_state="TX", radius="long_haul_500_plus")
-    at_1m = _price_with(_crash_carrier(0), limit=1000000, **base)
-    at_2m = _price_with(_crash_carrier(0), limit=2000000, **base)
-    at_5m = _price_with(_crash_carrier(0), limit=5000000, **base)
+    def dec(limit): return _price_with(_crash_carrier(0), limit=limit, **base)
     assert 5000000 not in cfg["limits"]["offered"]
-    assert at_1m["decision"] == "price"
-    assert at_2m["decision"] == "refer" and any(x["id"] == "R12" for x in at_2m["rules_fired"])
-    assert at_5m["decision"] == "decline" and any(x["id"] == "D32" for x in at_5m["rules_fired"])
+    assert dec(750000)["decision"] == "price" and dec(1000000)["decision"] == "price"
+    # the $2m excess layer is offered but the tail is not calibrated for it
+    r = dec(2000000); assert r["decision"] == "refer" and any(x["id"] == "R12" for x in r["rules_fired"])
+    # above the top limit offered, and below the federal minimum: both outside what we can write
+    for bad in (5000000, 500000, 100):
+        r = dec(bad)
+        assert r["decision"] == "decline" and any(x["id"] == "D32" for x in r["rules_fired"]), bad
+    # a typo inside the writable band must NOT cost an otherwise good submission a decline
+    for odd in (900000, 1000001):
+        r = dec(odd)
+        assert r["decision"] == "refer" and any(x["id"] == "R13" for x in r["rules_fired"]), odd
+        assert not any(x["id"] == "D32" for x in r["rules_fired"]), odd
+
+def test_non_positive_limit_is_flagged_not_silently_defaulted():
+    """Every other assumption in ingest.normalise appends a flag; "limit": 0 was the one that did not."""
+    for bad in (0, -5):
+        n = ingest.normalise({"usdot": 1000986, "limit": bad})
+        assert n["limit"] == 1000000
+        assert any(f.startswith("limit_non_positive") for f in n["ingest_flags"]), bad

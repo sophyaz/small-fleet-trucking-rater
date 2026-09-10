@@ -43,4 +43,4 @@ Rendered from `config/rates.yaml`. Do not edit by hand.
 
 ## 6. Decline / refer rules
 - See `config/rules.yaml`. D01, D02, D03, D04, D05, D10, D11, D12, D20, D21, D22, D23, D24, D25, D30, D31, D32 decline;
-  R01, R02, R03, R04, R05, R06, R07, R08, R09, R10, R11, R12 refer.
+  R01, R02, R03, R04, R05, R06, R07, R08, R09, R10, R11, R12, R13 refer.

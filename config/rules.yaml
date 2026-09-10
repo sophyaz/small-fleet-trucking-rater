@@ -18,7 +18,11 @@ rules:
   - {id: D20, action: decline, reason: "Own crash rate > 4x segment on 3+ crashes in 24 months", when: {all: [{field: own_crash_rate_ratio, op: gt, value: 4.0}, {field: crashes_24m, op: gte, value: 3}]}}
   - {id: D21, action: decline, reason: "Fatal crash in window with >=1 other crash", when: {all: [{field: fatal_crashes, op: gte, value: 1}, {field: crashes_24m, op: gte, value: 2}]}}
   # Enforcing limits.offered. Previously any submitted limit bound through the limited mean of the severity mixture.
-  - {id: D32, action: decline, reason: "Limit outside the offered set (750k / 1m / 2m CSL)", when: {field: limit_in_offered_set, op: eq, value: false}}
+  # D32 is deliberately narrow: only a limit BELOW the federal minimum (cannot legally write it) or ABOVE the top
+  # limit we offer (a layer we do not rate). A limit that is merely off the grid - $900k, or $1,000,001, which is a
+  # typo rather than a request - refers on R13 instead. Declining an otherwise good submission over a stray digit
+  # is the wrong answer to "sensible handling of missing or bad inputs".
+  - {id: D32, action: decline, reason: "Limit below the federal minimum or above the top limit offered (750k-2m CSL)", when: {field: limit_outside_writable_range, op: eq, value: true}}
   - {id: D22, action: decline, reason: "Driver OOS rate > 3x segment avg with >= 5 inspections", when: {all: [{field: driver_oos_ratio, op: gt, value: 3.0}, {field: driver_inspections, op: gte, value: 5}]}}
   - {id: D23, action: decline, reason: "Insurance cancelled / coverage gap in last 24 months", when: {field: insurance_cancellation_24m, op: eq, value: true}}
   # DORMANT on live data: QCMobile returns basicsPercentile "Not Public" for property carriers (53 of 53 enriched), so
@@ -54,4 +58,7 @@ rules:
   - {id: R11, action: refer, reason: "Fatal crash in the 24-month window", when: {field: fatal_crashes, op: gte, value: 1}}
   # $2m is offered but the severity tail is not calibrated for it: ILF(2m) = 1.058 against market 1.3-1.5
   # (RATIONALE section 6, gap G13). Refer for manual excess pricing rather than bind a known-thin ILF.
-  - {id: R12, action: refer, reason: "Limit above $1m base - ILF thin at 2m, price the excess manually", when: {field: limit_above_base, op: eq, value: true}}
+  - {id: R12, action: refer, reason: "Limit above $1m base - ILF thin at 2m, price the excess manually", when: {field: limit_excess_layer, op: eq, value: true}}
+  # Inside the writable band but not one of the three limits we quote: almost always a data-entry error. Priced at
+  # the limit submitted (the limited mean handles any limit) and put in front of a human to confirm what they meant.
+  - {id: R13, action: refer, reason: "Limit is not one of the offered values - confirm the limit requested", when: {field: limit_off_grid, op: eq, value: true}}
