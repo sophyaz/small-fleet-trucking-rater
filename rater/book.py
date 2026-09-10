@@ -23,7 +23,7 @@ def _load(fp):
                     try: subs.append(json.loads(line))
                     except Exception: bad += 1
             if bad and not subs: return [], f"unreadable jsonl: {bad} bad lines, none parsed"
-            return subs, (f"{bad} unparseable lines skipped" if bad else None)
+            return subs, (f"{bad} unparseable line{'s' if bad != 1 else ''} skipped" if bad else None)
         if ext == ".csv":
             with open(fp, newline="", encoding="utf-8-sig") as f:
                 # ingest.py resolves header spellings (dot_number, vins, state, power_units, ...) via its alias table
@@ -52,7 +52,11 @@ def run(paths):
             r["_file"] = name if len(subs) == 1 else f"{name}#{i}"
             if not r.get("submission_id") or r["submission_id"] == "sub-?":
                 r["submission_id"] = r["_file"]
-            if note: r.setdefault("flags", []).append(note)
+            if note:
+                r.setdefault("flags", []).append(note)
+                # Also carried structurally: a row silently dropped from a feed must show in the printed
+                # summary, not only in a flags column nobody reads.
+                r["_file_note"] = f"{name}: {note}"
             results.append(r)
     return results
 
@@ -78,6 +82,9 @@ def summarise(results):
     lines += ["", "Rules fired:"] + [f"  {k}: {v}" for k, v in reasons.most_common()]
     errs = [r for r in results if r["decision"] == "error"]
     lines += ["", f"Errored submissions ({len(errs)}):"] + [f"  {r.get('_file', r.get('submission_id'))}: {r['error']}" for r in errs]
+    notes = sorted({r["_file_note"] for r in results if r.get("_file_note")})
+    if notes:
+        lines += ["", f"Files read only in part ({len(notes)}) - these rows never reached the rater:"] + [f"  {x}" for x in notes]
     lines += ["", "Per submission:"]
     for r in results:
         rf = ",".join(x["id"] for x in r.get("rules_fired", []))

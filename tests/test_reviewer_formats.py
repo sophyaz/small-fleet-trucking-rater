@@ -48,6 +48,20 @@ def test_full_state_names_and_radius_objects():
     n = ingest.normalise({"usdot": 1, "radius": {"miles": 400}})
     assert n["radius"] == "regional_201_500"
 
+def test_near_miss_radius_bands_resolve_instead_of_defaulting_cheap():
+    """A band name that is close but not exact must not fall through to the neutral default. "long_haul_501_plus"
+    priced at 1.00 instead of 1.30 -- a long-haul risk 30% light, with only a flag to show for it."""
+    for given in ("long_haul_501_plus", "LongHaul", "long haul", "501+", "500_plus", "500+ mi", "long_distance"):
+        n = ingest.normalise({"usdot": 1, "radius": given})
+        assert n["radius"] == "long_haul_500_plus", (given, n["radius"])
+    assert ingest.normalise({"usdot": 1, "radius": "local_radius"})["radius"] == "local_0_50"
+    assert ingest.normalise({"usdot": 1, "radius": "51_200"})["radius"] == "intermediate_51_200"
+    # absent vs present-but-unreadable both price at the neutral band, but must not look alike in the flags
+    assert "radius_missing_default_intermediate" in ingest.normalise({"usdot": 1})["ingest_flags"]
+    bad = ingest.normalise({"usdot": 1, "radius": "banana"})
+    assert bad["radius"] == "intermediate_51_200"
+    assert "radius_unparseable:banana->default_intermediate" in bad["ingest_flags"]
+
 def test_split_limits_are_flagged_not_invented():
     """We write CSL. A split-limit string must not be silently turned into a number."""
     n = ingest.normalise({"usdot": 1, "limit": "1000/1000/1000"})
@@ -95,6 +109,21 @@ def test_reviewer_formats_folder_prices_and_never_errors_unexpectedly():
     unknown = next(r for r in res if str(r.get("usdot")) == "9999999999")
     assert unknown["decision"] == "refer" and unknown["premium"] and any(x["id"] == "R02" for x in unknown["rules_fired"])
     assert "Decline rate" in book.summarise(res)
+
+def test_partially_read_file_is_named_in_the_printed_summary(tmp_path):
+    """A corrupt line in a feed is counted and skipped, but it used to appear only in a flags column. Hand over
+    20 carriers, get 19 on screen, nobody notices. The summary has to say which file lost rows."""
+    fp = tmp_path / "feed.jsonl"
+    fp.write_text(json.dumps({"usdot": 9900001, "power_units": 1}) + "\n"
+                  + "{ not json at all\n"
+                  + json.dumps({"usdot": 9900001, "power_units": 2}) + "\n")
+    res = book.run([str(fp)])
+    assert len(res) == 2 and all(r["decision"] != "error" for r in res)
+    out = book.summarise(res)
+    assert "Files read only in part (1)" in out
+    assert "feed.jsonl: 1 unparseable line skipped" in out, out
+    # a clean file adds no such section
+    assert "Files read only in part" not in book.summarise(book.run([FORMATS]))
 
 def test_every_format_file_parses():
     """Guards against a demo file being edited into something unreadable."""

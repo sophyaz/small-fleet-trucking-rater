@@ -10,6 +10,11 @@ RADII = ["local_0_50", "intermediate_51_200", "regional_201_500", "long_haul_500
 RADIUS_ALIASES = {"local": "local_0_50", "intermediate": "intermediate_51_200", "regional": "regional_201_500",
                   "long": "long_haul_500_plus", "long_haul": "long_haul_500_plus", "longhaul": "long_haul_500_plus",
                   "0-50": "local_0_50", "51-200": "intermediate_51_200", "201-500": "regional_201_500", "500+": "long_haul_500_plus"}
+# Leading-keyword fallback for a band name that is close but not exact ("long_haul_501_plus", "local_radius").
+# Longest keyword first so "long_haul_*" is not swallowed by "long".
+RADIUS_PREFIXES = (("intermediate", "intermediate_51_200"), ("regional", "regional_201_500"),
+                   ("long_haul", "long_haul_500_plus"), ("longhaul", "long_haul_500_plus"),
+                   ("local", "local_0_50"), ("long", "long_haul_500_plus"))
 COMMODITY_ALIASES = {"dryvan": "dry_van", "van": "dry_van", "refrigerated": "reefer", "reefer": "reefer",
                      "flat": "flatbed", "flatbed": "flatbed", "general": "general_freight", "lumber": "logs_lumber",
                      "logs": "logs_lumber", "machinery": "machinery_heavy", "grain": "grain_feed"}
@@ -93,6 +98,19 @@ def _unwrap(sub: dict, flags: list) -> dict:
     k, v = cands[0]
     flags.append(f"unwrapped:{k}")
     return {**{kk: vv for kk, vv in sub.items() if kk != k}, **v}
+
+def _resolve_radius_band(r: str):
+    """Exact band name, alias, or a near miss. A reviewer who types "long_haul_501_plus" or "longhaul" means
+    long haul; without the prefix fallback the value used to drop through to the neutral default and the risk
+    was priced two bands (1.30 -> 1.00) too cheap with only a flag to show for it. None = not a band name."""
+    if not r:
+        return None
+    if r in RADII:
+        return r
+    key = r.replace("_", "-") if re.fullmatch(r"\d+_\d+", r) else r   # "51_200" -> the "51-200" alias
+    if key in RADIUS_ALIASES:
+        return RADIUS_ALIASES[key]
+    return next((band for kw, band in RADIUS_PREFIXES if r.startswith(kw)), None)
 
 def _radius_from_miles(miles: float) -> str:
     if miles <= 50: return "local_0_50"
@@ -196,7 +214,7 @@ def normalise(sub: dict) -> dict:
         r_raw = next((lookup[k] for k in ("miles", "value", "radius", "max", "average", "avg", "band") if lookup.get(k) is not None), None)
         flags.append(f"radius_object_unwrapped:{r_raw}")
     r = str(r_raw if r_raw is not None else "").strip().lower().replace(" ", "_").replace("-", "_") if not isinstance(r_raw, (int, float)) or isinstance(r_raw, bool) else ""
-    out["radius"] = r if r in RADII else RADIUS_ALIASES.get(r.replace("_", "-") if re.fullmatch(r"\d+_\d+", r) else r)
+    out["radius"] = _resolve_radius_band(r)
     if out["radius"] is None:
         miles = _to_number(r_raw)
         if miles is not None and miles >= 0:
@@ -207,7 +225,16 @@ def normalise(sub: dict) -> dict:
             miles = float(m.group(1)) + (1 if m.group(2) else 0)
             out["radius"] = _radius_from_miles(miles); flags.append(f"radius_miles:{m.group(1)}{m.group(2)}->{out['radius']}")
     if out["radius"] is None:
-        out["radius"] = "intermediate_51_200"; flags.append("radius_missing_default_intermediate")
+        m = re.fullmatch(r"(\d+)_?(?:\+|plus)", r)   # bare "501+", "500_plus" (no "mi" for the regex above to catch)
+        if m:
+            out["radius"] = _radius_from_miles(float(m.group(1)) + 1); flags.append(f"radius_miles:{m.group(1)}+->{out['radius']}")
+    if out["radius"] is None:
+        # Absent vs present-but-unreadable are different problems: the first is a calibrated default, the second is
+        # a data-quality signal an underwriter should see. Both price at the neutral band; only the flag differs.
+        given = r or (str(r_raw).strip() if r_raw is not None else "")
+        out["radius"] = "intermediate_51_200"
+        flags.append(f"radius_unparseable:{given[:24]}->default_intermediate" if given
+                     else "radius_missing_default_intermediate")
     # commodity
     c_raw = _pick(sub, "commodity", flags)
     if isinstance(c_raw, list):
