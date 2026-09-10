@@ -2,7 +2,7 @@
 
 **Brief:** *Small-Fleet Trucking Rater* (Corgi Quant work trial). Build the pricing and risk-selection core for for-hire trucking, 1–5 power units, primary auto liability: a rater that takes any conforming submission and returns a bindable price or a defensible decline, judged by reading how it is built and by running unseen carriers through it.
 
-**Status 2026-09-10:** all five deliverables are in place and runnable offline from a fresh clone. The open items are calibration evidence (SERFF filings, inspection file, ATRI PDFs), two dormant rules, and the physical-damage bonus. Section 1 is the full register.
+**Status 2026-09-10:** all five deliverables are in place and runnable offline from a fresh clone. The open items are calibration evidence (SERFF filings, inspection file, ATRI PDFs), two dormant rules, and the physical-damage bonus. The rules have since been run cold against 68 carriers from 19 states that were not in the sample they were tuned on, with no retuning afterwards (section 6.1). Section 1 is the full register.
 
 ---
 
@@ -33,6 +33,8 @@ Priority: **H** would cost marks or break the live test; **M** weakens a defence
 | G19 | H | **A USDOT arriving as a float rated the wrong carrier.** `"usdot": 9900001.0` — what a spreadsheet or pandas export produces — had its decimal point stripped by `re.sub(r"\D","",...)` and became `99000010`, a different and possibly real DOT, silently and with no flag | **Fixed 2026-09-10.** `normalise` parses the DOT as a number first and only falls back to digit-extraction for genuine free text, which is now flagged `usdot_parsed_from_text` (`rater/ingest.py`; `test_float_usdot_is_not_a_different_carrier`) | Worth volunteering: it was found by fuzzing the ingest with reviewer-shaped inputs, which is also where G20/G21 came from |
 | G20 | H | **A fresh clone priced a different book.** QCMobile returns no `addDate` / `mcs150Date` / HM–PC flags; they come from `data/raw/census.csv`, which is 731 MB and gitignored. Without it every live-fetched carrier is assumed 0.5 years old → 1.65 new-venture factor and an R01 refer | **Fixed 2026-09-10.** `analysis/build_census_slim.py` writes `data/census_slim.csv.gz` (1.95 M carriers ≤ 6 units, 19.3 MB, committed); `rater/enrich.py` indexes it when the full census is absent. A row missing from the slim file is *unknown*, not "not in the snapshot", so R08 stays silent for large carriers | `test_slim_census_fallback_supplies_registration_dates` |
 | G21 | M | The book check read one submission per `*.json` file; a reviewer's JSON array, `.jsonl` feed or CSV of DOTs produced an error row or a D01 decline | **Fixed 2026-09-10.** `rater/book.py` reads object / array / jsonl / csv, one result row per carrier tagged `<file>#<i>`; `python -m rater <folder>` runs a book check | `samples/reviewer_formats/` is the demo folder |
+| G22 | H | **The headline 24.4% decline rate is partly a sampling artifact.** The census `authorized_for_hire` flag is self-declared and goes stale, so a random census draw over-samples dormant shells. Only 23 of the 45 drawn carriers (51%) have active for-hire authority *and* BI/PD insurance on file — the other half are registrations no broker would submit | **Measured 2026-09-10**, and not a defect in the rater: `analysis/build_operating_set.py` draws the same segment filtered to operating carriers and the decline rate falls to 1 of 38 (2.6%). Both figures are reported in section 6.1 | Volunteer it: "24% is what a census draw declines; 2.6% is what a submission flow declines, and the difference is dormancy, not appetite" |
+| G23 | M | The rules in section 5 were tuned on the 45-carrier census draw, which therefore could not also be the evidence that they generalise to unseen carriers | **Fixed 2026-09-10.** Three cold-start tracks (68 carriers, section 6.1) exclude every already-cached DOT; tracks A and B also exclude the original ten focus states. No rule was retuned afterwards, so the figures are a genuine out-of-sample read | Section 6.1; D11 fired on a real carrier for the first time |
 
 ---
 
@@ -43,6 +45,7 @@ Priority: **H** would cost marks or break the live test; **M** weakens a defence
 | **A working rater** — submission in, premium out, priced off an explicit loss-cost-plus-margin view; a number you'd take money on | Done | `rater/price.py`, `config/rates.yaml`, `docs/RATING_MANUAL.md` | `python -m rater samples/submissions/00_established_clean_ia.json` | Base loss cost $4,151 per unit-year = 0.045 crashes × 2.0 claims per crash × $42,265 limited severity × 1.091 trend; gross-up (1+14% ALAE) ÷ (1 − 22% expense − 6% reinsurance − 7% profit); floor $8,000 per unit; every step in the returned `breakdown` |
 | **A decline list / rules** — the risks you won't write, and why | Done | `config/rules.yaml` (16 decline, 9 refer), section 5 below, RATIONALE §2 | rules fire inside every `price()` call; counts in the book check | 11 of 45 real carriers declined (24.4%); 13 of 31 synthetic; each with rule id and reason |
 | **A system that generalises** — runnable on unseen submissions, sensible handling of missing or bad inputs | Done | `rater/ingest.py` (aliases, coercion, flags), `rater/enrich.py` (never raises; API → cache → fixture → segment defaults), `rater/price.py` (last-line try/except) | `python -m rater.book samples/submissions` includes six edge cases: unknown DOT, missing DOT, bad VINs, zero drivers, garbage types, not-JSON | Tests `test_never_crashes_on_any_sample`, `test_garbage_input`, `test_input_aliases_and_numeric_radius`; edge cases produce refer / decline / price with flags, and the unreadable file is reported as an error line |
+| **...demonstrated on carriers the rules were not built on** | Done | `samples/submissions_holdout/` (30), `samples/submissions_operating/` (38), `samples/submissions_curveball/` (14 rows in 6 files) | `python -m rater.book samples/submissions_holdout samples/submissions_operating samples/submissions_curveball` | Section 6.1. 68 cold-start carriers from 19 states outside the original ten, none previously cached, no rule retuned afterwards; 0 crashes and every error row explained |
 | **A reproducible pipeline** — sourced data plus a short rationale: exposure base, key variables, loss-cost view, every judgment call cited | Done | `run_all.py`; `docs/RATIONALE.md` (assumptions A1–A13 with impact), `docs/SOURCES.md` (S1–S16), `docs/FREQUENCY_PROPOSAL_2026-09-09.md`, `docs/MARKET_BENCHMARK.md`; archived sources in `data/raw/` | `python run_all.py` (offline); `python -m analysis.build_frequency_tables --years 3` after pulling S3/S4 | Every rates.yaml value tagged [E]/[S]/[B] with its source; derived tables in `data/derived/` |
 | **A self-running book check** — priced vs declined counts, decline rate, price distribution, errored submissions with reason; must not crash or decline everything on thin-data carriers | Done | `rater/book.py` | `python -m rater.book <folders or files> [--csv] [--jsonl]` | Section 6; thin-data carriers go to refer with a price (R01/R02/R07/R09), not decline |
 
@@ -112,7 +115,7 @@ What happens to bad or missing input:
 
 ## 5. Decline and refer rules
 
-Any decline wins; otherwise any refer; otherwise price. Counts are from the current book checks (`data/derived/book_check.csv`, 31 synthetic incl. 6 edge cases; `book_check_real.csv`, 45 real carriers). Status: **live** fires from live data; **dormant** cannot fire from public data today; **declared** relies on a submission field; **stub** not implemented.
+Any decline wins; otherwise any refer; otherwise price. Counts are from the current book checks (`data/derived/book_check.csv`, 31 synthetic incl. 6 edge cases; `book_check_real.csv`, 45 real carriers). The **Synthetic** and **Real** columns are those two sets; for what fired on the cold-start holdout — a different 68 carriers in different states — see section 6.1, where D11 appears on a real carrier for the first time. Status: **live** fires from live data; **dormant** cannot fire from public data today; **declared** relies on a submission field; **stub** not implemented.
 
 ### Declines
 
@@ -167,10 +170,29 @@ Results, offline, run 2026-09-10 (`data/derived/book_check*.csv`; figures move s
 |---|---|---|---|---|---|---|---|---|
 | Synthetic adversarial (one carrier per rule + 6 edge cases) | 31 | 12 | 5 | 13 | 1 (not JSON, by design) | 41.9% | $8,250 / $18,023 / $84,127 | 12 |
 | Real, stratified census draw (15 each < 1 y / 1–3 y / 3 y+ authority, ten focus states) | 45 | 17 | 17 | 11 | 0 | 24.4% (refer 37.8%) | $8,250 / $13,059 / $73,616 | 9 |
+| **Cold-start holdout, tracks A + B** (`samples/submissions_holdout`) — 19 states, none of the original ten | 30 | 13 | 7 | 10 | 0 | 33.3% (refer 23.3%) | $8,250 / $13,379 / $40,250 | 3 |
+| **Operating draw, track C** (`samples/submissions_operating`) — active authority **and** BI/PD on file | 38 | 37 | 0 | 1 | 0 | 2.6% | $8,250 / $10,093 / $42,992 | 15 |
+| **Curveball inputs** (`samples/submissions_curveball`) — 14 carriers in 6 files | 14 | 2 | 1 | 9 | 2 (by design) | n/a — see below | $8,250 / $20,084 / $24,250 | 5 |
 | Market-benchmark mirrors (`samples/submissions_benchmark`) | 10 | 9 | 1 | 0 | 0 | 0% | per unit $8,000–$18,964; median gap to observed −1.2% | 3 |
 | Reviewer formats (`samples/reviewer_formats`) — 16 carriers in 9 files, 4 container shapes | 16 | 14 | 1 | 0 | 1 (not JSON, by design) | 0% | $8,250 / $9,760 / $114,701 | 4 |
 
 The synthetic decline rate is high by construction (one carrier per decline rule). The real draw is the answer to "what book does this attract": a quarter declined on status, over a third referred as pending applicants, the rest priced between the $8k floor and about $16k per unit.
+
+### 6.1 Cold start — carriers the rules were not written on
+
+The rules in section 5 were tuned on the 45-carrier census draw, so that draw cannot also be the evidence that they generalise. Three further tracks were sourced afterwards, each excluding every DOT already in `data/cache/carrier/` or any `samples/` folder, and tracks A and B also excluding the ten focus states the original draw used. Build with `python -m analysis.build_holdout_set` and `python -m analysis.build_operating_set` (census + webKey); the resulting submissions and their enrichment are committed, so the book checks re-run offline.
+
+| Track | What it tests | Result |
+|---|---|---|
+| **A** — 18 carriers, unit counts only, no VINs | The common case: a DOT, a fleet size, no vehicle identity | 5 price / 7 refer / 6 decline |
+| **B** — 12 carriers, their own real VINs from the MCMIS crash file | The vPIC decode path on VINs never seen before | 8 price / 0 refer / 4 decline |
+| **C** — 38 carriers filtered to *operating* | Whether the decline rate is a property of the book or of the sampling frame | 37 price / 1 decline |
+
+**The track C finding is the one to volunteer.** The census `authorized_for_hire` flag is self-declared on the MCS-150 and goes stale, so a random census draw over-samples dormant shells no broker would ever submit. Applying track C's operating test — `common_authority_status == 'A'` (or contract authority active) **and** `bipd_insurance_on_file > 0` — to the original 45-carrier draw keeps only **23 of 45 (51%)**. Half of that draw is dormant. So the headline 24.4% decline rate is substantially a sampling artifact: on carriers that look like they are actually trading, the rater declines 1 in 38 (2.6%) and prices the rest at a median $9,038 per unit. Both numbers are honest; they answer different questions, and the operating figure is the one that predicts a real submission flow. See G22.
+
+Ten rules fire across the holdout tracks (R07 10, D25 6, R04 3, R01 3, D11 2, R09 2, D02 2, D03 2, D05 1, D22 1) — including **D11**, which had fired only on the synthetic set and never on a real carrier before.
+
+`samples/submissions_curveball/` is the presentation-day rehearsal: real holdout DOTs arriving in Corgi's shape rather than ours — a broker CSV with `DOT Number` / `# Trucks` / `Radius (mi)` headers, commas in numbers, `"1M"` as a limit, full state names; a doubly-nested `{"carrier": {...}}` array with a float DOT and `"USDOT 3989969"` as free text; a `.jsonl` feed containing an unparseable line, a negative unit count, `"drivers": "three"` and `"radius": "banana"`; a file whose VIN list and `power_units` disagree; and two empty files. 14 rows out of 6 files: 2 price, 1 refer, 9 decline (3 of them D01 on rows with no resolvable DOT, by design), 2 error rows, and one file reported as **read only in part** — the partial-read surfacing added in `rater/book.py`. Nothing crashes and no bad row is silently dropped.
 
 `samples/reviewer_formats/` is the generalisation demo: the same cached carriers arriving as a spreadsheet export with a float DOT and a full state name, a broker's JSON array, an agency `.jsonl`, a CSV of DOTs, a wrapped `{"carrier": {...}}` object, a DOT on its own, a submission of nothing but nulls and junk keys, and one deliberately corrupt file. 14 price, the fake DOT refers on R02, the corrupt file is one error row, nothing crashes.
 
@@ -180,11 +202,14 @@ The synthetic decline rate is high by construction (one carrier per decline rule
 
 | Step | Command | Needs | Writes |
 |---|---|---|---|
-| Everything, offline | `python run_all.py` (or `./run_all.sh`) | nothing beyond `pip install -r requirements.txt` | samples, `docs/RATING_MANUAL.md`, `data/derived/{ilf_table,tornado,market_benchmark,book_check*}.csv`, test run |
+| Everything, offline | `python run_all.py` (or `./run_all.sh`) | nothing beyond `pip install -r requirements.txt` | samples, `docs/RATING_MANUAL.md`, `data/derived/{ilf_table,tornado,market_benchmark,book_check*}.csv`, test run. Runs all seven book checks: synthetic, market benchmark, reviewer formats, cold-start holdout, operating draw, curveball inputs, real census draw |
 | Single submission | `python -m rater file.json` | webKey for an uncached DOT | stdout |
 | Book check | `python -m rater.book folders... --csv --jsonl` | as above | stdout, CSV, JSONL |
 | Frequency tables and GLM | `python -m analysis.build_frequency_tables --years 3` | `data/raw/census.csv`, `crash_2023..2026.csv` (SOURCES S3/S4 URLs; ~1 GB; gitignored) | `data/derived/crash_rate_by_segment.csv`, `crash_rate_by_state.csv`, `glm_relativities*.csv` |
 | Real-carrier draw | `python -m analysis.build_sample_set --n 45` | census.csv + webKey | `samples/submissions_real/`, `data/cache/carrier/` |
+| Cold-start holdout draw (tracks A + B, G23) | `python -m analysis.build_holdout_set` | census.csv + webKey | `samples/submissions_holdout/` (30), carrier + VIN cache |
+| Operating draw (track C, G22) | `python -m analysis.build_operating_set` | census.csv + webKey | `samples/submissions_operating/` (38); prints the operating keep rate |
+| Curveball inputs | `python samples/make_curveball_samples.py` | `samples/submissions_holdout/` | `samples/submissions_curveball/` (6 files, 4 container shapes) |
 | Slim census (clean-clone parity, G20) | `python -m analysis.build_census_slim` | `data/raw/census.csv` | `data/census_slim.csv.gz` (19.3 MB, committed) |
 | Severity / ILFs | `python -m analysis.fit_severity` | — | `ilf_table.csv` |
 | Tornado | `python -m analysis.sensitivity [submission]` | — | `tornado.csv` |
@@ -217,6 +242,8 @@ Judgment calls: `docs/RATIONALE.md` §5 numbers them A1–A13 with value, basis,
 |---|---|---|---|
 | `analysis/build_frequency_tables.py` | census.csv, crash_*.csv | `crash_rate_by_segment.csv` (fleet × authority age: rate, SE, fatal / injury shares), `crash_rate_by_state.csv`, `glm_relativities.csv` (NB GLM, log unit-year offset, reference 2–5 units / 3 y+ / CA), `glm_relativities_operating.csv`, `proposed_venue_state.csv`, `authority_age_diagnostics.txt` | A1 crash rate 0.045 [E]; A7 severity shares [E]; the rejected authority-age and venue proposals (FREQUENCY_PROPOSAL) |
 | `analysis/build_sample_set.py` | census.csv, webKey | `samples/submissions_real/`, carrier cache | Real-carrier book check |
+| `analysis/build_holdout_set.py` | census.csv, crash_*.csv, webKey | `samples/submissions_holdout/` (18 track A + 12 track B), carrier + VIN cache | Cold-start book check on carriers and states the rules were not built on (G23) |
+| `analysis/build_operating_set.py` | census.csv, webKey | `samples/submissions_operating/` (38); keep rate on stdout | Separating dormancy from appetite in the decline rate (G22) |
 | `analysis/build_census_slim.py` | census.csv | `data/census_slim.csv.gz` | Registration dates on a machine without the 731 MB census (G20) |
 | `analysis/fit_severity.py` | rates.yaml | `ilf_table.csv` | Multi-limit; tail diagnostics |
 | `analysis/sensitivity.py` | rates.yaml, a submission | `tornado.csv` | "Where is it most likely wrong" |
@@ -224,4 +251,5 @@ Judgment calls: `docs/RATIONALE.md` §5 numbers them A1–A13 with value, basis,
 | `analysis/portfolio.py` | rates.yaml | stdout | Capital and return |
 | `analysis/render_manual.py` | rates.yaml | `docs/RATING_MANUAL.md` | Manual == code |
 | `samples/make_synthetic_samples.py` | — | 25 carriers + 6 edge cases with fixtures | Adversarial book check |
+| `samples/make_curveball_samples.py` | `samples/submissions_holdout/` | 6 files, 14 rows: broker CSV, nested array, jsonl with an unparseable line, VIN/count conflict, 2 empty files | Presentation-day input shapes; exercises partial-read reporting |
 | `samples/make_benchmark_samples.py [--run]` | MARKET_BENCHMARK profiles | 10 mirrors; `market_benchmark.csv` | Market comparison |

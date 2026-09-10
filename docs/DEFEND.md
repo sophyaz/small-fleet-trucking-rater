@@ -69,6 +69,7 @@ What I did **not** trust: national OOS averages for small carriers (2009–10 fi
 8. **Re-basing on data** (`eaa851b`): crash rate 0.0625 [S/B] → 0.045 [E]; claims per crash 1.2 → 2.0 [S] chosen so the product stays inside the market back-out; severity shares from crash flags [E]. Base loss cost moved −1.4%.
 9. **Honesty passes** (`dd6de6f`, `94b4343`, `90c1cce`): BASIC factors marked dormant; trend cut from 8% to 6% because 8% sat above every published series; stale VERIFY markers retired.
 10. **Packaging** (2026-09-10): input aliases so unseen file formats run; caches committed so a fresh clone reproduces; cross-platform runner; these two documents.
+11. **Cold start** (`e9692a8`, `0162245`): the rules had been tuned on the 45-carrier draw, so a fresh 68 carriers were sourced across three tracks — none previously cached, tracks A and B from 19 states the original draw never touched — plus a curveball folder in the file shapes a broker actually sends. Run once, no retuning. It is what turned "it generalises" from a design claim into a measurement, and it produced the dormancy finding in §2.1.
 
 Tools: Python (pandas, numpy, scipy, statsmodels for the NB GLM), seeded Monte Carlo for limited severity and the portfolio, Socrata SODA for the bulk pulls, QCMobile and vPIC REST, pytest. Claude Code was used as the build assistant; the prompts that drove each live-data step are archived in `docs/CLAUDE_CODE_PROMPTS.md` with their status, so the process is inspectable.
 
@@ -84,6 +85,22 @@ From the 45-carrier census draw (`data/derived/book_check_real.csv`): 17 priced,
 - **Referred (38%):** almost entirely new applicants waiting on a BMC-91 insurance filing (R07, R09, R01). That is the front door of this market: they cannot get authority until an insurer files. They are priced with the 1.65 new-venture factor and the stack cap holds a first-year Texas long-hauler to about $13k against a published $8k–$20k band.
 - **Declined (24%):** status and authority (inactive registration, OOS order, lapsed authority with no filing) and driver OOS three times the segment. Nothing declined for thin data.
 - **Where the market beats us:** high-venue long-haul new ventures and 20-year-old iron with two drivers (P3 in the benchmark, +17%). That is fine; we do not want them at our price.
+
+**Volunteer the sampling caveat before they find it.** The 24% decline rate is partly an artifact of how the sample was drawn. The census `authorized_for_hire` flag is self-declared on the MCS-150 and goes stale, so a random census draw over-samples dormant shells no broker would ever submit. Of the 45 drawn carriers, only **23 (51%)** have active for-hire authority *and* BI/PD insurance on file. `analysis/build_operating_set.py` re-draws the same segment with that operating test applied, and on those 38 carriers the rater declines **1 (2.6%)** and prices 37 at a median $9,038 per unit (`book_check_operating.csv`). Both numbers are true and they answer different questions: 24% is what a census draw declines, 2.6% is what a submission flow declines, and the gap is dormancy, not appetite. The honest planning number for a real quote flow is nearer the second.
+
+### 2.1a Cold start: it was tested on carriers it was not built on
+
+The decline and refer rules were tuned on that 45-carrier draw, so that draw cannot also be the evidence that they generalise. Three further tracks were sourced afterwards — 68 carriers in total, every one excluded from `data/cache/carrier/` and every `samples/` folder at draw time, and tracks A and B drawn from 19 states outside the original ten. **No rule was changed after seeing the results.**
+
+| Track | n | What it tests | Price / refer / decline |
+|---|---|---|---|
+| A — unit counts, no VINs | 18 | The common case: a DOT and a fleet size, no vehicle identity | 5 / 7 / 6 |
+| B — carriers' own real VINs from the crash file | 12 | The vPIC decode path on VINs never seen before | 8 / 0 / 4 |
+| C — filtered to operating carriers | 38 | Whether the decline rate is a property of the book or the sampling frame | 37 / 0 / 1 |
+
+Holdout tracks A+B: 13 priced, 7 referred, 10 declined, **0 errors**, median policy $13,379, ten rules firing (R07 10, D25 6, R04 3, R01 3, D11 2, R09 2, D02 2, D03 2, D05 1, D22 1). D11 (out-of-appetite commodity) fired on a real carrier for the first time. The premium distribution holds its shape on unseen geography — median $10,567 per unit against $11,808 on the tuning draw — which is the claim worth making: this is a rater, not a lookup table for 45 carriers.
+
+`samples/submissions_curveball/` is the presentation-day rehearsal: real holdout DOTs in Corgi's file shapes rather than ours — a broker CSV with `DOT Number` / `# Trucks` / `Radius (mi)` headers, commas in numbers, `"1M"` limits and full state names; a nested `{"carrier": {...}}` array with a float DOT and `"USDOT 3989969"` as free text; a `.jsonl` feed with an unparseable line, a negative unit count, `"drivers": "three"` and `"radius": "banana"`; a file whose VIN list contradicts `power_units`; two empty files. 14 rows from 6 files: 2 price, 1 refer, 9 decline (3 of them D01 on rows with no resolvable DOT), 2 error rows with reasons, and one file reported as *read only in part*. Nothing crashes; no bad row is silently dropped. **If they hand you a file at the table, this is the rehearsal for it.**
 
 ### 2.2 Would it make money?
 
@@ -164,7 +181,8 @@ The rater prices whatever limit is submitted through the limited mean of the mix
 
 ## 6. Anticipated challenges
 
-- *"Your decline rate on your own sample is 42%."* The synthetic sample is adversarial by design, one carrier per rule. The census draw is the answer: 45 real carriers, 24% declined, 38% referred (almost all pending applicants), 38% priced, none errored.
+- *"Your decline rate on your own sample is 42%."* The synthetic sample is adversarial by design, one carrier per rule. On the real draw the figure is 24%, and even that is inflated by the sampling frame: only 23 of those 45 (51%) have active authority and BI/PD insurance on file, so half the draw is dormant registrations no broker would send. Re-drawn to carriers that look like they are operating, the decline rate is 1 in 38 (2.6%) (section 2.1). In full: 45 real carriers, 24% declined, 38% referred (almost all pending applicants), 38% priced, none errored.
+- *"You tuned the rules on the same 45 carriers you are showing me."* True of the first draw, which is exactly why there is a second. 68 carriers were sourced afterwards across three tracks — none previously cached, tracks A and B from 19 states the original draw never touched — and run once with **no retuning afterwards**: 13 priced, 7 referred, 10 declined, 0 errors, median $10,567 per unit against $11,808 on the tuning draw. Ten rules fired, including D11 on a real carrier for the first time. Section 2.1a.
 - *"Your BASIC factors never fire."* Correct: percentiles are "Not Public" for 53 of 53 live property carriers. They are marked dormant in the config; the API does return the measure and the intervention threshold, and a measure-based band is the replacement.
 - *"Why refer instead of decline new ventures?"* Half the segment is under three years old; declining them is declining the market. Surcharge, refer, watch the bind mix.
 - *"ILFs look thin."* Agreed and flagged. The fatal share or α is light. It is exactly the parameter I would buy data for, and it does not bite at $1m primary.
@@ -191,7 +209,9 @@ The rater prices whatever limit is submitted through the limited mean of the mix
 4. `python -m rater their_carrier.json` — live enrichment with the webKey; show the cached response landing in `data/cache/carrier/`.
 5. `python -m rater.book samples/reviewer_formats` — the same carriers arriving as a spreadsheet export, a broker's array, an agency JSONL, a CSV of DOTs and a wrapped object, plus one corrupt file. This is the "runs on submissions you haven't seen" evidence; have it ready **before** they hand anything over.
 6. `python -m rater.book samples/submissions their_folder` — their cases alongside ours, whatever shape their file is in.
-7. `config/rates.yaml` open on the loss-cost block; `data/derived/tornado.csv`; `docs/MARKET_BENCHMARK.md` after table.
+7. `python -m rater.book samples/submissions_holdout samples/submissions_operating` — the cold-start evidence: 68 carriers in states the rules were never tuned on, run once with no retuning. Use it the moment anyone asks whether this generalises.
+8. `python -m rater.book samples/submissions_curveball` — the hostile-input rehearsal: a broker CSV, a nested array, a JSONL with an unparseable line, a VIN/count conflict, two empty files. Point at the *files read only in part* block — the row that could not be parsed is reported, not silently dropped.
+9. `config/rates.yaml` open on the loss-cost block; `data/derived/tornado.csv`; `docs/MARKET_BENCHMARK.md` after table.
 
 Slides (8): system picture; scope; data; loss cost; relativities and credibility; rules with counts; sensitivity and validation; where wrong / watch / roadmap (`docs/PRESENTATION_OUTLINE.md`).
 
