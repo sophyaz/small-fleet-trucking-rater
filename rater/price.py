@@ -103,6 +103,11 @@ def price(submission: dict, cfg=None) -> dict:
                 "flags": f["flags"], "enrichment_source": car.get("source"), "breakdown": breakdown,
                 "features": {k: v for k, v in f.items() if k not in ("flags",)}, "error": None}
     except Exception as e:   # last line of defence: never crash the book run
-        return {"submission_id": str(submission.get("submission_id", "?")), "usdot": submission.get("usdot"),
+        # `submission` is not necessarily a dict here - book.py guards its own call, but a caller using price()
+        # directly can pass anything, and .get() on a str/list would raise *inside the handler*, taking out the
+        # one guarantee this function makes. Not reachable today (ingest.normalise absorbs non-dicts before
+        # anything can throw), which is exactly why it is worth pinning: the safety net must not need luck.
+        sub = submission if isinstance(submission, dict) else {}
+        return {"submission_id": str(sub.get("submission_id", "?")), "usdot": sub.get("usdot"),
                 "decision": "error", "premium": None, "rules_fired": [], "flags": [], "breakdown": {},
                 "error": f"{type(e).__name__}: {e}", "trace": traceback.format_exc()}

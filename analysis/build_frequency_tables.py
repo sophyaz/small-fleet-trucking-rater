@@ -70,8 +70,10 @@ def main():
     df["auth_age"] = (now - df["add_date"]).dt.days / 365.25
     df["auth_bucket"] = pd.cut(df["auth_age"], [-1, 1, 3, 200], labels=["<1y", "1-3y", "3y+"])
     df["fleet"] = np.where(df["units"] == 1, "1", "2-5")
-    df["exposure"] = df["units"] * yrs
-    # NOTE: carriers added within the window have less than `yrs` of exposure -> approximate: min(auth_age, yrs)
+    # Carriers added within the window have less than `yrs` of exposure -> min(auth_age, yrs). Note the known bias:
+    # `units` is the CURRENT census count applied back over the whole window, so a carrier that has grown gets more
+    # unit-years than it really ran. That overstates the denominator and understates the rate; it is one reason the
+    # measured 0.0363 is called a floor in docs/FREQUENCY_PROPOSAL_2026-09-09.md section 1.
     df["exposure"] = df["units"] * np.minimum(df["auth_age"].clip(lower=0.1), yrs)
     tab = df.groupby(["fleet", "auth_bucket"], observed=True).agg(carriers=("dot", "size"), unit_years=("exposure", "sum"),
           crashes=("crashes", "sum"), fatal=("fatal", "sum"), inj=("inj", "sum")).reset_index()

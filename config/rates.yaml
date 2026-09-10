@@ -67,6 +67,18 @@ relativities:
     - {max: 1,   factor: 1.65}
     - {max: 3,   factor: 1.25}
     - {max: 99,  factor: 1.00}
+  # [S] KEPT at 0.95 against a measured [E] of 1.18 - the one place the manual deliberately overrides its own
+  # estimate, so have the reconciliation ready. The census x crash-file GLM puts a solo carrier at 1.176 (SE 0.013,
+  # operating cut 1.224; raw 3y+ rates 0.0462 vs 0.0363 = 1.27x) - FREQUENCY_PROPOSAL section 3. Three reasons it is
+  # not applied: (1) it is a FREQUENCY contrast measured on census exposure, and part of it is denominator error -
+  # 2-5 unit carriers overstate power units on the MCS-150, which dilutes their per-unit rate and inflates the solo
+  # relativity, which is why section 3 calls 1.18 an upper bound and 1.10-1.18 the honest range; (2) only the PRODUCT
+  # of crash rate x claims-per-crash x relativities is identified, and that product is anchored to the ten observed
+  # market prices - moving one factor up 24% without moving another down breaks the anchor; (3) the benchmark says
+  # so directly: at 1.15 the one-unit profiles go to +71% (P1), +50% (P3), +44% (P7) against the observed
+  # liability-only estimates, from +41 / +24 / +19 today. The market charges solo carriers what we charge them.
+  # The reconciliation, if the frequency contrast is real: solo severity is likely lower (owner-driver, no dispatch
+  # pressure to run tired) and offsets it. That is a bound-book question, not a public-data one.
   fleet_size_units:
     - {max: 1,   factor: 0.95}
     - {max: 5,   factor: 1.00}
